@@ -126,8 +126,10 @@ class ArgumentsParser:
     def check_args(self):
         """Main routine for arguments checking, dispatch to correct function"""
         
-        if   self.mode == Mode.TOOLBOX :  return self.check_args_toolbox()
-        else                           :  return self.check_args_attack()
+        if self.mode == Mode.TOOLBOX :  
+            return self.check_args_toolbox()
+        else:  
+            return self.check_args_attack()
 
     #------------------------------------------------------------------------------------
 
@@ -141,7 +143,7 @@ class ArgumentsParser:
             self.args.update_tool is not None,
             self.args.update_all,
             self.args.uninstall_tool is not None,
-            self.args.uninstall_all
+            self.args.uninstall_all,
         ])
 
         # Since they are mutually exclusive, exactly one of them should be true/not None.

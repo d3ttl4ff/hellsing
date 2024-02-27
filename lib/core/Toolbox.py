@@ -1,5 +1,6 @@
 import configparser
 import os
+import subprocess
 import sys
 
 from lib.core.Config import *
@@ -17,7 +18,6 @@ class Toolbox:
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         self.tools = self.config.sections()
-        # print(f"Loaded tools: {self.tools}")
         
     #------------------------------------------------------------------------------------
     # Output Methods
@@ -67,9 +67,31 @@ class Toolbox:
     
     def update_tool(self, tool_name):
         """
-        Update the specified tool.
+        Update a specified tool by its name.
 
-        :param str tool_name: Name of the tool to update
+        :param str tool_name: The name of the tool to update.
         """
+        # Normalize the tool_name to lowercase
+        tool_name_lower = tool_name.lower()
+
+        # Attempt to find the tool in the config, comparing lowercased names
+        for tool in self.tools:
+            if self.config.get(tool, 'name').lower() == tool_name_lower:
+                # If found, execute the update command
+                try:
+                    update_command = self.config.get(tool, 'update')
+                    print(f"Updating {tool_name}...")
+                    subprocess.run(update_command, shell=True, check=True)
+                    print(f"{tool_name} updated successfully.")
+                    return
+                except subprocess.CalledProcessError as e:
+                    print(f"Error updating {tool_name}: {e}")
+                    return
+                except configparser.NoOptionError:
+                    print(f"Update command not defined for {tool_name}.")
+                    return
+
+        # If the loop completes without finding and updating the tool, it doesn't exist in the config
+        print(f"Tool {tool_name} not found in the toolbox configuration.")
         
         
