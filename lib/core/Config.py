@@ -28,7 +28,7 @@ BANNER = colored.stylize("""
                                                             
         [ Network & Web Pentest Automation Framework ]
 
-""".format(version=__version__), colored.fg('light_green') + colored.attr('bold'))
+""".format(version=__version__), colored.fg('red') + colored.attr('bold'))
 
 USAGE = """
 python3 hellsing.py <command> [<args>]

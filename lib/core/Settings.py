@@ -4,6 +4,7 @@ import sys
 import os
 
 from lib.core.Config import *
+from lib.core.Toolbox import Toolbox
 
 class Settings:
     def __init__(self, config_file='settings/toolbox.conf'):
@@ -11,11 +12,25 @@ class Settings:
         self.config.read(config_file)
         self.tools = self.config.sections()
 
+
     def show_all_tools(self):
+        # Instantiate Toolbox with the current settings instance
+        toolbox = Toolbox(self)
+        toolbox.show_toolbox()
+
+    def update_tool(self, tool_name):
+        if tool_name in self.tools:
+            update_cmd = self.config[tool_name]['update']
+            subprocess.run(update_cmd, shell=True)
+        else:
+            print(f"Tool {tool_name} not found.")
+
+    def update_all_tools(self):
+        print(f"Current working directory: {os.getcwd()}")
         for tool in self.tools:
-            print(f"Name: {self.config[tool]['name']}")
-            print(f"Description: {self.config[tool]['description']}")
-            print(f"Target Service: {self.config[tool]['target_service']}\n")
+            self.update_tool(tool)
+
+
 
     def install_tool(self, tool_name):
         if tool_name in self.tools:
