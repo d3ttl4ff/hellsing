@@ -8,7 +8,7 @@ from lib.core.ArgumentsParser import ArgumentsParser
 from lib.core.Config import *
 from lib.core.Exceptions import *
 from lib.core.Settings import Settings
-# from lib.controller.MainController import MainController
+from lib.controller.MainController import MainController
 # from lib.db.Mission import Mission
 # from lib.db.Session import *
 from lib.output.Logger import logger
@@ -25,20 +25,9 @@ class Program:
             # Parse command-line arguments
             arguments = ArgumentsParser(settings)
             
-            if arguments.args.show_toolbox_all:
-                settings.show_all_tools() 
-            if arguments.args.install_tool:
-                settings.install_tool()
-            if arguments.args.install_all:
-                settings.install_all_tools()
-            if arguments.args.update_tool:
-                settings.update_tool()
-            if arguments.args.update_all:
-                settings.update_all_tools()
-            if arguments.args.uninstall_tool:
-                settings.uninstall_tool()
-            if arguments.args.uninstall_all:
-                settings.uninstall_all_tools()
+            # Controller
+            controller = MainController(arguments, settings)
+            controller.run()
 
         except KeyboardInterrupt:
             print()

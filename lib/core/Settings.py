@@ -11,15 +11,15 @@ class Settings:
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         self.tools = self.config.sections()
+        self.toolbox = None # Receives Toolbox object
 
     def show_all_tools(self):
-        print("hellfireeeeeeeee111111")
         # Instantiate Toolbox with the current settings instance
         toolbox = Toolbox(self)
         toolbox.show_toolbox()
 
     def update_tool(self, tool_name):
-        print("hellfireeeeeeeee222222")
+        # Instantiate Toolbox with the current settings instance
         toolbox = Toolbox(self)
         toolbox.update_tool(tool_name)
 
@@ -27,8 +27,6 @@ class Settings:
     #     print(f"Current working directory: {os.getcwd()}")
     #     for tool in self.tools:
     #         self.update_tool(tool)
-
-
 
     # def install_tool(self, tool_name):
     #     if tool_name in self.tools:
