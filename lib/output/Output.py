@@ -31,7 +31,11 @@ class Output(object):
     def bold(string):
         """Print string in bold"""
         return colored.stylize(string, colored.attr('bold'))
-
+    
+    @staticmethod
+    def success(string):
+        """Print string in green"""
+        Output.print(string, color='green_yellow')
 
     @staticmethod
     def print_with_tabs(string, color=None, highlight=None, attrs=None):
@@ -91,8 +95,9 @@ class Output(object):
             col = col if col is not None else 80
         msg = "\n"
         msg += " " * col + "\n"
-        msg += "cmd> {cmd}".format(cmd=cmd) + " " * (col - (len(cmd) + 5) % col) + "\n"
-        Output.print(msg, color="white", highlight="grey_19", attrs="bold")
+        msg += " command> {cmd}".format(cmd=cmd) + " " * (col - (len(cmd) + 5) % col)
+        Output.print(msg, color="161", highlight="234", attrs="bold")
+        Output.print("")
 
     @staticmethod
     def delimiter():

@@ -30,13 +30,11 @@ class Settings:
     def install_all_tools(self):
         self.toolbox.install_all()
 
-    # def uninstall_tool(self, tool_name):
-    #     # Uninstallation logic here
-    #     pass
+    def uninstall_tool(self, tool_name):
+        self.toolbox.uninstall_tool(tool_name)
 
-    # def uninstall_all_tools(self):
-    #     for tool in self.tools:
-    #         self.uninstall_tool(tool)
+    def uninstall_all_tools(self):
+        self.toolbox.uninstall_all_tools()
 
     def check_tool(self, tool_name):
         self.toolbox.check_tool(tool_name)

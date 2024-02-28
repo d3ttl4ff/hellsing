@@ -52,29 +52,13 @@ class ToolboxController():
         elif self.arguments.args.update_all:
             self.settings.update_all_tools()
 
-        # # --uninstall-tool <tool-name>
-        # elif self.arguments.args.uninstall_tool:
-        #     self.settings.toolbox.remove_tool(toolname)
+        # --uninstall-tool <tool-name>
+        elif self.arguments.args.uninstall_tool:
+            self.settings.uninstall_tool(toolname)
 
-        # # --uninstall-all
-        # elif self.arguments.args.uninstall_all:
-        #     self.settings.toolbox.remove_all()
-
-         
-            # if arguments.args.show_toolbox_all:
-            #     settings.show_all_tools() 
-            # if arguments.args.install_tool:
-            #     settings.install_tool()
-            # if arguments.args.install_all:
-            #     settings.install_all_tools()
-            # if arguments.args.update_tool:
-            #     settings.update_tool(toolname)
-            # if arguments.args.update_all:
-            #     settings.update_all_tools()
-            # if arguments.args.uninstall_tool:
-            #     settings.uninstall_tool()
-            # if arguments.args.uninstall_all:
-            #     settings.uninstall_all_tools()
+        # --uninstall-all
+        elif self.arguments.args.uninstall_all:
+            self.settings.toolbox.uninstall_all_tools()
 
 
 

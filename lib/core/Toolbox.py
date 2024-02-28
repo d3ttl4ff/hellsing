@@ -2,9 +2,11 @@ import configparser
 import os
 import subprocess
 import sys
+import shutil
 
 from lib.core.Config import *
 from lib.output import Output
+from lib.output.Logger import logger
 from lib.utils.StringUtils import StringUtils
 
 class Toolbox:
@@ -33,7 +35,7 @@ class Toolbox:
             'Service',
             'Status',
             'Last Update',
-            'Description',
+            # 'Description',
         ]
 
         for tool in self.tools:
@@ -47,7 +49,7 @@ class Toolbox:
             if os.path.exists(tool_dir_path):
                 try:
                     # Use git to get the last commit date in ISO format
-                    result = subprocess.run(['git', 'log', '-1', '--format=%cd', '--date=iso'], cwd=tool_dir_path, text=True, capture_output=True, check=True)
+                    result = subprocess.run(['git', 'log', '-1', '--format=%cd', '--date=short'], cwd=tool_dir_path, text=True, capture_output=True, check=True)
                     # Extract and format the last commit date
                     last_update = result.stdout.strip()
                 except subprocess.CalledProcessError:
@@ -78,7 +80,7 @@ class Toolbox:
                 target_service,
                 status,
                 last_update,
-                StringUtils.wrap(description, 120), # Max line length
+                # StringUtils.wrap(description, 120), # Max line length
             ])
 
         Output.table(columns, data, hrules=False)
@@ -105,29 +107,32 @@ class Toolbox:
 
                 try:
                     # Check if the tool is operational
+                    logger.info(f"Checking operational status of {tool_name}...")
                     check_command = self.config.get(tool, 'check_command')
                     subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    # If check_command succeeds, print operational status
-                    Output.print(f"{tool_name} is operational.", color='yellow')
+                    Output.success(f"[+] {tool_name} is operational.")
 
                     # Proceed with update
                     update_command = self.config.get(tool, 'update')
-                    print(f"Updating {tool_name}...")
+                    logger.info(f"Updating {tool_name}...")
                     Output.begin_cmd(update_command)
                     subprocess.run(update_command, shell=True, check=True, cwd=tool_dir)
-                    Output.print(f"{tool_name} updated successfully.", color='green')
+                    logger.success(f"[+] {tool_name} updated successfully.\n")
                     return
                 except subprocess.CalledProcessError:
-                    print(f"An error occurred during {tool_name} the update.")
+                    logger.error(f"An error occurred during {tool_name} the update.\n")
                     return
                 except configparser.NoOptionError:
-                    print(f"Command not defined for {tool_name}.")
+                    logger.error(f"Command not defined for {tool_name}.\n")
+                    return
+                except FileNotFoundError:
+                    logger.error(f"Tool {tool_name} directory does not exist.\n")
                     return
                 except OSError as e:
-                    print(f"Error accessing directory {tool_dir} for {tool_name}: {e}")
+                    logger.error(f"An error occured updating {tool_name}: {e}\n")
                     return
 
-        print(f"Tool {tool_name} not found in the toolbox configuration.")
+        logger.error(f"Tool {tool_name} not found in the toolbox configuration.")
         
     #------------------------------------------------------------------------------------
     
@@ -142,7 +147,7 @@ class Toolbox:
     
     def install_tool(self, tool_name):
         """
-        Install a specified tool by its name.
+        Install a specified tool by its name. Ask for reinstallation if the tool is not operational or already exists.
 
         :param str tool_name: The name of the tool to install.
         """
@@ -154,31 +159,54 @@ class Toolbox:
             original_name = self.config.get(tool, 'name')
             config_name = original_name.lower()
             if config_name == tool_name_lower:
-                # If found, construct the directory path for the tool
+                # Construct the directory path for the tool
                 tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
-                
+
+                # Check if the tool's directory exists and if it's operational
+                tool_exists = os.path.exists(tool_dir)
+                operational = False
+                if tool_exists:
+                    try:
+                        check_command = self.config.get(tool, 'check_command')
+                        subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        operational = True
+                    except subprocess.CalledProcessError:
+                        operational = False
+
+                # Ask for reinstallation if the tool exists but is not operational
+                if tool_exists and not operational:
+                    logger.warning(f"{original_name} directory exists but is not operational.")
+                    user_input = input(f"[>] Do you want to reinstall it? (y/n): ")
+                    if user_input.lower() != 'y':
+                        logger.info("Reinstallation cancelled by the user.\n")
+                        return
+
+                    # Attempt to uninstall before reinstalling
+                    self.uninstall_tool(original_name)
+
                 # Ensure the tool's directory exists
                 os.makedirs(tool_dir, exist_ok=True)
 
+                # Proceed with installation
                 try:
                     install_command = self.config.get(tool, 'install')
-                    Output.print(f"\n[+] Installing {tool_name}...", color='turquoise_2')
-                    
+                    logger.info(f"Installing {tool_name}...")
                     subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
-                    Output.print(f"[*] {tool_name} installed successfully in {tool_dir}.", color='green_yellow')
+                    logger.success(f"{tool_name} installed successfully in {tool_dir}.\n")
                     return
                 except subprocess.CalledProcessError as e:
-                    Output.print(f"[-] Error installing {tool_name} in {tool_dir}: {e}", color='light_red')
+                    logger.error(f"Error installing {tool_name} in {tool_dir}: {e}\n")
                     return
                 except configparser.NoOptionError:
-                    Output.print(f"[-] Install command not defined for {tool_name}.", color='green_yellow')
+                    logger.error(f"Install command not defined for {tool_name}.\n")
                     return
                 except OSError as e:
-                    Output.print(f"[-] Error creating directory {tool_dir} for {tool_name}: {e}", color='green_yellow')
+                    logger.error(f"Error creating directory {tool_dir} for {tool_name}: {e}\n")
                     return
 
         # If the loop completes without finding and installing the tool, it doesn't exist in the config
-        print(f"Tool {tool_name} not found in the toolbox configuration.")
+        logger.error(f"Tool {tool_name} not found in the toolbox configuration.\n")
+
 
     #------------------------------------------------------------------------------------
     
@@ -214,21 +242,25 @@ class Toolbox:
                     print(f"Checking {original_name} in {tool_dir}...")
                     subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, text=True, capture_output=True)
                     # Success message without showing stdout
-                    print(f"{original_name} check completed successfully. Tool's available and operational.")
+                    logger.info(f"{original_name} check completed successfully.")
+                    logger.success(f"{original_name} is operational.\n")
                     return
                 except subprocess.CalledProcessError as e:
                     # Print error details including stderr
-                    print(f"Error checking {original_name}: {e}\nError Output:\n{e.stderr}")
+                    logger.error(f"Error checking {original_name}: {e}\nError Output:\n{e.stderr}")
                     return
                 except configparser.NoOptionError:
-                    print(f"Check command not defined for {original_name}.")
+                    logger.error(f"Check command not defined for {original_name}.\n")
+                    return
+                except FileNotFoundError:
+                    logger.error(f"Tool {tool_name} directory does not exist.\n")
                     return
                 except OSError as e:
-                    print(f"Error accessing directory {tool_dir} for {original_name}: {e}")
+                    logger.error(f"Error accessing directory {tool_dir} for {original_name}: {e}\n")
                     return
 
         # If the loop completes without finding and executing the check command, the tool doesn't exist in the config
-        print(f"Tool {tool_name} not found in the toolbox configuration or check command is not executable.")
+        logger.error(f"Tool {tool_name} not found in the toolbox configuration or check command is not executable.\n")
         
     #------------------------------------------------------------------------------------
     
@@ -241,4 +273,59 @@ class Toolbox:
             
     #------------------------------------------------------------------------------------
     
+    def uninstall_tool(self, tool_name):
+        """
+        Remove the specified tool by deleting its directory.
+
+        :param str tool_name: The name of the tool to remove.
+        """
+        # Normalize the tool_name to lowercase for consistency
+        tool_name_lower = tool_name.lower()
+
+        # Attempt to find the tool in the config, comparing lowercased names
+        found = False
+        for tool in self.tools:
+            original_name = self.config.get(tool, 'name')
+            config_name = original_name.lower()
+
+            if config_name == tool_name_lower:
+                # If found, construct the directory path for the tool
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+
+                # Check if the tool's directory exists
+                if os.path.exists(tool_dir):
+                    try:
+                        logger.info(f"Removing {original_name}...")
+                        # Remove the tool's directory
+                        shutil.rmtree(tool_dir)
+                        logger.success(f"{original_name} has been successfully removed.")
+                        found = True
+                        return
+                    except PermissionError:
+                        # If permission is denied, suggest running with sudo
+                        logger.error(f"Unable to delete directory {original_name}. " \
+                    "Check permissions and/or re-run with sudo")
+                        return
+                    except OSError as e:
+                        logger.error(f"Error removing {original_name}: {e}")
+                        return
+                else:
+                    logger.error(f"Tool {original_name} directory does not exist.")
+                    found = True
+                    return
+
+        if not found:
+            # If the loop completes without finding the tool, it doesn't exist in the config
+            logger.error(f"Tool {tool_name} not found in the toolbox configuration.")
+    
+    #------------------------------------------------------------------------------------
+    
+    def uninstall_all_tools(self):
+        """
+        Remove all tools in the toolbox.
+        """
+        for tool in self.tools:
+            self.uninstall_tool(tool)
+            
+    #------------------------------------------------------------------------------------
 
