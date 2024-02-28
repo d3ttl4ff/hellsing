@@ -8,7 +8,6 @@ import textwrap
 
 from lib.core.Config import *
 
-
 class LineWrapRawTextHelpFormatter(argparse.RawDescriptionHelpFormatter):
 
     def _split_lines(self, text, width):

@@ -4,14 +4,13 @@
 ### Output > Command-Line Output
 ###
 import os
+import re
 import sys
-import colored
+from colored import *
 import prettytable
 import humanfriendly.prompts
-#import humanfriendly.tables
 
 from lib.output.Logger import logger
-
 
 class Output(object):
 
@@ -20,7 +19,6 @@ class Output(object):
         """Print string with styles"""
         print(Output.colored(string, color, highlight, attrs))
 
-
     @staticmethod
     def colored(string, color=None, highlight=None, attrs=None):
         """Apply styles to a given string"""
@@ -28,7 +26,7 @@ class Output(object):
         return colored.stylize(string, (colored.fg(color) if color else '') + \
                                        (colored.bg(highlight) if highlight else '') + \
                                        (colored.attr(attrs) if attrs else ''))
-
+    
     @staticmethod
     def bold(string):
         """Print string in bold"""
@@ -194,18 +192,3 @@ class Output(object):
             table.border = False
         print(table)
             
-
-    # @staticmethod
-    # def table(columns, data, mode_row=True):
-    #     if not mode_row:
-    #         nbcols = len(cols)
-    #         maxcollen = len(max(d, key=len))
-    #         newdata = list([] for x in range(maxcollen))
-    #         for i in range(maxcollen):
-    #             newdata[i] = list('' for x in range(nbcols))
-    #             for j in range(nbcols):
-    #                 if i<len(data[j]):
-    #                     newdata[i][j] = data[j][i]
-    #         data = newdata         
-    #     print humanfriendly.tables.format_pretty_table(data, columns)
-

@@ -11,33 +11,24 @@ class Settings:
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         self.tools = self.config.sections()
-        self.toolbox = None # Receives Toolbox object
+        
+        # Instantiate Toolbox with the current settings instance
+        self.toolbox = Toolbox(self)
 
     def show_all_tools(self):
-        # Instantiate Toolbox with the current settings instance
-        toolbox = Toolbox(self)
-        toolbox.show_toolbox()
+        self.toolbox.show_toolbox()
 
     def update_tool(self, tool_name):
-        # Instantiate Toolbox with the current settings instance
-        toolbox = Toolbox(self)
-        toolbox.update_tool(tool_name)
+        self.toolbox.update_tool(tool_name)
 
-    # def update_all_tools(self):
-    #     print(f"Current working directory: {os.getcwd()}")
-    #     for tool in self.tools:
-    #         self.update_tool(tool)
+    def update_all_tools(self):
+        self.toolbox.update_all()
 
     def install_tool(self, tool_name):
-        if tool_name in self.tools:
-            install_cmd = self.config[tool_name]['install']
-            subprocess.run(install_cmd, shell=True)
-        else:
-            print(f"Tool {tool_name} not found.")
+        self.toolbox.install_tool(tool_name)
 
-    # def install_all_tools(self):
-    #     for tool in self.tools:
-    #         self.install_tool(tool)
+    def install_all_tools(self):
+        self.toolbox.install_all()
 
     # def uninstall_tool(self, tool_name):
     #     # Uninstallation logic here
@@ -46,3 +37,9 @@ class Settings:
     # def uninstall_all_tools(self):
     #     for tool in self.tools:
     #         self.uninstall_tool(tool)
+
+    def check_tool(self, tool_name):
+        self.toolbox.check_tool(tool_name)
+        
+    def check_all_tools(self):
+        self.toolbox.check_all()

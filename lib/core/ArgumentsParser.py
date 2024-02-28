@@ -116,6 +116,19 @@ class ArgumentsParser:
             action  = 'store_true', 
             dest    = 'uninstall_all', 
             default = False)
+        toolbox_mxg.add_argument(
+            '--check-tool', 
+            help    = 'Check the operational status of a given tool',
+            action  = 'store', 
+            dest    = 'check_tool', 
+            metavar = '<tool-name>', 
+            default = None)
+        toolbox_mxg.add_argument(
+            '--check-all', 
+            help    = 'Check the operational status of all tools in the toolbox',
+            action  = 'store_true', 
+            dest    = 'check_all', 
+            default = False)
 
         self.subparser = parser
         # Inside Mode, so ignore the first TWO argvs
@@ -144,6 +157,8 @@ class ArgumentsParser:
             self.args.update_all,
             self.args.uninstall_tool is not None,
             self.args.uninstall_all,
+            self.args.check_tool is not None,
+            self.args.check_all,
         ])
 
         # Since they are mutually exclusive, exactly one of them should be true/not None.
