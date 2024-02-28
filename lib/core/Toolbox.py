@@ -95,3 +95,43 @@ class Toolbox:
         print(f"Tool {tool_name} not found in the toolbox configuration.")
         
         
+    #------------------------------------------------------------------------------------
+    
+def install_tool(self, tool_name):
+        """
+        Install a specified tool by its name.
+
+        :param str tool_name: The name of the tool to install.
+        """
+        # Normalize the tool_name to lowercase for directory naming
+        tool_name_lower = tool_name.lower()
+
+        # Attempt to find the tool in the config, comparing lowercased names
+        for tool in self.tools:
+            original_name = self.config.get(tool, 'name')
+            config_name = original_name.lower()
+            if config_name == tool_name_lower:
+                # If found, construct the directory path for the tool
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+                
+                # Ensure the tool's directory exists
+                os.makedirs(tool_dir, exist_ok=True)
+
+                try:
+                    install_command = self.config.get(tool, 'install')
+                    print(f"Installing {tool_name} in {tool_dir}...")
+                    subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
+                    print(f"{tool_name} installed successfully in {tool_dir}.")
+                    return
+                except subprocess.CalledProcessError as e:
+                    print(f"Error installing {tool_name} in {tool_dir}: {e}")
+                    return
+                except configparser.NoOptionError:
+                    print(f"Install command not defined for {tool_name}.")
+                    return
+                except OSError as e:
+                    print(f"Error creating directory {tool_dir} for {tool_name}: {e}")
+                    return
+
+        # If the loop completes without finding and installing the tool, it doesn't exist in the config
+        print(f"Tool {tool_name} not found in the toolbox configuration.")

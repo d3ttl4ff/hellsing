@@ -28,12 +28,12 @@ class Settings:
     #     for tool in self.tools:
     #         self.update_tool(tool)
 
-    # def install_tool(self, tool_name):
-    #     if tool_name in self.tools:
-    #         install_cmd = self.config[tool_name]['install']
-    #         subprocess.run(install_cmd, shell=True)
-    #     else:
-    #         print(f"Tool {tool_name} not found.")
+    def install_tool(self, tool_name):
+        if tool_name in self.tools:
+            install_cmd = self.config[tool_name]['install']
+            subprocess.run(install_cmd, shell=True)
+        else:
+            print(f"Tool {tool_name} not found.")
 
     # def install_all_tools(self):
     #     for tool in self.tools:

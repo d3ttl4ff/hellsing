@@ -85,6 +85,7 @@ ARGPARSE_MAX_HELP_POS    = 45
 
 TOOL_BASEPATH      = os.path.dirname(os.path.realpath(__file__+'/../..'))
 TOOLBOX_DIR        = TOOL_BASEPATH + '/toolbox'
+HTTP_TOOLBOX_DIR        = TOOLBOX_DIR + '/http'
 # DEFAULT_OUTPUT_DIR = 'output'
 # WEBSHELLS_DIR      = TOOL_BASEPATH + '/webshells'
 # WORDLISTS_DIR      = TOOL_BASEPATH + '/wordlists'
