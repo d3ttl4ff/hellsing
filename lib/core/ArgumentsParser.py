@@ -50,6 +50,8 @@ class ArgumentsParser:
 
         subcmd = {
             Mode.TOOLBOX : 'toolbox',
+            Mode.DB      : 'db',
+            Mode.ATTACK  : 'attack'
         }.get(self.mode)
 
         return argparse.ArgumentParser(
@@ -141,6 +143,8 @@ class ArgumentsParser:
         
         if self.mode == Mode.TOOLBOX :  
             return self.check_args_toolbox()
+        elif self.mode == Mode.DB :  
+            return self.check_args_db()
         else:  
             return self.check_args_attack()
 

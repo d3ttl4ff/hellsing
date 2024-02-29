@@ -35,14 +35,6 @@ class ToolboxController():
         # --install-all
         elif self.arguments.args.install_all:
             self.settings.install_all_tools()
-            
-        # --check-tool <tool-name>
-        elif self.arguments.args.check_tool:
-            self.settings.check_tool(toolname)
-            
-        # --check-all
-        elif self.arguments.args.check_all:
-            self.settings.check_all_tools()
 
         # --update-tool <tool-name>
         elif self.arguments.args.update_tool:
@@ -59,6 +51,14 @@ class ToolboxController():
         # --uninstall-all
         elif self.arguments.args.uninstall_all:
             self.settings.toolbox.uninstall_all_tools()
+            
+        # --check-tool <tool-name>
+        elif self.arguments.args.check_tool:
+            self.settings.check_tool(toolname)
+            
+        # --check-all
+        elif self.arguments.args.check_all:
+            self.settings.check_all_tools()
 
 
 

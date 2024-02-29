@@ -16,28 +16,37 @@ class Settings:
         self.toolbox = Toolbox(self)
 
     def show_all_tools(self):
+        Output.print_title("Installed tools status")
         self.toolbox.show_toolbox()
 
-    def update_tool(self, tool_name):
-        self.toolbox.update_tool(tool_name)
-
-    def update_all_tools(self):
-        self.toolbox.update_all()
-
     def install_tool(self, tool_name):
+        Output.print_title("Install tools")
         self.toolbox.install_tool(tool_name)
 
     def install_all_tools(self):
+        Output.print_title("Install tools")
         self.toolbox.install_all()
+        
+    def update_tool(self, tool_name):
+        Output.print_title("Update tools")
+        self.toolbox.update_tool(tool_name)
+
+    def update_all_tools(self):
+        Output.print_title("Update tools")
+        self.toolbox.update_all()
 
     def uninstall_tool(self, tool_name):
+        Output.print_title("Uninstall tools")
         self.toolbox.uninstall_tool(tool_name)
 
     def uninstall_all_tools(self):
+        Output.print_title("Uninstall tools")
         self.toolbox.uninstall_all_tools()
 
     def check_tool(self, tool_name):
+        Output.print_title("Check tools")
         self.toolbox.check_tool(tool_name)
         
     def check_all_tools(self):
+        Output.print_title("Check tools")
         self.toolbox.check_all()

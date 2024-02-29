@@ -23,7 +23,7 @@ DATE_FORMAT  = '%H:%M:%S'
 
 LOG_COLORS = {
     DEBUG    : 'bold,white',
-    INFO     : 'bold,blue',
+    INFO     : 'bold,cyan',
     SUCCESS  : 'bold,green',
     PROMPT   : 'bold,cyan',
     WARNING  : 'bold,yellow',
@@ -37,7 +37,7 @@ LOG_COLORS = {
 SECONDARY_LOG_COLORS = {
         'message': {
             DEBUG    : 'white',
-            INFO     : 'blue',
+            INFO     : 'bold,cyan',
             SUCCESS  : 'bold,green',
             WARNING  : 'bold,yellow',
             ERROR    : 'bold,red',

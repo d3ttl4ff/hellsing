@@ -33,9 +33,29 @@ class Output(object):
         return colored.stylize(string, colored.attr('bold'))
     
     @staticmethod
-    def success(string):
-        """Print string in green"""
-        Output.print(string, color='green_yellow')
+    def print_title(title: str) -> None:
+        title_len = len(title) + 2  # Adding 2 for the spaces around the title
+        max_title_len = 67
+        rest_len = (max_title_len - title_len) // 2 - 2  # Adjusted for the border characters
+        
+        title_color = '6'
+        border_color = '10'
+
+        # Top border
+        top_border = ' ' * rest_len + '╔' + '═' * (title_len) + '╗'
+        Output.print(top_border, color=border_color, attrs='bold')
+
+        # Title row
+        title_part = Output.colored(' ' + title + ' ', color=title_color)
+        # For the title row, since it combines different colors, print parts separately
+        left_border = Output.colored('═' * rest_len + '╣', color=border_color, attrs='bold')
+        right_border = Output.colored('╠' + '═' * rest_len, color=border_color, attrs='bold')
+        print(left_border + title_part + right_border)
+
+        # Bottom border
+        bottom_border = ' ' * rest_len + '╚' + '═' * (title_len) + '╝'
+        Output.print(bottom_border, color=border_color, attrs='bold')
+        print()
 
     @staticmethod
     def print_with_tabs(string, color=None, highlight=None, attrs=None):

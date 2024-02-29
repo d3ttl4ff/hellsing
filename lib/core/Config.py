@@ -12,25 +12,25 @@ from lib.output import Output
 
 #----------------------------------------------------------------------------------------
 # Banner/Help
-__version__ = Output.colored(f'{__version__}                          ', color='black', highlight='red', attrs='bold')
-prefix = Output.colored('                       v ', color='black', highlight='red', attrs='bold')
+__version__ = Output.colored(f'{__version__}                            ', color='black', highlight='red', attrs='bold')
+prefix = Output.colored('                         v ', color='black', highlight='red', attrs='bold')
 
 BANNER = colored.stylize("""
-
+                         
   ██╗  ██╗███████╗██╗     ██╗     ███████╗██╗███╗   ██╗ ██████╗ 
   ██║  ██║██╔════╝██║     ██║     ██╔════╝██║████╗  ██║██╔════╝ 
   ███████║█████╗  ██║     ██║     ███████╗██║██╔██╗ ██║██║  ███╗
   ██╔══██║██╔══╝  ██║     ██║     ╚════██║██║██║╚██╗██║██║   ██║
   ██║  ██║███████╗███████╗███████╗███████║██║██║ ╚████║╚██████╔╝
   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
-          [ Network & Web Pentest Automation Framework ]
+  ██▓▒░░░░░[ Network & Web Pentest Automation Suit ]░░░░░░░▒▓██
   ▒ ░░▒░▒░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒  ░▒   ▒ 
   ▒ ░▒░ ░ ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░  ░   ░ 
   ░  ░░ ░   ░     ░ ░     ░ ░   ░  ░  ░   ▒ ░   ░   ░ ░ ░ ░   ░ 
   ░  ░  ░   ░  ░    ░  ░    ░  ░      ░   ░           ░       ░ 
-                                                              
-  {version}
-                        
+    011010001100100110110011011001110010110100011011101100111                                                              
+{version}
+                 
 """.format(version=prefix + __version__), colored.fg('red') + colored.attr('bold'))
 
 USAGE = """
@@ -86,9 +86,12 @@ ARGPARSE_MAX_HELP_POS    = 45
 #----------------------------------------------------------------------------------------
 # Basic Settings
 
-TOOL_BASEPATH      = os.path.dirname(os.path.realpath(__file__+'/../..'))
-TOOLBOX_DIR        = TOOL_BASEPATH + '/toolbox'
-HTTP_TOOLBOX_DIR        = TOOLBOX_DIR + '/http'
+TOOL_BASEPATH             = os.path.dirname(os.path.realpath(__file__+'/../..'))
+TOOL_RELATED_BASEPATH     = os.path.dirname(os.path.relpath(__file__))
+TOOLBOX_DIR               = TOOL_BASEPATH + '/toolbox'
+HTTP_TOOLBOX_DIR          = TOOLBOX_DIR + '/http'
+TOOLBOX_RELATIVE_DIR      = TOOL_RELATED_BASEPATH + '/toolbox'
+HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 # DEFAULT_OUTPUT_DIR = 'output'
 # WEBSHELLS_DIR      = TOOL_BASEPATH + '/webshells'
 # WORDLISTS_DIR      = TOOL_BASEPATH + '/wordlists'

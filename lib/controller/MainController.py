@@ -5,9 +5,8 @@
 ###
 from lib.core.Constants import *
 from lib.controller.ToolboxController import ToolboxController
-# from lib.controller.InfoController import InfoController
-# from lib.controller.DbController import DbController
-# from lib.controller.AttackController import AttackController
+from lib.controller.DbController import DbController
+from lib.controller.AttackController import AttackController
 
 
 class MainController():
@@ -26,9 +25,8 @@ class MainController():
         """Run the adapted controller"""
         {
             Mode.TOOLBOX : ToolboxController,
-            # Mode.INFO    : InfoController,
-            # Mode.DB      : DbController,
-            # Mode.ATTACK  : AttackController,
+            Mode.DB      : DbController,
+            Mode.ATTACK  : AttackController,
         }.get(self.arguments.mode)(self.arguments, self.settings).run()
 
 
