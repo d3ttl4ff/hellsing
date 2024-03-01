@@ -53,7 +53,7 @@ class ArgumentsParser:
 
         subcmd = {
             Mode.TOOLBOX : 'toolbox',
-            Mode.DB      : 'db',
+            # Mode.DB      : 'db',
             Mode.ATTACK  : 'attack'
         }.get(self.mode)
 
@@ -211,6 +211,12 @@ class ArgumentsParser:
 
         self.subparser = parser
         self.args = parser.parse_args(sys.argv[2:]) 
+        try:
+            self.args = parser.parse_args(sys.argv[2:])
+            print(f"Parsed arguments: {self.args}")
+        except Exception as e:
+            print(f"Error parsing arguments: {e}")
+
         
     #------------------------------------------------------------------------------------
 
@@ -261,7 +267,11 @@ class ArgumentsParser:
 
         status &= self.check_args_selection()
         
-        return status
+        if not status:
+            self.subparser.print_help()
+            return False
+        else:
+            return True
     
     def check_args_target(self):
         """Check arguments for subcommand Attack"""
