@@ -137,6 +137,93 @@ class ArgumentsParser:
         self.args = parser.parse_args(sys.argv[2:])
         
     #------------------------------------------------------------------------------------
+    
+    #Attack Subcommand Parsing
+    
+    def attack(self):
+        """Arguments for subcommand Attack"""
+        self.mode = Mode.ATTACK
+        
+        parser = self.__create_subcmd_parser()
+        target = parser.add_argument_group(
+            Output.colored('Target', attrs='bold'), 
+            'Run security checks against a target.')
+        
+        target.add_argument(
+            't', '--target',
+            help    = 'Target IP[:PORT] (default port if not specified) or URL',
+            action  = 'store',
+            dest    = 'target_ip_or_url',
+            metavar = '<target>',
+            default = None)
+        target.add_argument(
+            '-s', '--service',
+            help    = 'Target service',
+            action  = 'store',
+            dest    = 'service',
+            metavar = '<service>',
+            default = None)
+        target.add_argument(
+            '--addop',
+            help    = 'Add/update the target into a given task scope in the database (default: task "default")',
+            action  = 'store',
+            dest    = 'add',
+            metavar = '<task>',
+            default = 'default')
+        
+        selection = parser.add_argument_group(
+            Output.colored('Attack configuration', attrs='bold'),
+            'Select a subset of checks to run, either manually or by using a ' \
+            'pre-defined attack profile.')
+
+        selection_mxg = selection.add_mutually_exclusive_group()
+        selection_mxg.add_argument(
+            '--profile',
+            help    = 'Use a pre-defined attack profile',
+            action  = 'store',
+            dest    = 'profile',
+            metavar = '<profile>',
+            default = None)
+        selection_mxg.add_argument(
+            '--run-only', 
+            help    = 'Run only checks in specified category(ies) (comma-separated)', 
+            action  = 'store', 
+            dest    = 'run_only', 
+            metavar = '<cat1,cat2...>', 
+            default = None)
+        selection_mxg.add_argument(
+            '--run-exclude', 
+            help    = 'Run all checks except the ones in specified ' \
+                      'category(ies) (comma-separated)',
+            action  = 'store',
+            dest    = 'cat_exclude',
+            metavar = '<cat1,cat2...>',
+            default = None)
+        selection_mxg.add_argument(
+            '--checks',
+            help    = 'Run only the specified check(s) (comma-separated)',
+            action  = 'store',
+            dest    = 'checks',
+            metavar = '<check1,check2...>',
+            default = None) 
+
+        bruteforce = parser.add_argument_group(
+            Output.colored('Bruteforce options', attrs='bold'))
+
+        bruteforce.add_argument(
+            '--userlist',
+            help    = 'List of usernames to use (instead of default lists)',
+            action  = 'store',
+            dest    = 'userlist',
+            default = None)
+        bruteforce.add_argument(
+            '--passlist',
+            help    = 'List of passwords to use (instead of default lists)',
+            action  = 'store',
+            dest    = 'passlist',
+            default = None)
+        
+    #------------------------------------------------------------------------------------
 
     def check_args(self):
         """Main routine for arguments checking, dispatch to correct function"""
@@ -172,4 +259,19 @@ class ArgumentsParser:
         else:
             return True
 
+    #------------------------------------------------------------------------------------
+
+    def check_args_attack(self):
+        """Check arguments for subcommand Attack"""
+        status=True
+        if self.args.target_ip_or_url:
+            status &= self.check_args_target()
+        else:
+            self.subparser.print_help()
+            return False
+
+        status &= self.check_args_selection()
+        
+        return status
+    
     #------------------------------------------------------------------------------------
