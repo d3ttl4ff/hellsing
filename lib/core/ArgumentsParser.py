@@ -142,15 +142,14 @@ class ArgumentsParser:
     #------------------------------------------------------------------------------------
     
     #Attack Subcommand Parsing
-    
     def attack(self):
         """Arguments for subcommand Attack"""
         self.mode = Mode.ATTACK
         
         parser = self.__create_subcmd_parser()
         target = parser.add_argument_group(
-            Output.colored('Target', attrs='bold'), 
-            'Run security checks against a target.')
+            Output.colored('Mode: Single target', attrs='bold'), 
+            'Run security checks against one target.')
         
         target.add_argument(
             't', '--target',
@@ -210,21 +209,8 @@ class ArgumentsParser:
             metavar = '<check1,check2...>',
             default = None) 
 
-        bruteforce = parser.add_argument_group(
-            Output.colored('Bruteforce options', attrs='bold'))
-
-        bruteforce.add_argument(
-            '--userlist',
-            help    = 'List of usernames to use (instead of default lists)',
-            action  = 'store',
-            dest    = 'userlist',
-            default = None)
-        bruteforce.add_argument(
-            '--passlist',
-            help    = 'List of passwords to use (instead of default lists)',
-            action  = 'store',
-            dest    = 'passlist',
-            default = None)
+        self.subparser = parser
+        self.args = parser.parse_args(sys.argv[2:]) 
         
     #------------------------------------------------------------------------------------
 

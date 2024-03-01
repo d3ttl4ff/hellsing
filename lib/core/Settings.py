@@ -60,6 +60,8 @@ class Settings:
         self.toolbox = Toolbox(self)
 
     #------------------------------------------------------------------------------------
+    
+    # Toolbox methods
     def show_all_tools(self):
         Output.print_title("Installed tools status")
         self.toolbox.show_toolbox()
@@ -97,4 +99,6 @@ class Settings:
         self.toolbox.check_all()
     
     #------------------------------------------------------------------------------------    
+    
+    
     

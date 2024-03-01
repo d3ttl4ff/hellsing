@@ -6,7 +6,7 @@
 from lib.core.Constants import *
 from lib.controller.ToolboxController import ToolboxController
 # from lib.controller.DbController import DbController
-# from lib.controller.AttackController import AttackController
+from lib.controller.AttackController import AttackController
 
 
 class MainController():
@@ -26,7 +26,7 @@ class MainController():
         {
             Mode.TOOLBOX : ToolboxController,
             # Mode.DB      : DbController,
-            # Mode.ATTACK  : AttackController,
+            Mode.ATTACK  : AttackController,
         }.get(self.arguments.mode)(self.arguments, self.settings).run()
 
 
