@@ -147,12 +147,13 @@ class ArgumentsParser:
         self.mode = Mode.ATTACK
         
         parser = self.__create_subcmd_parser()
+        
         target = parser.add_argument_group(
             Output.colored('Mode: Single target', attrs='bold'), 
-            'Run security checks against one target.')
+            'Run security checks against a target.')
         
         target.add_argument(
-            't', '--target',
+            '-t','--target',
             help    = 'Target IP[:PORT] (default port if not specified) or URL',
             action  = 'store',
             dest    = 'target_ip_or_url',
@@ -211,12 +212,6 @@ class ArgumentsParser:
 
         self.subparser = parser
         self.args = parser.parse_args(sys.argv[2:]) 
-        try:
-            self.args = parser.parse_args(sys.argv[2:])
-            print(f"Parsed arguments: {self.args}")
-        except Exception as e:
-            print(f"Error parsing arguments: {e}")
-
         
     #------------------------------------------------------------------------------------
 
@@ -262,16 +257,12 @@ class ArgumentsParser:
         if self.args.target_ip_or_url:
             status &= self.check_args_target()
         else:
-            self.subparser.print_help()
+            logger.error('Invalid attack arguments. Please provide exactly one action at a time.')
             return False
 
         status &= self.check_args_selection()
         
-        if not status:
-            self.subparser.print_help()
-            return False
-        else:
-            return True
+        return status
     
     def check_args_target(self):
         """Check arguments for subcommand Attack"""
