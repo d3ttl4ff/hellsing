@@ -109,11 +109,11 @@ HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 # #----------------------------------------------------------------------------------------
 # # Settings Files
 
-# SETTINGS_DIR              = TOOL_BASEPATH + '/settings'
-# CONF_EXT                  = '.conf'
-# TOOLBOX_CONF_FILE         = '/toolbox'
+SETTINGS_DIR              = TOOL_BASEPATH + '/settings'
+CONF_EXT                  = '.conf'
+TOOLBOX_CONF_FILE         = '/toolbox'
+ATTACK_PROFILES_CONF_FILE = 'attack_profiles'
 # INSTALL_STATUS_CONF_FILE  = '_install_status'
-# ATTACK_PROFILES_CONF_FILE = 'attack_profiles'
 # PREFIX_SECTION_CHECK      = 'check_'
 # MULTI_CONF                = 'multi'
 # MULTI_TOOLBOX_SUBDIR      = 'multi'
