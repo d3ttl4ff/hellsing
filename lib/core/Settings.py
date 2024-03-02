@@ -3,6 +3,7 @@ import configparser
 import subprocess
 import sys
 import os
+from lib.core.Attack import Attack
 
 from lib.core.Config import *
 from lib.core.Exceptions import SettingsException
@@ -17,6 +18,8 @@ class Settings:
         
         # Instantiate Toolbox with the current settings instance
         self.toolbox = None
+        # Instantiate Attack with the current settings instance
+        self.attack = None
         # Instantiate ServicesConfig with the current settings instance
         self.services = None
 
@@ -29,6 +32,7 @@ class Settings:
         # Parse configuration files and create objects
         self.__parse_all_config_files(files)
         self.__create_toolbox()
+        self.__create_attack()
         
     #------------------------------------------------------------------------------------
     
@@ -103,9 +107,24 @@ class Settings:
     
     #------------------------------------------------------------------------------------    
     
+    # Parse the attack configuration file
+    def __create_attack(self):
+        """
+        Parse the attack configuration file.
+        """
+        self.attack = Attack(self)
+    
+    #------------------------------------------------------------------------------------  
+    
+    # Attack methods
+    
+    def set_target(self, target):
+        """
+        Set the target for the attack and execute the relevant commands.
 
-    
-    
+        :param target: Target URL or IP address
+        """
+        self.attack.set_target(target)
     
     
     

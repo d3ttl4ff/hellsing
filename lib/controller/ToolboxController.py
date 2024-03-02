@@ -12,7 +12,6 @@ class ToolboxController():
 
         :param ArgumentsParser arguments: Arguments from command-line
         :param Settings settings: Settings from config files
-        :param Session sqlsession: SQLAlchemy session
         """
         self.arguments = arguments
         self.settings  = settings

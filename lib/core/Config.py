@@ -90,9 +90,10 @@ ARGPARSE_MAX_HELP_POS    = 45
 # Basic Settings
 
 TOOL_BASEPATH             = os.path.dirname(os.path.realpath(__file__+'/../..'))
-TOOL_RELATED_BASEPATH     = os.path.dirname(os.path.relpath(__file__))
 TOOLBOX_DIR               = TOOL_BASEPATH + '/toolbox'
 HTTP_TOOLBOX_DIR          = TOOLBOX_DIR + '/http'
+
+TOOL_RELATED_BASEPATH     = os.path.dirname(os.path.relpath(__file__))
 TOOLBOX_RELATIVE_DIR      = TOOL_RELATED_BASEPATH + '/toolbox'
 HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 # DEFAULT_OUTPUT_DIR = 'output'

@@ -44,7 +44,7 @@ class Toolbox:
         for tool in self.tools:
             
             # Construct the expected directory path for the tool based on its name
-            tool_dir_path = os.path.join(HTTP_TOOLBOX_DIR, self.config.get(tool, 'name'))
+            tool_dir_path = os.path.join(HTTP_TOOLBOX_DIR, self.config.get(tool, 'name').lower())
             
             # last_repo_update = 'Unknown'
             last_update = 'Unknown'
@@ -121,7 +121,7 @@ class Toolbox:
             config_name = original_name.lower()
             if config_name == tool_name_lower:
                 # Construct the directory path for the tool
-                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, config_name)
 
                 # Check if the tool's directory exists and if it's operational
                 tool_exists = os.path.exists(tool_dir)
@@ -136,14 +136,14 @@ class Toolbox:
 
                 # Ask for reinstallation if the tool exists but is not operational
                 if tool_exists and not operational:
-                    logger.warning(f"{original_name} directory exists but is not operational.")
+                    logger.warning(f"{config_name} directory exists but is not operational.")
                     user_input = input(f"[>] Do you want to reinstall it? (y/n): ")
                     if user_input.lower() != 'y':
                         logger.info("Reinstallation cancelled by the user.\n")
                         return
 
                     # Attempt to uninstall before reinstalling
-                    self.uninstall_tool(original_name)
+                    self.uninstall_tool(config_name)
 
                 # Ensure the tool's directory exists
                 os.makedirs(tool_dir, exist_ok=True)
@@ -201,7 +201,7 @@ class Toolbox:
 
             if config_name == tool_name_lower:
                 # Construct the directory path for the tool
-                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, config_name)
 
                 try:
                     # Check if the tool is operational
@@ -265,27 +265,27 @@ class Toolbox:
 
             if config_name == tool_name_lower:
                 # If found, construct the directory path for the tool
-                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, config_name)
 
                 # Check if the tool's directory exists
                 if os.path.exists(tool_dir):
                     try:
-                        logger.info(f"Removing {original_name}...")
+                        logger.info(f"Removing {config_name}...")
                         # Remove the tool's directory
                         shutil.rmtree(tool_dir)
-                        logger.success(f"{original_name} has been successfully removed.\n")
+                        logger.success(f"{config_name} has been successfully removed.\n")
                         found = True
                         return
                     except PermissionError:
                         # If permission is denied, suggest running with sudo
-                        logger.error(f"Unable to delete directory {original_name}. " \
+                        logger.error(f"Unable to delete directory {config_name}. " \
                     "Check permissions and/or re-run with sudo\n")
                         return
                     except OSError as e:
-                        logger.error(f"Error removing {original_name}: {e}\n")
+                        logger.error(f"Error removing {config_name}: {e}\n")
                         return
                 else:
-                    logger.error(f"Tool {original_name} directory does not exist.\n")
+                    logger.error(f"Tool {config_name} directory does not exist.\n")
                     found = True
                     return
 
@@ -320,27 +320,27 @@ class Toolbox:
             
             if config_name == tool_name_lower:
                 # If found, construct the directory path for the tool
-                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, original_name)
+                tool_dir = os.path.join(HTTP_TOOLBOX_DIR, config_name)
                 
                 try:
                     check_command = self.config.get(tool, 'check_command')
-                    logger.info(f"Checking {original_name} in {tool_dir}...")
+                    logger.info(f"Checking {config_name} in {tool_dir}...")
                     subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, text=True, capture_output=True)
                     # Success message without showing stdout
-                    logger.success(f"{original_name} is operational.\n")
+                    logger.success(f"{config_name} is operational.\n")
                     return
                 except subprocess.CalledProcessError as e:
                     # Print error details including stderr
-                    logger.error(f"Error checking {original_name}: {e}\nError Output:\n{e.stderr}")
+                    logger.error(f"Error checking {config_name}: {e}\nError Output:\n{e.stderr}")
                     return
                 except configparser.NoOptionError:
-                    logger.error(f"Check command not defined for {original_name}.\n")
+                    logger.error(f"Check command not defined for {config_name}.\n")
                     return
                 except FileNotFoundError:
                     logger.error(f"Tool {tool_name} directory does not exist.\n")
                     return
                 except OSError as e:
-                    logger.error(f"Error accessing directory {tool_dir} for {original_name}: {e}\n")
+                    logger.error(f"Error accessing directory {tool_dir} for {config_name}: {e}\n")
                     return
 
         # If the loop completes without finding and executing the check command, the tool doesn't exist in the config

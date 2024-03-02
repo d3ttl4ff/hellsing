@@ -202,13 +202,6 @@ class ArgumentsParser:
             dest    = 'run_exclude',
             metavar = '<cat1,cat2...>',
             default = None)
-        selection_mxg.add_argument(
-            '--checks',
-            help    = 'Run only the specified check(s) (comma-separated)',
-            action  = 'store',
-            dest    = 'checks',
-            metavar = '<check1,check2...>',
-            default = None) 
 
         self.subparser = parser
         self.args = parser.parse_args(sys.argv[2:]) 
