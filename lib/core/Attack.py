@@ -2,6 +2,7 @@ import configparser
 from datetime import datetime
 import os
 import shlex
+import socket
 import subprocess
 import sys
 import shutil
@@ -26,8 +27,7 @@ class Attack:
 
     #------------------------------------------------------------------------------------
     
-    # Attack methods
-    
+    # Attack methods    
     def set_target(self, target):
         """
         Set the target for the attack and execute the relevant commands.
@@ -39,6 +39,7 @@ class Attack:
         #     target_mode = "URL"
         # else:
         #     target_mode = "IP"
+
             
         # Extract the base target and check if a port is specified
         if "://" in target:
