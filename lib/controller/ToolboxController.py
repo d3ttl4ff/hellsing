@@ -50,7 +50,7 @@ class ToolboxController():
 
         # --uninstall-all
         elif self.arguments.args.uninstall_all:
-            self.settings.toolbox.uninstall_all_tools()
+            self.settings.uninstall_all_tools()
             
         # --check-tool <tool-name>
         elif self.arguments.args.check_tool:

@@ -1,42 +1,26 @@
-from lib.core.AttackScope import AttackScope
-from lib.core.ServicesConfig import ServicesConfig
-from lib.core.Toolbox import Toolbox
 
 class AttackController:
-    def __init__(self, settings, arguments):
-        self.settings = settings
+    def __init__(self, arguments, settings):
         self.arguments = arguments
-        self.attack_scope = AttackScope()
-        self.services_config = ServicesConfig(self.settings.list_services())
-        self.toolbox = Toolbox(self.settings)
+        self.settings = settings
+        self.services_config = settings.services
 
-    def run_attack(self):
-        # Example: Running an attack based on provided arguments
+    def run(self):
         target = self.arguments.target_ip_or_url
-        service = self.arguments.service
-        if not service:
-            print("Service not specified.")
-            return
+        run_only = self.arguments.run_only.split(',') if self.arguments.run_only else []
+        run_exclude = self.arguments.run_exclude.split(',') if self.arguments.run_exclude else []
 
-        if not self.services_config.is_service_supported(service):
-            print(f"Service {service} is not supported.")
-            return
+        for service_name in self.services_config.services:
+            for check_name, check in self.services_config[service_name].items():
+                if run_only and check['category'] not in run_only:
+                    continue
+                if run_exclude and check['category'] in run_exclude:
+                    continue
+                self.execute_check(check, target)
 
-        self.attack_scope.add_target(target)
-        # This is a placeholder for actual attack logic
-        print(f"Executing attacks against {target} for service {service}...")
-
-        # Example: Fetching and using tools from the toolbox for the specified service
-        tools = self.toolbox.list_tools(service)
-        for tool in tools:
-            print(f"Using tool {tool} for attacking {target} on service {service}...")
-            # Placeholder for executing the tool
-
-    def add_target_to_scope(self, target):
-        self.attack_scope.add_target(target)
-
-    def update_target_in_scope(self, old_target, new_target):
-        self.attack_scope.update_target(old_target, new_target)
-
-    def list_attack_scope(self):
-        self.attack_scope.list_targets()
+    def execute_check(self, check, target):
+        # Assume command is stored in check['command_1']
+        # Replace [URL] or [IP] with the actual target
+        command = check['command_1'].replace('[URL]', target).replace('[IP]', target)
+        print(f"Executing {check['name']}: {command}")
+        # Execution logic here, e.g., subprocess.run(command, shell=True)

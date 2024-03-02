@@ -14,6 +14,13 @@ from lib.output import Output
 # Banner/Help
 __version__ = Output.colored(f'{__version__}                            ', color='black', highlight='red', attrs='bold')
 prefix = Output.colored('                         v ', color='black', highlight='red', attrs='bold')
+subtitle = Output.colored('█▓▓░░░░░[ Network & Web Pentest Automation Suite ]░░░░░░▒▓█', color='black', highlight='red', attrs='bold')
+context = Output.colored(
+  """▒ ░░▒░▒░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒  ░▒   ▒
+  ▒ ░▒░ ░ ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░  ░   ░
+  ░  ░░ ░   ░     ░ ░     ░ ░   ░  ░  ░   ▒ ░   ░   ░ ░ ░ ░   ░ 
+  ░  ░  ░   ░  ░    ░  ░    ░  ░      ░   ░           ░       ░ 
+    011010001100100110110011011001110010110100011011101100111""", color='red', attrs='bold')
 
 BANNER = colored.stylize("""
                          
@@ -23,15 +30,11 @@ BANNER = colored.stylize("""
   ██╔══██║██╔══╝  ██║     ██║     ╚════██║██║██║╚██╗██║██║   ██║
   ██║  ██║███████╗███████╗███████╗███████║██║██║ ╚████║╚██████╔╝
   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
-   █▓▓░░░░░[ Network & Web Pentest Automation Suite ]░░░░░░▒▓█
-  ▒ ░░▒░▒░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒  ░▒   ▒
-  ▒ ░▒░ ░ ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░  ░   ░
-  ░  ░░ ░   ░     ░ ░     ░ ░   ░  ░  ░   ▒ ░   ░   ░ ░ ░ ░   ░ 
-  ░  ░  ░   ░  ░    ░  ░    ░  ░      ░   ░           ░       ░ 
-    011010001100100110110011011001110010110100011011101100111                                                              
+   {subtitle}
+  {context}                                                              
 {version}
                  
-""".format(version=prefix + __version__), colored.fg('red') + colored.attr('bold'))
+""".format(version=prefix + __version__, subtitle=subtitle, context=context), colored.fg('red') + colored.attr('bold'))
 
 USAGE = """
 python3 hellsing.py <command> [<args>]
@@ -111,7 +114,9 @@ HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 
 SETTINGS_DIR              = TOOL_BASEPATH + '/settings'
 CONF_EXT                  = '.conf'
+HTTP_CONF_FILE            = '/http'
 TOOLBOX_CONF_FILE         = '/toolbox'
+
 ATTACK_PROFILES_CONF_FILE = 'attack_profiles'
 # INSTALL_STATUS_CONF_FILE  = '_install_status'
 # PREFIX_SECTION_CHECK      = 'check_'

@@ -244,7 +244,7 @@ class ArgumentsParser:
 
         # Since they are mutually exclusive, exactly one of them should be true/not None.
         if args_count != 1:
-            logger.error('Invalid toolbox arguments. Please provide exactly one action at a time.')
+            logger.error('Invalid mode:toolbox arguments. Please provide exactly one action at a time.')
             return False
         else:
             return True
@@ -257,10 +257,10 @@ class ArgumentsParser:
         if self.args.target_ip_or_url:
             status &= self.check_args_target()
         else:
-            logger.error('Invalid attack arguments. Please provide exactly one action at a time.')
+            logger.error('Invalid mode:attack arguments. Please provide exactly one action at a time.')
             return False
 
-        status &= self.check_args_selection()
+        status &= self.__check_args_attack_selection()
         
         return status
     
@@ -373,7 +373,7 @@ class ArgumentsParser:
             
             # Store the list of categories
             if self.args.run_only:
-                self.args.cat_only = categories
+                self.args.run_only = categories
             else:
                 self.args.cat_exclude = categories
                 
@@ -395,5 +395,7 @@ class ArgumentsParser:
             
             # Store attack profile
             self.args.profile = profile
+            
+        return True
                     
     #------------------------------------------------------------------------------------ 
