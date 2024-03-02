@@ -114,8 +114,8 @@ HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 
 SETTINGS_DIR              = TOOL_BASEPATH + '/settings'
 CONF_EXT                  = '.conf'
-HTTP_CONF_FILE            = '/http'
-TOOLBOX_CONF_FILE         = '/toolbox'
+TOOLBOX_CONF_FILE         = SETTINGS_DIR + '/toolbox'
+HTTP_CONF_FILE            = SETTINGS_DIR + '/http'
 
 ATTACK_PROFILES_CONF_FILE = 'attack_profiles'
 # INSTALL_STATUS_CONF_FILE  = '_install_status'

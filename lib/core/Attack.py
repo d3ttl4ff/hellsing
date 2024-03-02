@@ -1,26 +1,29 @@
-class AttackScope:
-    def __init__(self):
-        self.targets = []
+import configparser
+from datetime import datetime
+import os
+import subprocess
+import sys
+import shutil
 
-    def add_target(self, target):
-        if target not in self.targets:
-            self.targets.append(target)
-            print(f"Target {target} added to the scope.")
-        else:
-            print(f"Target {target} is already in the scope.")
+from lib.core.Config import *
+from lib.output import Output
+from lib.output.Logger import logger
+from lib.utils.StringUtils import StringUtils
 
-    def update_target(self, old_target, new_target):
-        try:
-            index = self.targets.index(old_target)
-            self.targets[index] = new_target
-            print(f"Target {old_target} updated to {new_target}.")
-        except ValueError:
-            print(f"Target {old_target} not found in the scope.")
+class Attack:
+    def __init__ (self, settings):
+        """
+        Construct the Toolbox object.
 
-    def list_targets(self):
-        if self.targets:
-            print("Current targets in scope:")
-            for target in self.targets:
-                print(target)
-        else:
-            print("No targets in the scope.")
+        :param Settings settings: Settings from config file
+        """
+        self.settings = settings
+        self.config = configparser.ConfigParser()
+        self.config.read(HTTP_CONF_FILE + CONF_EXT)
+        self.tools = self.config.sections()
+
+    #------------------------------------------------------------------------------------
+    
+    # Attack methods
+    
+    def 

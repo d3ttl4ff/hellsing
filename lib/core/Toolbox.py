@@ -11,7 +11,7 @@ from lib.output.Logger import logger
 from lib.utils.StringUtils import StringUtils
 
 class Toolbox:
-    def __init__ (self, settings, config_file='settings/toolbox.conf'):
+    def __init__ (self, settings):
         """
         Construct the Toolbox object.
 
@@ -19,11 +19,11 @@ class Toolbox:
         """
         self.settings = settings
         self.config = configparser.ConfigParser()
-        self.config.read(config_file)
+        self.config.read(TOOLBOX_CONF_FILE + CONF_EXT)
         self.tools = self.config.sections()
         
     #------------------------------------------------------------------------------------
-    # Output Methods
+    # Toolbox methods
 
     def show_toolbox(self):
         """
