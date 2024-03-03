@@ -56,22 +56,31 @@ class Output(object):
         # Bottom border
         bottom_border = ' ' * rest_len + '╚' + '═' * (title_len) + '╝'
         Output.print(bottom_border, color=border_color, attrs='bold')
-        print()
+        # print()
         
     @staticmethod
-    def print_subtitle(subtitle: str, subcommand: str) -> None:
-        subtitle_color = '6'
+    def print_subtitle(subtitle: str, subtool: str, subcommand: str) -> None:
+        subtitle_color = 'black'
+        subtitle_highlight = '226'
+        subtool_color = 'black'
+        subtool_highlight = 'turquoise_2'
+        subcommand_color = 'turquoise_2'
+        subcommand_highlight = '234'
         border_color = '10'
 
-        # Subtitle row
-        subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color)
-        subcommand_part = Output.colored(' ' + subcommand + ' ', color='light_blue')
-        # For the subtitle row, since it combines different colors, print parts separately
-        top_border = Output.colored('╔══════════╣', color=border_color, attrs='bold')
-        bottom_border = Output.colored('╚', color=border_color, attrs='bold')
+        # Subtitle, subtool and subcommand 
+        subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color, highlight=subtitle_highlight, attrs='bold')
+        subtool_part = Output.colored(' ' + subtool + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
+        subcommand_part = Output.colored(' ' + subcommand + ' ', color=subcommand_color, attrs='bold')
         
-        print(top_border + subtitle_part)
-        print(bottom_border + subcommand_part)
+        top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        bottom_border = Output.colored('╚═', color=border_color)
+        buttom_cmd = Output.colored('$', color='10', attrs='bold')
+        left_connector = Output.colored(' ◖', color="226", attrs='bold')
+        right_connector = Output.colored('◗ ', color="turquoise_2", attrs='bold')
+        
+        print(top_border + subtitle_part + left_connector + right_connector + subtool_part)
+        print(bottom_border + buttom_cmd + subcommand_part)
         
         print()
 

@@ -53,7 +53,7 @@ class Attack:
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
-                    print(f"Invalid port number: {port_str}.")
+                    logger.error(f"Invalid port number: {port_str}.")
                     return
             else:
                 base_target = rest
@@ -63,7 +63,7 @@ class Attack:
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
-                    print(f"Invalid port number: {port_str}.")
+                    logger.error(f"Invalid port number: {port_str}.")
                     return
             else:
                 base_target = target
@@ -99,11 +99,11 @@ class Attack:
             tool_config = self.config[tool]
             current_category = tool_config.get('category', None)
 
-            # Print category title if it's different from the last one
+            # Print the category title if it's different from the last one
             if current_category and current_category != last_category:
-                print(self.output.print_title(current_category))
+                self.output.print_title(current_category)
                 last_category = current_category
-
+                
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)
             if command_template:
@@ -124,14 +124,12 @@ class Attack:
                 if os.path.isdir(tool_dir_path):
                     # Change to the tool's directory and execute the command
                     os.chdir(tool_dir_path)
-                    print(f"Changed directory to {tool_dir_path}")
-                else:
-                    # Tool can be executed directly, no directory change needed
-                    print(f"Executing {tool_name} directly without changing directory.")
 
-                # Execute the command
+                x = tool_config.get('name', None)
+                y = tool_config.get('tool', None)
+                
                 try:
-                    print(f"Executing: {command}")
+                    self.output.print_subtitle(x, y, command)
                     subprocess.run(shlex.split(command), check=True)
                 except subprocess.CalledProcessError as e:
                     print(f"Error executing {tool}: {e}")
