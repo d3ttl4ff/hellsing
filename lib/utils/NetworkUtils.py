@@ -6,6 +6,8 @@
 import socket
 import ipaddress
 import time
+from urllib.parse import urlparse
+from lib.output.Logger import logger
 
 class NetworkUtils:
     
@@ -31,7 +33,17 @@ class NetworkUtils:
         try:
             return 0 <= int(port) <= 65535
         except ValueError:
+            logger.error(f"Invalid port number: {port}. Must be in the range [0-65535]")
             return False
+        
+    @staticmethod
+    def get_port_from_url(url):
+        """Return port from URL"""
+        parsed = urlparse(url)
+        if parsed.port:
+            return int(parsed.port)
+        else:
+            return 443 if parsed.scheme == 'https' else 80
         
     @staticmethod
     def extract_secondary_domain(domain):

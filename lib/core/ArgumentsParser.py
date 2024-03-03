@@ -15,6 +15,7 @@ from lib.core.Constants import Mode
 from lib.output.Output import Output
 from lib.output.Logger import logger
 from lib.utils.ArgParseUtils import LineWrapRawTextHelpFormatter
+from lib.utils.NetworkUtils import NetworkUtils
 from lib.utils.WebUtils import WebUtils
 
 class ArgumentsParser:
@@ -276,24 +277,27 @@ class ArgumentsParser:
                 logger.info('URL given as target, targeted service is HTTP')
                 
             self.args.service = 'http' 
-            self.args.target_port = WebUtils.get_port_from_url(target)
+            self.args.target_port = NetworkUtils.get_port_from_url(target)
+            print(self.args.target_port)
         
         # Check if target is an IP      
         else:
             self.args.target_mode = TargetMode.IP
             self.args.target_port = None
-            s = target.split(':')
-            self.args.target_ip_or_url = s[0]
+            port_section = target.split(':')
+            self.args.target_ip_or_url = port_section[0]
             
             # Extract port 
-            if len(s) == 2:
-                self.args.target_port = int(s[1])
-                if not (0 <= self.args.target_port <= 65535):
-                    logger.error('Target port is invalid. Must be in the ' \
-                        'range [0-65535]')
-                    return False
+            if len(port_section) == 2:
+                self.args.target_port = int(port_section[1])
+                NetworkUtils.is_valid_port(self.args.target_port)
+                
+                # if not (0 <= self.args.target_port <= 65535):
+                #     logger.error('Target port is invalid. Must be in the ' \
+                #         'range [0-65535]')
+                #     return False
 
-            elif len(s) > 2:
+            elif len(port_section) > 2:
                 logger.error('Incorrect target format. Must be either an IP[:PORT] or ' \
                     'an URL')
                 return False
@@ -350,45 +354,45 @@ class ArgumentsParser:
                     
         return True
               
-    # def __check_args_attack_selection(self):
-    #     """Check arguments for subcommand Attack (selection)"""
+    def __check_args_attack_selection(self):
+        """Check arguments for subcommand Attack (selection)"""
         
-    #     # Select a subset of checks to run
-    #     categories = self.args.run_only or self.args.run_exclude
+        # Select a subset of checks to run
+        categories = self.args.run_only or self.args.run_exclude
         
-    #     if categories:
-    #         categories = categories.split(',')
-    #         for cat in categories:
-    #             if not self.settings.services.list_all_categories():
-    #                 logger.error('Category "{cat}" is not supported. ' \
-    #                     'Check "info --categories".'.format(cat=cat))
-    #                 return False
+        if categories:
+            categories = categories.split(',')
+            for cat in categories:
+                if not self.settings.services.list_all_categories():
+                    logger.error('Category "{cat}" is not supported. ' \
+                        'Check "info --categories".'.format(cat=cat))
+                    return False
             
-    #         # Store the list of categories
-    #         if self.args.run_only:
-    #             self.args.run_only = categories
-    #         else:
-    #             self.args.cat_exclude = categories
+            # Store the list of categories
+            if self.args.run_only:
+                self.args.run_only = categories
+            else:
+                self.args.cat_exclude = categories
                 
-    #     # Select attack profile
-    #     elif self.args.profile:
-    #         profile = self.settings.attack_profiles.get(self.args.profile.lower())
+        # Select attack profile
+        elif self.args.profile:
+            profile = self.settings.attack_profiles.get(self.args.profile.lower())
             
-    #         if not profile:
-    #             logger.error('Attack profile "{profile}" does not exist. ' \
-    #                 'Check "info --attack-profiles".'.format(profile=self.args.profile))
-    #             return False
+            if not profile:
+                logger.error('Attack profile "{profile}" does not exist. ' \
+                    'Check "info --attack-profiles".'.format(profile=self.args.profile))
+                return False
             
-    #         elif self.args.target_ip_or_url \
-    #              and not profile.is_service_supported(self.args.service):
+            elif self.args.target_ip_or_url \
+                 and not profile.is_service_supported(self.args.service):
                      
-    #             logger.error('Attack profile "{profile}" does not support service ' \
-    #                 'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
-    #             return False
+                logger.error('Attack profile "{profile}" does not support service ' \
+                    'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
+                return False
             
-    #         # Store attack profile
-    #         self.args.profile = profile
+            # Store attack profile
+            self.args.profile = profile
             
-    #     return True
+        return True
                     
     #------------------------------------------------------------------------------------ 
