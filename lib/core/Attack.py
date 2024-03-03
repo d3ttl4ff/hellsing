@@ -28,6 +28,8 @@ class Attack:
         
         # creating NetworkUtils object
         self.netutils = NetworkUtils()
+        # creating Output object
+        self.output = Output()
 
     #------------------------------------------------------------------------------------
     
@@ -84,12 +86,23 @@ class Attack:
             domain = base_target.split("//")[-1].split("/")[0]
             ip_address = self.netutils.dns_lookup(domain) or base_target
 
+        # To track the last printed category
+        last_category = None
+
         # List of section names to exclude
         excluded_sections = ["config", "specific_options", "products"]
 
         for tool in self.tools:
             if tool.lower() in excluded_sections:
                 continue
+            
+            tool_config = self.config[tool]
+            current_category = tool_config.get('category', None)
+
+            # Print category title if it's different from the last one
+            if current_category and current_category != last_category:
+                print(self.output.print_title(current_category))
+                last_category = current_category
 
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)

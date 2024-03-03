@@ -41,6 +41,7 @@ class Output(object):
         title_color = '6'
         border_color = '10'
 
+        print()
         # Top border
         top_border = ' ' * rest_len + '╔' + '═' * (title_len) + '╗'
         Output.print(top_border, color=border_color, attrs='bold')
@@ -55,6 +56,23 @@ class Output(object):
         # Bottom border
         bottom_border = ' ' * rest_len + '╚' + '═' * (title_len) + '╝'
         Output.print(bottom_border, color=border_color, attrs='bold')
+        print()
+        
+    @staticmethod
+    def print_subtitle(subtitle: str, subcommand: str) -> None:
+        subtitle_color = '6'
+        border_color = '10'
+
+        # Subtitle row
+        subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color)
+        subcommand_part = Output.colored(' ' + subcommand + ' ', color='light_blue')
+        # For the subtitle row, since it combines different colors, print parts separately
+        top_border = Output.colored('╔══════════╣', color=border_color, attrs='bold')
+        bottom_border = Output.colored('╚', color=border_color, attrs='bold')
+        
+        print(top_border + subtitle_part)
+        print(bottom_border + subcommand_part)
+        
         print()
 
     @staticmethod
