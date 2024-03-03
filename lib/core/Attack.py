@@ -11,6 +11,7 @@ from lib.core.Config import *
 from lib.output import Output
 from lib.output.Logger import logger
 from lib.utils.StringUtils import StringUtils
+from lib.utils.NetworkUtils import NetworkUtils
 
 class Attack:
     def __init__ (self, settings):
@@ -24,6 +25,9 @@ class Attack:
         self.config.read(HTTP_CONF_FILE + CONF_EXT)
         self.tools = self.config.sections()
         self.basepath = HTTP_TOOLBOX_DIR
+        
+        # creating NetworkUtils object
+        self.netutils = NetworkUtils()
 
     #------------------------------------------------------------------------------------
     
@@ -33,58 +37,71 @@ class Attack:
         Set the target for the attack and execute the relevant commands.
 
         :param target: Target URL or IP address
-        """
-        # # Determine if target is an IP address or URL
-        # if "http://" in target or "https://" in target:
-        #     target_mode = "URL"
-        # else:
-        #     target_mode = "IP"
+        """ 
+        protocol, base_target, specified_port, domain = '', '', None, ''
+        is_ip_address = False
 
-            
-        # Extract the base target and check if a port is specified
+        # Extract protocol, domain/IP, and port from the target
         if "://" in target:
-            # For URLs, split by "://" then check for a port after the domain
-            base_target, _, path_port_fragment = target.partition("://")
-            domain_port = path_port_fragment.split("/", 1)[0]  # Get the domain:port part
-            if ':' in domain_port:
-                base_target, specified_port = domain_port.rsplit(':', 1)
-                base_target = base_target + "://" + specified_port  # Reconstruct base_target with protocol
+            protocol, _, rest = target.partition("://")
+            if '/' in rest:
+                rest = rest.split('/', 1)[0]
+            if ':' in rest:
+                base_target, port_str = rest.rsplit(':', 1)
+                if self.netutils.is_valid_port(port_str):
+                    specified_port = port_str
+                else:
+                    print(f"Invalid port number: {port_str}.")
+                    return
             else:
-                specified_port = None
-                base_target = target
+                base_target = rest
         else:
-            # For IP or domain, simply split by ":"
-            parts = target.split(':')
-            if len(parts) == 2:
-                base_target, specified_port = parts
+            if ':' in target:
+                base_target, port_str = target.split(':', 1)
+                if self.netutils.is_valid_port(port_str):
+                    specified_port = port_str
+                else:
+                    print(f"Invalid port number: {port_str}.")
+                    return
             else:
-                base_target, specified_port = target, None
-        
-        # Fetch the default port from the config if no port is specified
+                base_target = target
+
+        # Determine if the base target is an IP address
+        try:
+            socket.inet_aton(base_target)
+            is_ip_address = True
+        except socket.error:
+            is_ip_address = False
+
+        # Fetch the default port if not specified
         default_port = self.config['config'].get('default_port', '80')
         port = specified_port if specified_port else default_port
-            
+
+        # Perform DNS or reverse DNS lookups as necessary
+        if is_ip_address:
+            domain = self.netutils.reverse_dns_lookup(base_target) or base_target
+        else:
+            domain = base_target.split("//")[-1].split("/")[0]
+            ip_address = self.netutils.dns_lookup(domain) or base_target
+
         # List of section names to exclude
         excluded_sections = ["config", "specific_options", "products"]
 
-        # Iterate through the tools in the config file and execute relevant commands
         for tool in self.tools:
-            # Skip excluded sections
             if tool.lower() in excluded_sections:
                 continue
-            
+
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)
             if command_template:
-                # Determine the correct command based on target type
-                if "[URL]" in command_template:
-                    command = command_template.replace("[URL]", base_target)
-                elif "[IP]" in command_template:
-                    command = command_template.replace("[IP]", base_target)
-                elif "[DOMAIN]" in command_template:
-                    command = command_template.replace("[DOMAIN]", base_target.split("//")[-1])  # Extract domain from URL
-                
-                # Apply the port to the command
+                command = command_template
+                if "[URL]" in command:
+                    command = command.replace("[URL]", f"{protocol}://{domain if not is_ip_address else base_target}:{port}")
+                if "[IP]" in command:
+                    command = command.replace("[IP]", ip_address if not is_ip_address else base_target)
+                if "[DOMAIN]" in command:
+                    extracted_domain = self.netutils.extract_secondary_domain(domain)
+                    command = command.replace("[DOMAIN]", extracted_domain)
                 command = command.replace("[PORT]", port)
                 
                 # Check if the tool's execution directory exists
