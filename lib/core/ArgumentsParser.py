@@ -249,12 +249,13 @@ class ArgumentsParser:
         """Check arguments for subcommand Attack"""
         status=True
         if self.args.target_ip_or_url:
-            status &= self.check_args_target()
+            # status &= self.check_args_target()
+            pass
         else:
             logger.error('Invalid mode:attack arguments. Please provide exactly one action at a time.')
             return False
 
-        status &= self.__check_args_attack_selection()
+        # status &= self.__check_args_attack_selection()
         
         return status
     
@@ -278,7 +279,6 @@ class ArgumentsParser:
                 
             self.args.service = 'http' 
             self.args.target_port = NetworkUtils.get_port_from_url(target)
-            print(self.args.target_port)
         
         # Check if target is an IP      
         else:
@@ -302,97 +302,97 @@ class ArgumentsParser:
                     'an URL')
                 return False
             
-            # Check or set target service and port
-            if self.args.service:
+        #     # Check or set target service and port
+        #     if self.args.service:
                 
-                # Check if service is supported
-                if not self.settings.services.is_service_supported(
-                    self.args.service, multi=False):
+        #         # Check if service is supported
+        #         if not self.settings.services.is_service_supported(
+        #             self.args.service, multi=False):
 
-                    logger.error('Service "{service}" is not supported. ' \
-                        'Check "info --services".'.format(
-                            service=self.args.service.upper()))
-                    return False
+        #             logger.error('Service "{service}" is not supported. ' \
+        #                 'Check "info --services".'.format(
+        #                     service=self.args.service.upper()))
+        #             return False
 
-                # Get the default port for the service if not specified
-                if not self.args.target_port:
-                    self.args.target_port = self.settings.services.get_default_port(
-                        self.args.service)
+        #         # Get the default port for the service if not specified
+        #         if not self.args.target_port:
+        #             self.args.target_port = self.settings.services.get_default_port(
+        #                 self.args.service)
                     
-                    if not self.args.target_port:
-                        logger.info('Default port for service {service} will be used: ' \
-                            '{port}/{proto}'.format(
-                                service = self.args.service,
-                                port    = self.args.target_port,
-                                proto   = self.settings.services.get_protocol(
-                                    self.args.service)))
+        #             if not self.args.target_port:
+        #                 logger.info('Default port for service {service} will be used: ' \
+        #                     '{port}/{proto}'.format(
+        #                         service = self.args.service,
+        #                         port    = self.args.target_port,
+        #                         proto   = self.settings.services.get_protocol(
+        #                             self.args.service)))
 
-                    else:
-                        logger.error('Target port is not specified and No default port for service {service}. ' \
-                            'You must specify a port.'.format(
-                                service=self.args.service))
-                        return False
+        #             else:
+        #                 logger.error('Target port is not specified and No default port for service {service}. ' \
+        #                     'You must specify a port.'.format(
+        #                         service=self.args.service))
+        #                 return False
                     
-            # Try to get the default service for the provided port if not specified
-            else:
-                if not self.args.target_port:
-                    logger.error('Target port and/or service must be specified')
-                    return False
+        #     # Try to get the default service for the provided port if not specified
+        #     else:
+        #         if not self.args.target_port:
+        #             logger.error('Target port and/or service must be specified')
+        #             return False
                 
-                else:
-                    self.args.service = self.settings.services.get_service_by_port(
-                        self.args.target_port)
+        #         else:
+        #             self.args.service = self.settings.services.get_service_by_port(
+        #                 self.args.target_port)
                     
-                    if not self.args.service:
-                        logger.error('Cannot automatically specify the target ' \
-                            'service for port {port}/tcp, use --target IP:PORT ' \
-                            'syntax'.format(port=self.args.target_port))
-                        return False
+        #             if not self.args.service:
+        #                 logger.error('Cannot automatically specify the target ' \
+        #                     'service for port {port}/tcp, use --target IP:PORT ' \
+        #                     'syntax'.format(port=self.args.target_port))
+        #                 return False
                     
-                    logger.info('Service {service} will be used for target'.format(
-                        service=self.args.service))
+        #             logger.info('Service {service} will be used for target'.format(
+        #                 service=self.args.service))
                     
-        return True
+        # return True
               
-    def __check_args_attack_selection(self):
-        """Check arguments for subcommand Attack (selection)"""
+    # def __check_args_attack_selection(self):
+    #     """Check arguments for subcommand Attack (selection)"""
         
-        # Select a subset of checks to run
-        categories = self.args.run_only or self.args.run_exclude
+    #     # Select a subset of checks to run
+    #     categories = self.args.run_only or self.args.run_exclude
         
-        if categories:
-            categories = categories.split(',')
-            for cat in categories:
-                if not self.settings.services.list_all_categories():
-                    logger.error('Category "{cat}" is not supported. ' \
-                        'Check "info --categories".'.format(cat=cat))
-                    return False
+    #     if categories:
+    #         categories = categories.split(',')
+    #         for cat in categories:
+    #             if not self.settings.services.list_all_categories():
+    #                 logger.error('Category "{cat}" is not supported. ' \
+    #                     'Check "info --categories".'.format(cat=cat))
+    #                 return False
             
-            # Store the list of categories
-            if self.args.run_only:
-                self.args.run_only = categories
-            else:
-                self.args.cat_exclude = categories
+    #         # Store the list of categories
+    #         if self.args.run_only:
+    #             self.args.run_only = categories
+    #         else:
+    #             self.args.run_exclude = categories
                 
-        # Select attack profile
-        elif self.args.profile:
-            profile = self.settings.attack_profiles.get(self.args.profile.lower())
+    #     # Select attack profile
+    #     elif self.args.profile:
+    #         profile = self.settings.attack_profiles.get(self.args.profile.lower())
             
-            if not profile:
-                logger.error('Attack profile "{profile}" does not exist. ' \
-                    'Check "info --attack-profiles".'.format(profile=self.args.profile))
-                return False
+    #         if not profile:
+    #             logger.error('Attack profile "{profile}" does not exist. ' \
+    #                 'Check "info --attack-profiles".'.format(profile=self.args.profile))
+    #             return False
             
-            elif self.args.target_ip_or_url \
-                 and not profile.is_service_supported(self.args.service):
+    #         elif self.args.target_ip_or_url \
+    #              and not profile.is_service_supported(self.args.service):
                      
-                logger.error('Attack profile "{profile}" does not support service ' \
-                    'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
-                return False
+    #             logger.error('Attack profile "{profile}" does not support service ' \
+    #                 'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
+    #             return False
             
-            # Store attack profile
-            self.args.profile = profile
+    #         # Store attack profile
+    #         self.args.profile = profile
             
-        return True
+    #     return True
                     
     #------------------------------------------------------------------------------------ 
