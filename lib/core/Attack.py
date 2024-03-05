@@ -34,7 +34,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Attack methods    
-    def set_target(self, target):
+    def set_target(self, target, banner_condition=False):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -56,7 +56,7 @@ class Attack:
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
-                    logger.error(f"Invalid port number: {port_str}.")
+                    logger.error(f"Invalid port number: {port_str}. Must be in the range [0-65535]")
                     return
                 
             # Check if base_target is an IP address
@@ -69,6 +69,7 @@ class Attack:
             except socket.error:
                 is_ip_address = False
                 domain = base_target
+                ip_address = self.netutils.dns_lookup(domain) or base_target
                 # logger.success(f'Target Domain : {domain}' + '\n')
             
             # Log warnings or info if service is specified or not
@@ -83,7 +84,7 @@ class Attack:
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
-                    logger.error(f"Invalid port number: {port_str}")
+                    logger.error(f"Invalid port number: {port_str}. Must be in the range [0-65535]")
                     return
             else:
                 base_target = target
@@ -105,7 +106,6 @@ class Attack:
                 logger.success(f'Target Hostname : {base_target}' + '\n')
 
         # Fetch the default port if not specified
-        # default_port = self.config['config'].get('default_port', '80')
         default_port = NetworkUtils.get_port_from_url(protocol + "://" + base_target)
         port = str(specified_port if specified_port else default_port)
 
@@ -115,8 +115,42 @@ class Attack:
         # else:
         #     domain = base_target.split("//")[-1].split("/")[0]
         #     ip_address = self.netutils.dns_lookup(domain) or base_target
+        
+        # Check if banner grab is specified
+        if banner_condition:
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
+        else:
+            self.run_default(protocol, base_target, specified_port, domain, is_ip_address, ip_address, port)
+        
+    #------------------------------------------------------------------------------------  
+    
+    # Banner grab the target
+    def banner_grab(self, target, port, domain, ip_address, protocol, specified_port):
+        """
+        Perform a banner grab on the specified target and port.
 
-
+        :param str target: Target IP address or hostname
+        :param str port: Port number
+        """
+        try:
+            print(f"[>] Banner grabbing...")
+            logger.info(f"Target---------| {target}")
+            logger.info(f"Port-----------| {port}")
+            logger.info(f"Domain---------| {domain}")
+            logger.info(f"IP-------------| {ip_address}")
+            logger.info(f"Protocol-------| {protocol}")
+            logger.info(f"Specified port-| {specified_port}")
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        except socket.error as e:
+            logger.error(f"Error performing banner grab: {e}")
+       
+    #------------------------------------------------------------------------------------
+    
+    # Run the attack tools in default mode
+    def run_default(self, protocol, base_target, specified_port, domain, is_ip_address, ip_address, port):
+        """
+        Run the attack tools in default mode.
+        """
         # To track the last printed category
         last_category = None
 
@@ -171,30 +205,9 @@ class Attack:
                 print('\n')
             else:
                 logger.error(f"No command template found for {tool}.\n")
-
+                
         logger.success("All applicable tools have been executed for the target.\n")
-        
-    #------------------------------------------------------------------------------------  
     
-    # Banner grab the target
-    
-    def banner_grab(self, target, port):
-        """
-        Perform a banner grab on the specified target and port.
-
-        :param str target: Target IP address or hostname
-        :param str port: Port number
-        """
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(5)
-                s.connect((target, int(port)))
-                s.sendall(b'HEAD / HTTP/1.1\r\n\r\n')
-                data = s.recv(1024)
-                logger.success(f"Banner grab successful: {data.decode('utf-8')}")
-        except socket.error as e:
-            logger.error(f"Error performing banner grab: {e}")
-       
     #------------------------------------------------------------------------------------
      
     def set_service(self, service):

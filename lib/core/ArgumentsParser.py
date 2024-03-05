@@ -256,6 +256,8 @@ class ArgumentsParser:
         status=True
         if self.args.target_ip_or_url:
             # status &= self.check_args_target()
+            if self.args.banner:      
+                pass
             pass
         else:
             logger.error('Invalid mode:attack arguments. Please provide exactly one action at a time.')

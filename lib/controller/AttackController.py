@@ -14,6 +14,11 @@ class AttackController:
     def run(self):
         
         # --set-target
-        if self.arguments.args.target_ip_or_url:
-            self.settings.set_target(self.arguments.args.target_ip_or_url)
+        if self.arguments.args.target_ip_or_url:            
+            
+    
+            if self.arguments.args.banner:
+                self.settings.set_target(self.arguments.args.target_ip_or_url, banner_condition=True)
+            else:
+                self.settings.set_target(self.arguments.args.target_ip_or_url)
         

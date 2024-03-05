@@ -118,19 +118,19 @@ class Settings:
     
     # Attack methods
     
-    def set_target(self, target):
+    def set_target(self, target, banner_condition=False):
         """
         Set the target for the attack and execute the relevant commands.
 
         :param target: Target URL or IP address
         """
-        self.attack.set_target(target)
+        self.attack.set_target(target, banner_condition=banner_condition)
         
-    def banner_grab(self):
-        """
-        Banner grab the target.
-        """
-        self.attack.banner_grab()
+    # def banner_grab(self):
+    #     """
+    #     Banner grab the target.
+    #     """
+    #     self.attack.banner_grab()
 
     
     # # Services configurations and checks parsing
