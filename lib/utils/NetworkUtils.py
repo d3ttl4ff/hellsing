@@ -33,7 +33,6 @@ class NetworkUtils:
         try:
             return 0 <= int(port) <= 65535
         except ValueError:
-            # logger.error(f"Invalid port number: {port}. Must be in the range [0-65535]")
             return False
         
     @staticmethod

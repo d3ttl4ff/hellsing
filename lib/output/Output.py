@@ -76,8 +76,8 @@ class Output(object):
         top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
         bottom_border = Output.colored('╚═', color=border_color)
         buttom_cmd = Output.colored('$', color='10', attrs='bold')
-        left_connector = Output.colored(' ▒', color="226", attrs='bold')
-        right_connector = Output.colored('░ ', color="turquoise_2", attrs='bold')
+        left_connector = Output.colored('▒', color="226", attrs='bold')
+        right_connector = Output.colored('▒', color="turquoise_2", attrs='bold')
         
         print(top_border + subtitle_part + left_connector + right_connector + subtool_part)
         print(bottom_border + buttom_cmd + subcommand_part)
