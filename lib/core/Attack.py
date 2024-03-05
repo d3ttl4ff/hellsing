@@ -65,18 +65,16 @@ class Attack:
                 is_ip_address = True
                 ip_address = base_target
                 domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
-                logger.info('IP given as target in URL') 
-                logger.success(f'Target IP : {ip_address}' + '\n')
+                # logger.success(f'Target IP : {ip_address}' + '\n')
             except socket.error:
-                # Not an IP, treat as a domain
                 is_ip_address = False
-                domain = base_target  # Use the base target as the domain
-                logger.info('Domain given as target in URL')
-                logger.success(f'Target Domain : {domain}' + '\n')
+                domain = base_target
+                # logger.success(f'Target Domain : {domain}' + '\n')
             
             # Log warnings or info if service is specified or not
             logger.info('URL given as target')
-            logger.success(f'Target URL : {protocol}://{base_target}' + '\n')
+            logger.success(f'Target URL : {protocol}://{base_target}')
+            logger.success(f'Target Domain : {domain}' + '\n')
 
         else:
             # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
