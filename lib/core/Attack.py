@@ -6,6 +6,7 @@ import socket
 import subprocess
 import sys
 import shutil
+from urllib.parse import urlparse
 
 from lib.core.Config import *
 from lib.output import Output
@@ -44,41 +45,18 @@ class Attack:
         is_ip_address = False
         ip_address = ''
             
-        # Check if the target is a URL
-        if target.startswith('http://') or target.startswith('https://'):
-            protocol, _, rest = target.partition("://")
-            if '/' in rest:
-                base_target = rest.split('/', 1)[0]
-            else:
-                base_target = rest
-            if ':' in base_target:
-                base_target, port_str = base_target.rsplit(':', 1)
-                if self.netutils.is_valid_port(port_str):
-                    specified_port = port_str
-                else:
-                    logger.error(f"Invalid port number: {port_str}. Must be in the range [0-65535]")
-                    return
-                
-            # Check if base_target is an IP address
-            try:
-                socket.inet_aton(base_target)
-                is_ip_address = True
-                ip_address = base_target
-                domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
-                # logger.success(f'Target IP : {ip_address}' + '\n')
-            except socket.error:
-                is_ip_address = False
-                domain = base_target
-                ip_address = self.netutils.dns_lookup(domain) or base_target
-                # logger.success(f'Target Domain : {domain}' + '\n')
+        # Parse the target to see if it's a URL with a scheme (http/https)
+        parsed_url = urlparse(target)
+        if parsed_url.scheme in ['http', 'https']:
+            protocol = parsed_url.scheme
+            base_target = parsed_url.hostname
+            specified_port = parsed_url.port  # This can be None if no port is specified
+            target_path = parsed_url.path
             
-            # Log warnings or info if service is specified or not
             logger.info('URL given as target')
-            logger.success(f'Target URL : {protocol}://{base_target}')
-            logger.success(f'Target Domain : {domain}' + '\n')
-
+            logger.success(f'Target URL: {protocol}://{base_target}')
         else:
-            # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
+            # Handle case without scheme - could be IP or domain
             if ':' in target:
                 base_target, port_str = target.split(':', 1)
                 if self.netutils.is_valid_port(port_str):
@@ -88,22 +66,25 @@ class Attack:
                     return
             else:
                 base_target = target
-
-            # Check if the base target is an IP address
-            try:
-                socket.inet_aton(base_target)
-                is_ip_address = True
-                ip_address = base_target 
-                domain = self.netutils.reverse_dns_lookup(base_target) or base_target
-                
-                logger.info('IP given as target') 
-                logger.success(f'Target IP : {ip_address}' + '\n')
-            except socket.error:
-                is_ip_address = False
-                # domain = base_target.split("//")[-1].split("/")[0]
+            
+        # Validate IP address or perform DNS lookup
+        try:
+            socket.inet_aton(base_target)
+            is_ip_address = True
+            ip_address = base_target
+            domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
+            logger.info('IP address given as target')
+            logger.success(f'Target IP: {ip_address}')
+        except socket.error:
+            # If it's not a valid IP address, treat it as a domain
+            is_ip_address = False
+            domain = base_target
+            if protocol:  # If protocol was parsed, it's a URL without a port
                 ip_address = self.netutils.dns_lookup(domain) or base_target
+                logger.info('Domain name in URL given as target')
+            else:
                 logger.info('Hostname given as target')
-                logger.success(f'Target Hostname : {base_target}' + '\n')
+            logger.success(f'Target Domain: {domain}')
 
         # Fetch the default port if not specified
         default_port = NetworkUtils.get_port_from_url(protocol + "://" + base_target)
