@@ -42,49 +42,76 @@ class Attack:
         """ 
         protocol, base_target, specified_port, domain = '', '', None, ''
         is_ip_address = False
-
-        # Extract protocol, domain/IP, and port from the target
-        if "://" in target:
+        ip_address = ''
+            
+        # Check if the target is a URL
+        if target.startswith('http://') or target.startswith('https://'):
             protocol, _, rest = target.partition("://")
             if '/' in rest:
-                rest = rest.split('/', 1)[0]
-            if ':' in rest:
-                base_target, port_str = rest.rsplit(':', 1)
+                base_target = rest.split('/', 1)[0]
+            else:
+                base_target = rest
+            if ':' in base_target:
+                base_target, port_str = base_target.rsplit(':', 1)
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
                     logger.error(f"Invalid port number: {port_str}.")
                     return
-            else:
-                base_target = rest
+                
+            # Check if base_target is an IP address
+            try:
+                socket.inet_aton(base_target)
+                is_ip_address = True
+                ip_address = base_target
+                domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
+                logger.info('IP given as target in URL') 
+                logger.success(f'Target IP : {ip_address}' + '\n')
+            except socket.error:
+                # Not an IP, treat as a domain
+                is_ip_address = False
+                domain = base_target  # Use the base target as the domain
+                logger.info('Domain given as target in URL')
+                logger.success(f'Target Domain : {domain}' + '\n')
+            
+            # Log warnings or info if service is specified or not
+            logger.info('URL given as target')
+            logger.success(f'Target URL : {protocol}://{base_target}' + '\n')
+
         else:
+            # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
             if ':' in target:
                 base_target, port_str = target.split(':', 1)
                 if self.netutils.is_valid_port(port_str):
                     specified_port = port_str
                 else:
-                    logger.error(f"Invalid port number: {port_str}.")
+                    logger.error(f"Invalid port number: {port_str}")
                     return
             else:
                 base_target = target
 
-        # Determine if the base target is an IP address
-        try:
-            socket.inet_aton(base_target)
-            is_ip_address = True
-        except socket.error:
-            is_ip_address = False
+            # Check if the base target is an IP address
+            try:
+                socket.inet_aton(base_target)
+                is_ip_address = True
+                ip_address = base_target 
+                domain = self.netutils.reverse_dns_lookup(base_target) or base_target
+                
+                logger.info('IP given as target') 
+                logger.success(f'Target IP : {ip_address}' + '\n')
+            except socket.error:
+                is_ip_address = False
+                domain = base_target.split("//")[-1].split("/")[0]
+                ip_address = self.netutils.dns_lookup(domain) or base_target
+                logger.info('Hostname given as target')
+                logger.success(f'Target Hostname : {base_target}' + '\n')
 
         # Fetch the default port if not specified
-        default_port = self.config['config'].get('default_port', '80')
-        port = specified_port if specified_port else default_port
-
-        # Perform DNS or reverse DNS lookups as necessary
-        if is_ip_address:
-            domain = self.netutils.reverse_dns_lookup(base_target) or base_target
-        else:
-            domain = base_target.split("//")[-1].split("/")[0]
-            ip_address = self.netutils.dns_lookup(domain) or base_target
+        # default_port = self.config['config'].get('default_port', '80')
+        default_port = NetworkUtils.get_port_from_url(protocol + "://" + base_target)
+        port = str(specified_port if specified_port else default_port)
+            
+        print(f"Domain: {domain}")
 
         # To track the last printed category
         last_category = None
@@ -125,23 +152,23 @@ class Attack:
                     # Change to the tool's directory and execute the command
                     os.chdir(tool_dir_path)
 
-                x = tool_config.get('name', None)
-                y = tool_config.get('tool', None)
+                display_check_name = tool_config.get('name', None)
+                display_check_tool_name = tool_config.get('tool', None)
                 
                 try:
-                    self.output.print_subtitle(x, y, command)
+                    self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     subprocess.run(shlex.split(command), check=True)
                 except subprocess.CalledProcessError as e:
-                    print(f"Error executing {tool}: {e}")
+                    logger.error(f"Error executing {tool}: {e}")
                 finally:
                     # Change back to the original directory after execution
                     if os.path.isdir(tool_dir_path):
                         os.chdir(TOOL_BASEPATH)  # Adjust this path to return to the original directory as needed
                 print('\n')
             else:
-                print(f"No command template found for {tool}.\n")
+                logger.error(f"No command template found for {tool}.\n")
 
-        print("All applicable tools have been executed for the target.\n")
+        logger.success("All applicable tools have been executed for the target.\n")
         
     
     def set_service(self, service):
