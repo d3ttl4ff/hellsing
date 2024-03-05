@@ -70,20 +70,24 @@ class Attack:
         # Validate IP address or perform DNS lookup
         try:
             socket.inet_aton(base_target)
+            
             is_ip_address = True
             ip_address = base_target
             domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
+            
             logger.info('IP address given as target')
             logger.success(f'Target IP: {ip_address}')
         except socket.error:
             # If it's not a valid IP address, treat it as a domain
             is_ip_address = False
             domain = base_target
+            
             if protocol:  # If protocol was parsed, it's a URL without a port
                 ip_address = self.netutils.dns_lookup(domain) or base_target
                 logger.info('Domain name in URL given as target')
             else:
                 logger.info('Hostname given as target')
+                
             logger.success(f'Target Domain: {domain}')
 
         # Fetch the default port if not specified
@@ -96,6 +100,22 @@ class Attack:
         # else:
         #     domain = base_target.split("//")[-1].split("/")[0]
         #     ip_address = self.netutils.dns_lookup(domain) or base_target
+
+        # For URLs or domains
+        if not is_ip_address:
+            # If it's a URL/domain, use HTTPS port by default if the scheme is https, else use HTTP port
+            default_port = 443 if protocol == 'https' else 80
+            port = specified_port if specified_port else default_port
+            if not self.netutils.is_host_reachable(domain, port):
+                logger.error(f"Host {domain} is not reachable.")
+                return
+            logger.info(f"Host {domain} is reachable.")
+        else:
+            # For IP addresses
+            if not self.netutils.is_host_reachable(ip_address, 80):
+                logger.error(f"IP address {ip_address} is not reachable.")
+                return
+            logger.info(f"IP address {ip_address} is reachable.")
         
         # Check if banner grab is specified
         if banner_condition:
@@ -188,6 +208,10 @@ class Attack:
                 logger.error(f"No command template found for {tool}.\n")
                 
         logger.success("All applicable tools have been executed for the target.\n")
+    
+    #------------------------------------------------------------------------------------
+    
+
     
     #------------------------------------------------------------------------------------
      

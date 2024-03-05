@@ -57,3 +57,17 @@ class NetworkUtils:
             return '.'.join(parts[-2:])
         else:
             return domain
+        
+    # Check if a host is reachable by attempting to connect on a given port
+    @staticmethod
+    def is_host_reachable(ip_or_domain, port=80):
+        """Check if a host is reachable by attempting to connect on a given port."""
+        try:
+            # Attempt to establish a socket connection
+            socket.setdefaulttimeout(3)  # Timeout for the socket connection
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                if sock.connect_ex((ip_or_domain, port)) == 0:
+                    return True  # The host is reachable
+        except Exception as e:
+            logger.error(f"Error checking reachability of {ip_or_domain}: {e}")
+        return False  # The host is not reachable
