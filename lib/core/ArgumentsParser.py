@@ -174,6 +174,12 @@ class ArgumentsParser:
             dest    = 'add',
             metavar = '<task>',
             default = 'default')
+        target.add_argument(
+            '--banner',
+            help    = 'Retrieve the banner of the target',
+            action  = 'store_true',
+            dest    = 'banner',
+            default = None)
         
         selection = parser.add_argument_group(
             Output.colored('Attack configuration', attrs='bold'),
@@ -203,12 +209,6 @@ class ArgumentsParser:
             dest    = 'run_exclude',
             metavar = '<cat1,cat2...>',
             default = None)
-        selection_mxg.add_argument(
-            '--banner',
-            help    = 'Banner grabbing only',
-            action  = 'store',
-            dest    = 'banner',
-            default = False)
 
         self.subparser = parser
         self.args = parser.parse_args(sys.argv[2:]) 

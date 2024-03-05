@@ -125,11 +125,13 @@ class Settings:
         :param target: Target URL or IP address
         """
         self.attack.set_target(target)
-    
-    
-    
-    
-    
+        
+    def banner_grab(self):
+        """
+        Banner grab the target.
+        """
+        self.attack.banner_grab()
+
     
     # # Services configurations and checks parsing
     # def __create_all_services_config_and_checks(self):

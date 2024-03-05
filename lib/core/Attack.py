@@ -174,7 +174,29 @@ class Attack:
 
         logger.success("All applicable tools have been executed for the target.\n")
         
+    #------------------------------------------------------------------------------------  
     
+    # Banner grab the target
+    
+    def banner_grab(self, target, port):
+        """
+        Perform a banner grab on the specified target and port.
+
+        :param str target: Target IP address or hostname
+        :param str port: Port number
+        """
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(5)
+                s.connect((target, int(port)))
+                s.sendall(b'HEAD / HTTP/1.1\r\n\r\n')
+                data = s.recv(1024)
+                logger.success(f"Banner grab successful: {data.decode('utf-8')}")
+        except socket.error as e:
+            logger.error(f"Error performing banner grab: {e}")
+       
+    #------------------------------------------------------------------------------------
+     
     def set_service(self, service):
         """
         Set the service to attack.
