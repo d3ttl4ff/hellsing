@@ -95,14 +95,14 @@ class Attack:
                 socket.inet_aton(base_target)
                 is_ip_address = True
                 ip_address = base_target 
-                domain = self.netutils.reverse_dns_lookup(base_target) or base_target
+                # domain = self.netutils.reverse_dns_lookup(base_target) or base_target
                 
                 logger.info('IP given as target') 
                 logger.success(f'Target IP : {ip_address}' + '\n')
             except socket.error:
                 is_ip_address = False
-                domain = base_target.split("//")[-1].split("/")[0]
-                ip_address = self.netutils.dns_lookup(domain) or base_target
+                # domain = base_target.split("//")[-1].split("/")[0]
+                # ip_address = self.netutils.dns_lookup(domain) or base_target
                 logger.info('Hostname given as target')
                 logger.success(f'Target Hostname : {base_target}' + '\n')
 
@@ -110,6 +110,13 @@ class Attack:
         # default_port = self.config['config'].get('default_port', '80')
         default_port = NetworkUtils.get_port_from_url(protocol + "://" + base_target)
         port = str(specified_port if specified_port else default_port)
+
+        # Perform DNS or reverse DNS lookups as necessary
+        if is_ip_address:
+            domain = self.netutils.reverse_dns_lookup(base_target) or base_target
+        else:
+            domain = base_target.split("//")[-1].split("/")[0]
+            ip_address = self.netutils.dns_lookup(domain) or base_target
             
         print(f"Domain: {domain}")
 
