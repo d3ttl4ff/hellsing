@@ -263,9 +263,50 @@ class ArgumentsParser:
             logger.error('Invalid mode:attack arguments. Please provide exactly one action at a time.')
             return False
 
-        # status &= self.__check_args_attack_selection()
+        status &= self.__check_args_attack_selection()
         
         return status
+    
+    def __check_args_attack_selection(self):
+        """Check arguments for subcommand Attack (selection)"""
+        
+        # Select a subset of checks to run
+        categories = self.args.run_only or self.args.run_exclude
+        
+        if categories:
+            categories = categories.split(',')
+            for cat in categories:
+                if not self.settings.services.list_all_categories():
+                    logger.error('Category "{cat}" is not supported. ' \
+                        'Check "info --categories".'.format(cat=cat))
+                    return False
+            
+            # Store the list of categories
+            if self.args.run_only:
+                self.args.run_only = categories
+            else:
+                self.args.run_exclude = categories
+                
+        # Select attack profile
+        elif self.args.profile:
+            profile = self.settings.attack_profiles.get(self.args.profile.lower())
+            
+            if not profile:
+                logger.error('Attack profile "{profile}" does not exist. ' \
+                    'Check "info --attack-profiles".'.format(profile=self.args.profile))
+                return False
+            
+            elif self.args.target_ip_or_url \
+                 and not profile.is_service_supported(self.args.service):
+                     
+                logger.error('Attack profile "{profile}" does not support service ' \
+                    'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
+                return False
+            
+            # Store attack profile
+            self.args.profile = profile
+            
+        return True
     
     # def check_args_target(self):
     #     """Check arguments for subcommand Attack"""
@@ -360,46 +401,5 @@ class ArgumentsParser:
         #                 service=self.args.service))
                     
         # return True
-              
-    # def __check_args_attack_selection(self):
-    #     """Check arguments for subcommand Attack (selection)"""
-        
-    #     # Select a subset of checks to run
-    #     categories = self.args.run_only or self.args.run_exclude
-        
-    #     if categories:
-    #         categories = categories.split(',')
-    #         for cat in categories:
-    #             if not self.settings.services.list_all_categories():
-    #                 logger.error('Category "{cat}" is not supported. ' \
-    #                     'Check "info --categories".'.format(cat=cat))
-    #                 return False
-            
-    #         # Store the list of categories
-    #         if self.args.run_only:
-    #             self.args.run_only = categories
-    #         else:
-    #             self.args.run_exclude = categories
-                
-    #     # Select attack profile
-    #     elif self.args.profile:
-    #         profile = self.settings.attack_profiles.get(self.args.profile.lower())
-            
-    #         if not profile:
-    #             logger.error('Attack profile "{profile}" does not exist. ' \
-    #                 'Check "info --attack-profiles".'.format(profile=self.args.profile))
-    #             return False
-            
-    #         elif self.args.target_ip_or_url \
-    #              and not profile.is_service_supported(self.args.service):
-                     
-    #             logger.error('Attack profile "{profile}" does not support service ' \
-    #                 'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
-    #             return False
-            
-    #         # Store attack profile
-    #         self.args.profile = profile
-            
-    #     return True
                     
     #------------------------------------------------------------------------------------ 
