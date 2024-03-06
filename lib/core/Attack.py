@@ -75,8 +75,7 @@ class Attack:
             
             # Log warnings or info if service is specified or not
             logger.info('URL given as target')
-            logger.success(f'Target URL : {protocol}://{base_target}')
-            logger.success(f'Target Domain : {domain}' + '\n')
+            logger.success(f'Target URL : {protocol}://{base_target}\n')
 
         else:
             # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
@@ -109,34 +108,62 @@ class Attack:
         # Fetch the default port if not specified
         default_port = self.netutils.get_port_from_url(protocol + "://" + base_target)
         port = str(specified_port if specified_port else default_port)
+        
+        # Variables to store the reachability status of the target
+        rechability = False
 
-        # For URLs or domains
+        # Check if the target is reachable 
         if not is_ip_address:
-            # If it's a URL/domain, use HTTPS port by default if the scheme is https, else use HTTP port
+            # For URLs or domains
+            logger.info(f"Checking the reachable status of {domain} on port {port}...")
+            
             default_port = 443 if protocol == 'https' else 80
             port = specified_port if specified_port else default_port
             if not self.netutils.is_host_reachable(domain, port):
                 logger.error(f"Host {domain} is not reachable\n")
-                return
-            logger.info(f"Host {domain} is reachable\n")
+                pass
+                # return
+            else:
+                logger.success(f"Host {domain} is reachable\n")
+                rechability = True
         else:
             # For IP addresses
+            logger.info(f"Checking the reachable status of {ip_address} on port {port}...")
+            
             if not self.netutils.is_host_reachable(ip_address, 80):
                 logger.error(f"IP address {ip_address} is not reachable\n")
-                return
-            logger.info(f"IP address {ip_address} is reachable\n")
+                pass
+                # return
+            else:
+                logger.success(f"IP address {ip_address} is reachable\n")
+                rechability = True
         
         # Check if banner grab is specified
         if banner_condition:
-            self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability)
         else:
-            self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability)
+            
+            # Prompt the user to continue if the target is reachable or not 
+            if rechability:
+                rechability_input = input(f"\033[1m[>] The target is reachable. Do you want to continue? (Y/n) :\033[0m ")
+                if rechability_input.lower() == 'y':
+                    pass
+                else:
+                    return
+            else:
+                rechability_input = input(f"\033[1m[>] The target is reachable. Do you want to continue? (Y/n) :\033[0m ")
+                if rechability_input.lower() == 'y':
+                    pass
+                else:
+                    return
+            
             self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port))
         
     #------------------------------------------------------------------------------------  
     
     # Banner grab the target
-    def banner_grab(self, target, port, domain, ip_address, protocol, specified_port):
+    def banner_grab(self, target, port, domain, ip_address, protocol, specified_port, rechability):
         """
         Perform a banner grab on the specified target and port.
 
@@ -145,14 +172,16 @@ class Attack:
         """
         try:
             self.output.print_title("Banner Grab Information")
-            logger.info(f"Target---------| {target}")
-            logger.info(f"Port-----------| {port}")
-            logger.info(f"Domain---------| {domain}")
-            logger.info(f"IP-------------| {ip_address}")
-            logger.info(f"Protocol-------| {protocol}")
-            logger.info(f"Specified port-| {specified_port}")
+            logger.info(f"Target------------| {target}")
+            logger.info(f"Port--------------| {port}")
+            logger.info(f"Specified Port----| {specified_port}")
+            logger.info(f"Domain------------| {domain}")
+            logger.info(f"IP Address--------| {ip_address}")
+            logger.info(f"Protocol----------| {protocol}")
+            logger.info(f"Reachable Status--| {rechability}")
+            print('')
         except socket.error as e:
-            logger.error(f"Error performing banner grab: {e}")
+            logger.error(f"Error performing banner grab: {e}\n")
        
     #------------------------------------------------------------------------------------
     
