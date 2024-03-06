@@ -117,7 +117,7 @@ class Settings:
     #------------------------------------------------------------------------------------  
     
     # Attack methods
-    
+    # Set the target for the attack and execute the relevant commands
     def set_target(self, target, banner_condition=False):
         """
         Set the target for the attack and execute the relevant commands.
@@ -126,13 +126,15 @@ class Settings:
         """
         self.attack.set_target(target, banner_condition=banner_condition)
         
-    # def banner_grab(self):
-    #     """
-    #     Banner grab the target.
-    #     """
-    #     self.attack.banner_grab()
+    # Run only the specified category of checks
+    def run_only(self, categories):
+        """
+        Run only the specified category of checks.
 
-    
+        :param str category: Category of checks to run
+        """
+        self.attack.run_only(categories)
+
     # # Services configurations and checks parsing
     # def __create_all_services_config_and_checks(self):
     #     """Parse each <service_name>.conf file"""

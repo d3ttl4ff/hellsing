@@ -275,11 +275,11 @@ class ArgumentsParser:
         
         if categories:
             categories = categories.split(',')
-            for cat in categories:
-                if not self.settings.services.list_all_categories():
-                    logger.error('Category "{cat}" is not supported. ' \
-                        'Check "info --categories".'.format(cat=cat))
-                    return False
+            # for cat in categories:
+            #     if not self.settings.services.list_all_categories():
+            #         logger.error('Category "{cat}" is not supported. ' \
+            #             'Check "info --categories".'.format(cat=cat))
+            #         return False
             
             # Store the list of categories
             if self.args.run_only:
@@ -287,24 +287,24 @@ class ArgumentsParser:
             else:
                 self.args.run_exclude = categories
                 
-        # Select attack profile
-        elif self.args.profile:
-            profile = self.settings.attack_profiles.get(self.args.profile.lower())
+        # # Select attack profile
+        # elif self.args.profile:
+        #     profile = self.settings.attack_profiles.get(self.args.profile.lower())
             
-            if not profile:
-                logger.error('Attack profile "{profile}" does not exist. ' \
-                    'Check "info --attack-profiles".'.format(profile=self.args.profile))
-                return False
+        #     if not profile:
+        #         logger.error('Attack profile "{profile}" does not exist. ' \
+        #             'Check "info --attack-profiles".'.format(profile=self.args.profile))
+        #         return False
             
-            elif self.args.target_ip_or_url \
-                 and not profile.is_service_supported(self.args.service):
+        #     elif self.args.target_ip_or_url \
+        #          and not profile.is_service_supported(self.args.service):
                      
-                logger.error('Attack profile "{profile}" does not support service ' \
-                    'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
-                return False
+        #         logger.error('Attack profile "{profile}" does not support service ' \
+        #             'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
+        #         return False
             
-            # Store attack profile
-            self.args.profile = profile
+        #     # Store attack profile
+        #     self.args.profile = profile
             
         return True
     

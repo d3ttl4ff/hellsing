@@ -35,7 +35,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Attack methods    
-    def set_target(self, target, banner_condition=False):
+    def set_target(self, target, banner_condition=False, categories=None):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -150,6 +150,8 @@ class Attack:
         # Check if banner grab is specified
         if banner_condition:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
+        elif :
+            pass
         else:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
             
@@ -267,18 +269,16 @@ class Attack:
     
     #------------------------------------------------------------------------------------
     
+    # Run only the specified checks
+    def run_only(self, checks):
+        """
+        Run only the specified checks.
 
+        :param list categories: Categories of checks to run
+        """
+        print(f"{checks}")
     
     #------------------------------------------------------------------------------------
-     
-    def set_service(self, service):
-        """
-        Set the service to attack.
-
-        :param str service: Service to attack
-        """
-        self.service = service
-        
     
     def use_profile(self, profile):
         """
@@ -287,16 +287,6 @@ class Attack:
         :param str profile: Attack profile to use
         """
         self.profile = profile
-        
-    
-    def run_only(self, checks):
-        """
-        Run only the specified checks.
-
-        :param list categories: Categories of checks to run
-        """
-        self.checks = checks
-        
     
     def run_exclude(self, checks):
         """
