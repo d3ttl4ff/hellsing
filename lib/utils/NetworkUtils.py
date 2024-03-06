@@ -7,6 +7,8 @@ import socket
 import ipaddress
 import time
 from urllib.parse import urlparse
+
+import requests
 from lib.output.Logger import logger
 
 class NetworkUtils:
@@ -42,7 +44,7 @@ class NetworkUtils:
         if parsed.port:
             return int(parsed.port)
         else:
-            return 443 if parsed.scheme == 'https' else 80
+            return 443 if parsed.scheme == 'https' else 80 
         
     @staticmethod
     def extract_secondary_domain(domain):
@@ -71,3 +73,30 @@ class NetworkUtils:
         except Exception as e:
             logger.error(f"Error checking reachability of {ip_or_domain}: {e}")
         return False  # The host is not reachable
+
+    def determine_protocol(self, base_target):
+    # Default to HTTP
+        protocol = "http"
+        
+        # Check if HTTP is supported
+        try_http_url = f"http://{base_target}"
+        try:
+            response = requests.head(try_http_url, timeout=3, verify=False)
+            if response.ok:
+                # If the server responds to HTTP, we prioritize HTTP
+                return protocol
+        except requests.ConnectionError:
+            pass  # Ignore errors for HTTP, move on to check HTTPS
+        
+        # If HTTP failed or was not conclusive, check HTTPS
+        try_https_url = f"https://{base_target}"
+        try:
+            response = requests.head(try_https_url, timeout=3, verify=False)
+            if response.ok:
+                # If the server also responds to HTTPS, we still prioritize HTTP
+                return protocol 
+        except requests.ConnectionError:
+            # If HTTPS connection fails, it means neither HTTP nor HTTPS worked
+            logger.error(f"Unable to connect to {base_target} via HTTP or HTTPS.")
+
+        return protocol

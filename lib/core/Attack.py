@@ -105,6 +105,7 @@ class Attack:
                 is_ip_address = False
                 domain = base_target.split("//")[-1].split("/")[0]
                 ip_address = self.netutils.dns_lookup(domain) or base_target
+                
                 logger.info('Hostname given as target')
                 logger.success(f'Target Hostname : {base_target}' + '\n')
                 target_mode = 'Hostname'
@@ -122,7 +123,7 @@ class Attack:
             logger.info(f"Checking the reachable status of {domain} on port {port}...")
             
             default_port = 443 if protocol == 'https' else 80
-            port = specified_port if specified_port else default_port
+            port = int(specified_port) if specified_port else default_port
             if not self.netutils.is_host_reachable(domain, port):
                 logger.error(f"Host {domain} is not reachable\n")
                 pass
