@@ -121,6 +121,7 @@ class Attack:
         if banner_condition:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
         else:
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
             self.run_default(protocol, base_target, specified_port, domain, is_ip_address, ip_address, port)
         
     #------------------------------------------------------------------------------------  
