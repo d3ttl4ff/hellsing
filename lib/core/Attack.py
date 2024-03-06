@@ -46,17 +46,40 @@ class Attack:
         ip_address = ''
             
         # Parse the target to see if it's a URL with a scheme (http/https)
-        parsed_url = urlparse(target)
-        if parsed_url.scheme in ['http', 'https']:
-            protocol = parsed_url.scheme
-            base_target = parsed_url.hostname
-            specified_port = parsed_url.port  # This can be None if no port is specified
-            target_path = parsed_url.path
+        if target.startswith('http://') or target.startswith('https://'):
+            protocol, _, rest = target.partition("://")
+            if '/' in rest:
+                base_target = rest.split('/', 1)[0]
+            else:
+                base_target = rest
+            if ':' in base_target:
+                base_target, port_str = base_target.rsplit(':', 1)
+                if self.netutils.is_valid_port(port_str):
+                    specified_port = port_str
+                else:
+                    logger.error(f"Invalid port number: {port_str}. Must be in the range [0-65535]")
+                    return
+                
+            # Check if base_target is an IP address
+            try:
+                socket.inet_aton(base_target)
+                is_ip_address = True
+                ip_address = base_target
+                domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
+                # logger.success(f'Target IP : {ip_address}' + '\n')
+            except socket.error:
+                is_ip_address = False
+                domain = base_target
+                ip_address = self.netutils.dns_lookup(domain) or base_target
+                # logger.success(f'Target Domain : {domain}' + '\n')
             
+            # Log warnings or info if service is specified or not
             logger.info('URL given as target')
-            logger.success(f'Target URL: {protocol}://{base_target}')
+            logger.success(f'Target URL : {protocol}://{base_target}')
+            logger.success(f'Target Domain : {domain}' + '\n')
+
         else:
-            # Handle case without scheme - could be IP or domain
+            # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
             if ':' in target:
                 base_target, port_str = target.split(':', 1)
                 if self.netutils.is_valid_port(port_str):
@@ -66,40 +89,26 @@ class Attack:
                     return
             else:
                 base_target = target
-            
-        # Validate IP address or perform DNS lookup
-        try:
-            socket.inet_aton(base_target)
-            
-            is_ip_address = True
-            ip_address = base_target
-            domain = self.netutils.reverse_dns_lookup(ip_address) or base_target
-            
-            logger.info('IP address given as target')
-            logger.success(f'Target IP: {ip_address}')
-        except socket.error:
-            # If it's not a valid IP address, treat it as a domain
-            is_ip_address = False
-            domain = base_target
-            
-            if protocol:  # If protocol was parsed, it's a URL without a port
-                ip_address = self.netutils.dns_lookup(domain) or base_target
-                logger.info('Domain name in URL given as target')
-            else:
-                logger.info('Hostname given as target')
+
+            # Check if the base target is an IP address
+            try:
+                socket.inet_aton(base_target)
+                is_ip_address = True
+                ip_address = base_target 
+                domain = self.netutils.reverse_dns_lookup(base_target) or base_target
                 
-            logger.success(f'Target Domain: {domain}')
+                logger.info('IP given as target') 
+                logger.success(f'Target IP : {ip_address}' + '\n')
+            except socket.error:
+                is_ip_address = False
+                domain = base_target.split("//")[-1].split("/")[0]
+                ip_address = self.netutils.dns_lookup(domain) or base_target
+                logger.info('Hostname given as target')
+                logger.success(f'Target Hostname : {base_target}' + '\n')
 
         # Fetch the default port if not specified
-        default_port = NetworkUtils.get_port_from_url(protocol + "://" + base_target)
+        default_port = self.netutils.get_port_from_url(protocol + "://" + base_target)
         port = str(specified_port if specified_port else default_port)
-
-        # # Perform DNS or reverse DNS lookups as necessary
-        # if is_ip_address:
-        #     domain = self.netutils.reverse_dns_lookup(base_target) or base_target
-        # else:
-        #     domain = base_target.split("//")[-1].split("/")[0]
-        #     ip_address = self.netutils.dns_lookup(domain) or base_target
 
         # For URLs or domains
         if not is_ip_address:
@@ -107,22 +116,22 @@ class Attack:
             default_port = 443 if protocol == 'https' else 80
             port = specified_port if specified_port else default_port
             if not self.netutils.is_host_reachable(domain, port):
-                logger.error(f"Host {domain} is not reachable.")
+                logger.error(f"Host {domain} is not reachable\n")
                 return
-            logger.info(f"Host {domain} is reachable.")
+            logger.info(f"Host {domain} is reachable\n")
         else:
             # For IP addresses
             if not self.netutils.is_host_reachable(ip_address, 80):
-                logger.error(f"IP address {ip_address} is not reachable.")
+                logger.error(f"IP address {ip_address} is not reachable\n")
                 return
-            logger.info(f"IP address {ip_address} is reachable.")
+            logger.info(f"IP address {ip_address} is reachable\n")
         
         # Check if banner grab is specified
         if banner_condition:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
         else:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port)
-            self.run_default(protocol, base_target, specified_port, domain, is_ip_address, ip_address, port)
+            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port))
         
     #------------------------------------------------------------------------------------  
     
@@ -135,21 +144,20 @@ class Attack:
         :param str port: Port number
         """
         try:
-            print(f"[>] Banner grabbing...")
+            self.output.print_title("Banner Grab Information")
             logger.info(f"Target---------| {target}")
             logger.info(f"Port-----------| {port}")
             logger.info(f"Domain---------| {domain}")
             logger.info(f"IP-------------| {ip_address}")
             logger.info(f"Protocol-------| {protocol}")
             logger.info(f"Specified port-| {specified_port}")
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         except socket.error as e:
             logger.error(f"Error performing banner grab: {e}")
        
     #------------------------------------------------------------------------------------
     
     # Run the attack tools in default mode
-    def run_default(self, protocol, base_target, specified_port, domain, is_ip_address, ip_address, port):
+    def run_default(self, protocol, base_target, domain, is_ip_address, ip_address, port):
         """
         Run the attack tools in default mode.
         """

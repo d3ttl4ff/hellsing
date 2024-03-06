@@ -72,14 +72,17 @@ class Output(object):
         subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color, highlight=subtitle_highlight, attrs='bold')
         subtool_part = Output.colored(' ' + subtool + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
         subcommand_part = Output.colored(' ' + subcommand + ' ', color=subcommand_color, attrs='bold')
+        check_part = Output.colored(' check ', color='black', highlight='10', attrs='bold')
         
-        top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        top_border = Output.colored('╔════════', color=border_color, attrs='bold')
         bottom_border = Output.colored('╚═', color=border_color)
         buttom_cmd = Output.colored('$', color='10', attrs='bold')
-        left_connector = Output.colored('▒', color="226", attrs='bold')
-        right_connector = Output.colored('▒', color="turquoise_2", attrs='bold')
+        subtitle_connector = Output.colored('▒', color="226", attrs='bold')
+        subtool_connector = Output.colored('▒', color="turquoise_2", attrs='bold')
+        check_connector = Output.colored('▒', color="10", attrs='bold')
         
-        print(top_border + subtitle_part + left_connector + right_connector + subtool_part)
+        print(top_border + check_part + check_connector + subtitle_connector + subtitle_part + subtitle_connector + subtool_connector + subtool_part)
         print(bottom_border + buttom_cmd + subcommand_part)
         
         print()
@@ -88,7 +91,6 @@ class Output(object):
     def print_with_tabs(string, color=None, highlight=None, attrs=None):
         """Print string prefixed by a tabulation"""
         Output.print('         '+string, color, highlight, attrs)
-
 
     @staticmethod
     def print_inline(string):
