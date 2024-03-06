@@ -98,6 +98,8 @@ class Attack:
                 ip_address = base_target 
                 domain = self.netutils.reverse_dns_lookup(base_target) or base_target
                 
+                protocol = self.netutils.determine_protocol(base_target)
+                
                 logger.info('IP given as target') 
                 logger.success(f'Target IP : {ip_address}' + '\n')
                 target_mode = 'IP'
@@ -105,6 +107,8 @@ class Attack:
                 is_ip_address = False
                 domain = base_target.split("//")[-1].split("/")[0]
                 ip_address = self.netutils.dns_lookup(domain) or base_target
+                
+                protocol = self.netutils.determine_protocol(base_target)
                 
                 logger.info('Hostname given as target')
                 logger.success(f'Target Hostname : {base_target}' + '\n')
@@ -176,7 +180,7 @@ class Attack:
         :param str port: Port number
         """
         self.output.print_title("Banner Grab Information")
-        self.output.print_banner_grabbing("banner-grabbing", f"Mode: {target_mode}", f"{target}")
+        self.output.print_banner_grabbing("banner-grabbing", f"mode: {target_mode}", f"{target}")
         
         try:
             rechable_status = self.output.colored("◉ unknown", "yellow") or '◉ unknown'
