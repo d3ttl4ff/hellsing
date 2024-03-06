@@ -35,7 +35,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Attack methods    
-    def set_target(self, target, banner_condition=False, categories=None):
+    def set_target(self, target, banner_condition=False, run_only_condition=False):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -150,8 +150,6 @@ class Attack:
         # Check if banner grab is specified
         if banner_condition:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
-        elif :
-            pass
         else:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
             
@@ -168,8 +166,13 @@ class Attack:
                     pass
                 else:
                     return
-            
-            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port))
+                
+            if run_only_condition:
+                print("testing 111")
+                self.run_only(protocol, base_target, domain, is_ip_address, ip_address, str(port), categories)
+            else:
+                print("testing 222")
+                self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port))
         
     #------------------------------------------------------------------------------------  
     
@@ -270,13 +273,75 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Run only the specified checks
-    def run_only(self, checks):
+    def run_only(self, protocol, base_target, domain, is_ip_address, ip_address, port, categories):
         """
-        Run only the specified checks.
+        Run the attack tools only for the specified categories.
 
-        :param list categories: Categories of checks to run
+        :param str categories: Comma-separated string of categories to include in the attack run.
         """
-        print(f"{checks}")
+        # Convert the comma-separated categories string into a set for efficient lookup
+        included_categories = set(categories.split(','))
+        
+        # To track the last printed category
+        last_category = None
+
+        # List of section names to exclude
+        excluded_sections = ["config", "specific_options", "products"]
+
+        for tool in self.tools:
+            if tool.lower() in excluded_sections:
+                continue
+            
+            tool_config = self.config[tool]
+            current_category = tool_config.get('category', None)
+
+            # Skip this tool if its category is not in the included categories
+            if current_category not in included_categories:
+                continue
+
+            # Print the category title if it's different from the last one
+            if current_category and current_category != last_category:
+                self.output.print_title(current_category)
+                last_category = current_category
+                
+            tool_config = self.config[tool]
+            command_template = tool_config.get('command_1', None)
+            if command_template:
+                command = command_template
+                if "[URL]" in command:
+                    command = command.replace("[URL]", f"{protocol}://{domain if not is_ip_address else base_target}:{port}")
+                if "[IP]" in command:
+                    command = command.replace("[IP]", ip_address if not is_ip_address else base_target)
+                if "[DOMAIN]" in command:
+                    extracted_domain = self.netutils.extract_secondary_domain(domain)
+                    command = command.replace("[DOMAIN]", extracted_domain)
+                command = command.replace("[PORT]", port)
+                
+                # Check if the tool's execution directory exists
+                tool_name = tool_config.get('tool', '').lower()
+                tool_dir_path = HTTP_TOOLBOX_DIR + '/' + tool_name
+                
+                if os.path.isdir(tool_dir_path):
+                    # Change to the tool's directory and execute the command
+                    os.chdir(tool_dir_path)
+
+                display_check_name = tool_config.get('name', None)
+                display_check_tool_name = tool_config.get('tool', None)
+                
+                try:
+                    self.output.print_subtitle(display_check_name, display_check_tool_name, command)
+                    subprocess.run(shlex.split(command), check=True)
+                except subprocess.CalledProcessError as e:
+                    logger.error(f"Error executing {tool}: {e}")
+                finally:
+                    # Change back to the original directory after execution
+                    if os.path.isdir(tool_dir_path):
+                        os.chdir(TOOL_BASEPATH)  # Adjust this path to return to the original directory as needed
+                print('\n')
+            else:
+                logger.error(f"No command template found for {tool}.\n")
+                
+        logger.success("All applicable tools have been executed for the target.\n")
     
     #------------------------------------------------------------------------------------
     

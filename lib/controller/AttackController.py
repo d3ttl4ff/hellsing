@@ -23,3 +23,4 @@ class AttackController:
         # --run-only
         if self.arguments.args.run_only:
             self.settings.run_only(self.arguments.args.run_only)
+            self.settings.set_target(self.arguments.args.target_ip_or_url,run_only_condition=True)
