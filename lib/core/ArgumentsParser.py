@@ -275,11 +275,15 @@ class ArgumentsParser:
         
         if categories:
             categories = categories.split(',')
-            # for cat in categories:
-            #     if not self.settings.services.list_all_categories():
-            #         logger.error('Category "{cat}" is not supported. ' \
-            #             'Check "info --categories".'.format(cat=cat))
-            #         return False
+            
+            # Get the list of all supported categories
+            supported_categories = NetworkUtils.list_all_categories()
+            
+            for cat in categories:
+                if cat not in supported_categories:
+                    logger.error('Category "{cat}" is not supported. ' \
+                        'Check "info --categories".'.format(cat=cat))
+                    return False
             
             # Store the list of categories
             if self.args.run_only:

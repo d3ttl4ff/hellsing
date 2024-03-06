@@ -35,7 +35,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Attack methods    
-    def set_target(self, target, banner_condition=False, run_only_condition=False, categories=None):
+    def set_target(self, target, banner_condition=False, run_only_condition=False, run_exclude_condition=False, categories=None):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -167,7 +167,7 @@ class Attack:
                 else:
                     return
                 
-            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, categories=categories)
+            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories)
         
     #------------------------------------------------------------------------------------  
     
@@ -204,7 +204,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Run the attack tools in default mode
-    def run_default(self, protocol, base_target, domain, is_ip_address, ip_address, port, run_only_condition=False, categories=None):
+    def run_default(self, protocol, base_target, domain, is_ip_address, ip_address, port, run_only_condition=False, run_exclude_condition=False, categories=None):
         """
         Run the attack tools in default mode.
         """
@@ -227,6 +227,10 @@ class Attack:
             if run_only_condition:
                 # Skip this tool if its category is not in the included categories
                 if current_category not in included_categories:
+                    continue
+            elif run_exclude_condition:
+                # Skip the tools that are in the included categories
+                if current_category in included_categories:
                     continue
 
             # Print the category title if it's different from the last one

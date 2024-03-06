@@ -14,16 +14,21 @@ class AttackController:
     def run(self):
         
         # --set-target
-        if self.arguments.args.target_ip_or_url:            
+        if self.arguments.args.target_ip_or_url:
+            
+            # --banner            
             if self.arguments.args.banner:
                 self.settings.set_target(self.arguments.args.target_ip_or_url, banner_condition=True)
+                
+            # --run-only
             elif self.arguments.args.run_only:
                 self.settings.set_target(self.arguments.args.target_ip_or_url,run_only_condition=True, categories=self.arguments.args.run_only)
-                # self.settings.run_only(self.arguments.args.run_only)
+                
+            # --run-exclude
+            elif self.arguments.args.run_exclude:
+                self.settings.set_target(self.arguments.args.target_ip_or_url, run_exclude_condition=True, categories=self.arguments.args.run_exclude)
+                
+            # Default
             else:
                 self.settings.set_target(self.arguments.args.target_ip_or_url)
         
-        # # --run-only
-        # if self.arguments.args.run_only:
-        #     self.settings.run_only(self.arguments.args.run_only)
-        #     self.settings.set_target(self.arguments.args.target_ip_or_url,run_only_condition=True)

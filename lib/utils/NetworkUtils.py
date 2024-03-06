@@ -100,3 +100,17 @@ class NetworkUtils:
             logger.error(f"Unable to connect to {base_target} via HTTP or HTTPS.")
 
         return protocol
+    
+    def list_all_categories():
+        """
+        Returns a dictionary of all tool categories and their descriptions.
+        """
+        categories = {
+            "recon": "Reconnaissance",
+            "vuln": "Vulnerability Scan",
+            "exploit": "Exploitation",
+            "postexploit": "Post-exploitation",
+            "bruteforce": "Brute Force",
+            "report": "Reporting"
+        }
+        return categories
