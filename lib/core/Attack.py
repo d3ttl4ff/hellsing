@@ -44,6 +44,7 @@ class Attack:
         protocol, base_target, specified_port, domain = '', '', None, ''
         is_ip_address = False
         ip_address = ''
+        target_mode = 'N/A'
             
         # Parse the target to see if it's a URL with a scheme (http/https)
         if target.startswith('http://') or target.startswith('https://'):
@@ -76,6 +77,7 @@ class Attack:
             # Log warnings or info if service is specified or not
             logger.info('URL given as target')
             logger.success(f'Target URL : {protocol}://{base_target}\n')
+            target_mode = 'URL'
 
         else:
             # Target does not start with http:// or https://, check if it's an IP address or a plain hostname
@@ -98,12 +100,14 @@ class Attack:
                 
                 logger.info('IP given as target') 
                 logger.success(f'Target IP : {ip_address}' + '\n')
+                target_mode = 'IP'
             except socket.error:
                 is_ip_address = False
                 domain = base_target.split("//")[-1].split("/")[0]
                 ip_address = self.netutils.dns_lookup(domain) or base_target
                 logger.info('Hostname given as target')
                 logger.success(f'Target Hostname : {base_target}' + '\n')
+                target_mode = 'Hostname'
 
         # Fetch the default port if not specified
         default_port = self.netutils.get_port_from_url(protocol + "://" + base_target)
@@ -140,9 +144,9 @@ class Attack:
         
         # Check if banner grab is specified
         if banner_condition:
-            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability)
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
         else:
-            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability)
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
             
             # Prompt the user to continue if the target is reachable or not 
             if rechability:
@@ -163,22 +167,31 @@ class Attack:
     #------------------------------------------------------------------------------------  
     
     # Banner grab the target
-    def banner_grab(self, target, port, domain, ip_address, protocol, specified_port, rechability):
+    def banner_grab(self, target, port, domain, ip_address, protocol, specified_port, rechability, target_mode):
         """
         Perform a banner grab on the specified target and port.
 
         :param str target: Target IP address or hostname
         :param str port: Port number
         """
+        self.output.print_title("Banner Grab Information")
+        self.output.print_banner_grabbing("banner-grabbing", f"Mode: {target_mode}", f"{target}")
+        
         try:
-            self.output.print_title("Banner Grab Information")
+            rechable_status = self.output.colored("◉ unknown", "yellow") or '◉ unknown'
+            
+            if rechability:
+                rechable_status = self.output.colored("◉ reachable", "green")
+            else:
+                rechable_status = self.output.colored("◉ not reachable", "red")
+            
             logger.info(f"Target------------| {target}")
             logger.info(f"Port--------------| {port}")
             logger.info(f"Specified Port----| {specified_port}")
             logger.info(f"Domain------------| {domain}")
             logger.info(f"IP Address--------| {ip_address}")
             logger.info(f"Protocol----------| {protocol}")
-            logger.info(f"Reachable Status--| {rechability}")
+            logger.info(f"Reachable Status--| {rechable_status}")
             print('')
         except socket.error as e:
             logger.error(f"Error performing banner grab: {e}\n")

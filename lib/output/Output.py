@@ -72,19 +72,46 @@ class Output(object):
         subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color, highlight=subtitle_highlight, attrs='bold')
         subtool_part = Output.colored(' ' + subtool + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
         subcommand_part = Output.colored(' ' + subcommand + ' ', color=subcommand_color, attrs='bold')
-        check_part = Output.colored(' check ', color='black', highlight='10', attrs='bold')
+        check_part = Output.colored(' check ', color='black', highlight=border_color, attrs='bold')
         
         # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
         top_border = Output.colored('╔════════', color=border_color, attrs='bold')
         bottom_border = Output.colored('╚═', color=border_color)
-        buttom_cmd = Output.colored('$', color='10', attrs='bold')
-        subtitle_connector = Output.colored('▒', color="226", attrs='bold')
-        subtool_connector = Output.colored('▒', color="turquoise_2", attrs='bold')
-        check_connector = Output.colored('▒', color="10", attrs='bold')
+        buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
+        subtitle_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        subtool_connector = Output.colored('▒', color=subtool_highlight, attrs='bold')
+        check_connector = Output.colored('▒', color=border_color, attrs='bold')
         
         print(top_border + check_part + check_connector + subtitle_connector + subtitle_part + subtitle_connector + subtool_connector + subtool_part)
         print(bottom_border + buttom_cmd + subcommand_part)
+        print()
         
+    @staticmethod
+    def print_banner_grabbing(description: str, target_mode: str, action: str) -> None:
+        description_color = 'black'
+        description_highlight = '135'
+        target_mode_color = 'black'
+        target_mode_highlight = '111'
+        action_color = 'turquoise_2'
+        action_highlight = '234'
+        border_color = '10'
+
+        # action, target_mode and subcommand 
+        description_part = Output.colored(' ' + description + ' ', color=description_color, highlight=description_highlight, attrs='bold')
+        target_mode_part = Output.colored(' ' + target_mode + ' ', color=target_mode_color, highlight=target_mode_highlight, attrs='bold')
+        action_part = Output.colored(' ' + action + ' ', color=action_color, attrs='bold')
+        identify_part = Output.colored(' identify ', color='black', highlight=border_color, attrs='bold')
+        
+        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        top_border = Output.colored('╔════════', color=border_color, attrs='bold')
+        bottom_border = Output.colored('╚═', color=border_color)
+        buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
+        description_connector = Output.colored('▒', color=description_highlight, attrs='bold')
+        target_mode_connector = Output.colored('▒', color=target_mode_highlight, attrs='bold')
+        identify_connector = Output.colored('▒', color=border_color, attrs='bold')
+        
+        print(top_border + identify_part + identify_connector + description_connector + description_part + description_connector + target_mode_connector + target_mode_part)
+        print(bottom_border + buttom_cmd + action_part)
         print()
 
     @staticmethod
