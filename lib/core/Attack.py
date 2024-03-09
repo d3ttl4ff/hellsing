@@ -278,22 +278,6 @@ class Attack:
         logger.success("All applicable tools have been executed for the target.\n")
     
     #------------------------------------------------------------------------------------
-    
-    def use_profile(self, profile):
-        """
-        Use the specified attack profile.
-
-        :param str profile: Attack profile to use
-        """
-        self.profile = profile
-    
-    def run_exclude(self, checks):
-        """
-        Exclude the specified checks.
-
-        :param list categories: Categories of checks to exclude
-        """
-        self.exclude = checks
         
         
     

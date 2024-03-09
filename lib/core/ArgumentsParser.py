@@ -16,7 +16,6 @@ from lib.output.Output import Output
 from lib.output.Logger import logger
 from lib.utils.ArgParseUtils import LineWrapRawTextHelpFormatter
 from lib.utils.NetworkUtils import NetworkUtils
-from lib.utils.WebUtils import WebUtils
 
 class ArgumentsParser:
     formatter_class = lambda prog: LineWrapRawTextHelpFormatter(
@@ -282,7 +281,7 @@ class ArgumentsParser:
             for cat in categories:
                 if cat not in supported_categories:
                     logger.error('Category "{cat}" is not supported. ' \
-                        'Check "info --categories".'.format(cat=cat))
+                        'Check "attack -h for more information".'.format(cat=cat))
                     return False
             
             # Store the list of categories

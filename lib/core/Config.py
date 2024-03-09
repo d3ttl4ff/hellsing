@@ -14,7 +14,7 @@ from lib.output import Output
 # Banner/Help
 __version__ = Output.colored(f'{__version__}                            ', color='black', highlight='red', attrs='bold')
 prefix = Output.colored('                         v ', color='black', highlight='red', attrs='bold')
-subtitle = Output.colored('█▓▓░░░░░[ Network & Web Pentest Automation Suite ]░░░░░░▒▓█', color='black', highlight='red', attrs='bold')
+subtitle = Output.colored('█▓▓░░░░░[ Web Pentest Automation Suite ]░░░░░░▒▓█', color='black', highlight='red', attrs='bold')
 context = Output.colored(
   """▒ ░░▒░▒░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒  ░▒   ▒
   ▒ ░▒░ ░ ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░  ░   ░

@@ -124,9 +124,11 @@ class Settings:
 
         :param target: Target URL or IP address
         """
-        print(f"run only condition: {run_only_condition} \nrun exclude condition: {run_exclude_condition}")
         self.attack.set_target(target, 
-                               banner_condition=banner_condition, run_only_condition=run_only_condition, run_exclude_condition=run_exclude_condition, categories=categories)
+                               banner_condition=banner_condition, 
+                               run_only_condition=run_only_condition, 
+                               run_exclude_condition=run_exclude_condition, 
+                               categories=categories)
         
     #------------------------------------------------------------------------------------ 
 
