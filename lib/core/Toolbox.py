@@ -159,6 +159,9 @@ class Toolbox:
                     install_command = self.config.get(tool, 'install')
                     logger.info(f"Installing {tool_name}...")
                     
+                    if '[HTTPTOOLBOXDIR]' in install_command:
+                        install_command = install_command.replace('[HTTPTOOLBOXDIR]', HTTP_TOOLBOX_DIR)
+                    
                     if operational:
                         logger.success(f"{config_name} is already installed and operational.\n")
                         return

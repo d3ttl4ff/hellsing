@@ -259,6 +259,12 @@ class Attack:
                     # Change to the tool's directory and execute the command
                     os.chdir(tool_dir_path)
 
+                if "[TOOLDIR]" in command:
+                    command = command.replace("[TOOLDIR]", tool_dir_path)
+                    
+                if "[WORDLISTSDIR]" in command:
+                    command = command.replace("[WORDLISTSDIR]", WORDLISTS_DIR)
+
                 display_check_name = tool_config.get('name', None)
                 display_check_tool_name = tool_config.get('tool', None)
                 
