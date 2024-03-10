@@ -265,7 +265,6 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
-                    print(tool_dir_path)
                     subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
                     # subprocess.run(command, shell=True, check=True)
                     
