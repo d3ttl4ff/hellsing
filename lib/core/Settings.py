@@ -70,7 +70,7 @@ class Settings:
     
     # Toolbox methods
     def show_all_tools(self):
-        Output.print_title("Installed tools status")
+        Output.print_title("Toolbox status")
         self.toolbox.show_toolbox()
 
     def install_tool(self, tool_name):

@@ -158,10 +158,15 @@ class Toolbox:
                 try:
                     install_command = self.config.get(tool, 'install')
                     logger.info(f"Installing {tool_name}...")
-                    subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
-                    logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
                     
-                            # Write the current date to installed_date.txt
+                    if operational:
+                        logger.success(f"{config_name} is already installed and operational.\n")
+                        return
+                    else:
+                        subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
+                        logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
+                        
+                    # Write the current date to installed_date.txt
                     installed_date_path = os.path.join(tool_dir, 'installed_date.txt')
                     with open(installed_date_path, 'w') as f:
                         f.write(datetime.now().strftime('%Y-%m-%d'))
