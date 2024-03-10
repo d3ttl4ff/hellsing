@@ -255,22 +255,23 @@ class Attack:
                 tool_name = tool_config.get('tool', '').lower()
                 tool_dir_path = HTTP_TOOLBOX_DIR + '/' + tool_name
                 
-                if os.path.isdir(tool_dir_path):
-                    # Change to the tool's directory and execute the command
-                    os.chdir(tool_dir_path)
+                # if os.path.isdir(tool_dir_path):
+                #     # Change to the tool's directory and execute the command
+                #     os.chdir(tool_dir_path)
 
                 display_check_name = tool_config.get('name', None)
                 display_check_tool_name = tool_config.get('tool', None)
                 
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
-                    subprocess.run(shlex.split(command), check=True)
+                    
+                    subprocess.run(shlex.split(command), check=True, cwd=tool_dir_path)
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}")
                 finally:
                     # Change back to the original directory after execution
                     if os.path.isdir(tool_dir_path):
-                        os.chdir(TOOL_BASEPATH)  # Adjust this path to return to the original directory as needed
+                        os.chdir(TOOL_BASEPATH)
                 print('\n')
             else:
                 logger.error(f"No command template found for {tool}.\n")
