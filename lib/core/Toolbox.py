@@ -29,9 +29,12 @@ class Toolbox:
         """
         Display a table showing the content of the toolbox.
         """
+        #tool counter
+        i = 0
 
         data = list()
         columns = [
+            '#',
             'Name',
             'Service',
             'Status',
@@ -76,13 +79,14 @@ class Toolbox:
                     check_command = self.config.get(tool, 'check_command')
                     result = subprocess.run(check_command, shell=True, check=True, cwd=tool_dir_path, text=True, capture_output=True)
                     # If the check_command runs successfully, the tool is operational
-                    status = Output.colored('READY', color='green')   
+                    status = Output.colored('READY', color='green')      
                 except (subprocess.CalledProcessError, configparser.NoOptionError, OSError):
                     # If the check_command fails or doesn't exist, the tool is not operational
                     status = Output.colored('Not operational', color='red')
             else:
                 # If the directory doesn't exist, the tool is not installed
                 status = Output.colored('Not installed', color='red')
+            i += 1 
             
             # last_repo_update = 'Unknown'
                 
@@ -93,6 +97,7 @@ class Toolbox:
 
             # Add line for the tool
             data.append([
+                i,
                 name,
                 target_service,
                 status,
@@ -126,6 +131,7 @@ class Toolbox:
                 # Check if the tool's directory exists and if it's operational
                 tool_exists = os.path.exists(tool_dir)
                 operational = False
+                
                 if tool_exists:
                     try:
                         check_command = self.config.get(tool, 'check_command')
@@ -172,8 +178,7 @@ class Toolbox:
 
         # If the loop completes without finding and installing the tool, it doesn't exist in the config
         logger.error(f"Tool {tool_name} not found in the toolbox configuration.\n")
-
-
+    
     #------------------------------------------------------------------------------------
     
     def install_all(self):
