@@ -326,7 +326,6 @@ class Toolbox:
                     check_command = self.config.get(tool, 'check_command')
                     logger.info(f"Checking {config_name} in {tool_dir}...")
                     subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, text=True, capture_output=True)
-                    print('111111111111111')
                     # Success message without showing stdout
                     logger.success(f"{config_name} is operational.\n")
                     return
