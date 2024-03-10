@@ -85,7 +85,6 @@ ARGPARSE_MAX_HELP_POS    = 45
 #     'banner'   : FilterData.BANNER,
 # }
 
-
 #----------------------------------------------------------------------------------------
 # Basic Settings
 
