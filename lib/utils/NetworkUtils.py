@@ -14,6 +14,21 @@ from lib.output.Logger import logger
 class NetworkUtils:
     
     @staticmethod
+    def get_local_ip_address():
+        """Return the local IP address of the machine."""
+        # Create a socket object
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            # Connect to an external server (doesn't actually establish a connection)
+            s.connect(("8.8.8.8", 80))
+            # Get the socket's own address
+            IP = s.getsockname()[0]
+        finally:
+            # Ensure the socket is closed to free up resources
+            s.close()
+        return IP
+    
+    @staticmethod
     def dns_lookup(domain_name):
         """Resolve domain name to IP address."""
         try:

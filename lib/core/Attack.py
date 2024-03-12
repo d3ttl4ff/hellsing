@@ -264,6 +264,13 @@ class Attack:
                     
                 if "[WORDLISTSDIR]" in command:
                     command = command.replace("[WORDLISTSDIR]", WORDLISTS_DIR)
+                    
+                if "[WEBSHELLSDIR]" in command:
+                    command = command.replace("[WEBSHELLSDIR]", WEBSHELLS_DIR)
+                    
+                if "[LOCALIP]" in command:
+                    local_ip = self.netutils.get_local_ip_address()
+                    command = command.replace("[LOCALIP]", local_ip)
 
                 display_check_name = tool_config.get('name', None)
                 display_check_tool_name = tool_config.get('tool', None)
