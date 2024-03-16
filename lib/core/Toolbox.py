@@ -164,16 +164,22 @@ class Toolbox:
                     
                     if operational:
                         logger.success(f"{config_name} is already installed and operational.\n")
-                        return
+                        return True
                     else:
-                        subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
-                        logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
+                        try:
+                            subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
+                            logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
+                            
+                            # Write the current date to installed_date.txt
+                            installed_date_path = os.path.join(tool_dir, 'installed_date.txt')
+                            with open(installed_date_path, 'w') as f:
+                                f.write(datetime.now().strftime('%Y-%m-%d'))
+                                
+                            return True
+                        except Exception as e:
+                            logger.error(f"Error installing {tool_name} in {tool_dir}: {e}\n")
+                            return False
                         
-                    # Write the current date to installed_date.txt
-                    installed_date_path = os.path.join(tool_dir, 'installed_date.txt')
-                    with open(installed_date_path, 'w') as f:
-                        f.write(datetime.now().strftime('%Y-%m-%d'))
-                    return
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error installing {tool_name} in {tool_dir}: {e}\n")
                     return
@@ -191,10 +197,25 @@ class Toolbox:
     
     def install_all(self):
         """
-        Install all tools in the toolbox.
+        Install all tools in the toolbox and report on success/failure.
         """
+        success_count = 0
+        failure_count = 0
+
         for tool in self.tools:
-            self.install_tool(tool)
+            original_name = self.config.get(tool, 'name')
+            result = self.install_tool(original_name)  # Use original tool name for case sensitivity
+            if result:
+                success_count += 1
+            else:
+                failure_count += 1
+
+        total_tools = len(self.tools)
+        if failure_count == 0:
+            logger.success(f"All {total_tools} tools have been successfully installed.")
+        else:
+            logger.info(f"{success_count} out of {total_tools} tools have been successfully installed.")
+            logger.warning(f"{failure_count} tools could not be installed. Check logs for more details.")
             
     #------------------------------------------------------------------------------------
     
