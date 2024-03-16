@@ -527,60 +527,60 @@ fi
 print_delimiter
 
 # -----------------------------------------------------------------------------
-# Install different versions of Ruby via RVM
+# # Install different versions of Ruby via RVM
 
-if [ -a /usr/local/rvm/scripts/rvm ]; then
-    source /usr/local/rvm/scripts/rvm
-fi
-if [[ ! $(rvm list | grep ruby-2.4) ]]; then
-    print_blue "[~] Install Ruby 2.4 (old version)"
-    apt-get install -y ruby-psych
-    apt-get purge -y libssl-dev
-    apt-get install -y libssl1.0-dev
-    rvm install ruby-2.4
-    if [[ ! $(rvm list | grep ruby-2.4) ]]; then
-        print_red "[!] Ruby 2.4 has not been installed correctly with RVM"
-        exit 1
-    else
-        rvm list
-        print_green "[+] Ruby 2.4 has been successfully installed with RVM"
-    fi
-else
-    print_green "[+] Ruby 2.4 is already installed"
-fi
-print_delimiter
-
-# if ! rvm list | grep -q "ruby-2.5"
-# then
-#     print_green "[~] Install Ruby 2.5 (default)"
-#     rvm install ruby-2.5
-#     rvm --default use 2.5
-#     gem install ffi
-#     rvm list
+# if [ -a /usr/local/rvm/scripts/rvm ]; then
+#     source /usr/local/rvm/scripts/rvm
 # fi
+# if [[ ! $(rvm list | grep ruby-2.4) ]]; then
+#     print_blue "[~] Install Ruby 2.4 (old version)"
+#     apt-get install -y ruby-psych
+#     apt-get purge -y libssl-dev
+#     apt-get install -y libssl1.0-dev
+#     rvm install ruby-2.4
+#     if [[ ! $(rvm list | grep ruby-2.4) ]]; then
+#         print_red "[!] Ruby 2.4 has not been installed correctly with RVM"
+#         exit 1
+#     else
+#         rvm list
+#         print_green "[+] Ruby 2.4 has been successfully installed with RVM"
+#     fi
+# else
+#     print_green "[+] Ruby 2.4 is already installed"
+# fi
+# print_delimiter
 
-if [[ ! $(rvm list | grep ruby-2.6) ]]; then
-    print_blue "[~] Install Ruby 2.6"
-    rvm install ruby-2.6
-    rvm --default use ruby-2.6
-    gem install ffi
-    if [[ ! $(rvm list | grep ruby-2.6) ]]; then
-        print_red "[!] Ruby 2.6 has not been installed correctly with RVM"
-        exit 1
-    else
-        rvm list
-        print_green "[+] Ruby 2.6 has been successfully installed with RVM"
-    fi
-else
-    print_green "[+] Ruby 2.6 is already installed"
-fi
-print_delimiter
+# # if ! rvm list | grep -q "ruby-2.5"
+# # then
+# #     print_green "[~] Install Ruby 2.5 (default)"
+# #     rvm install ruby-2.5
+# #     rvm --default use 2.5
+# #     gem install ffi
+# #     rvm list
+# # fi
+
+# if [[ ! $(rvm list | grep ruby-2.6) ]]; then
+#     print_blue "[~] Install Ruby 2.6"
+#     rvm install ruby-2.6
+#     rvm --default use ruby-2.6
+#     gem install ffi
+#     if [[ ! $(rvm list | grep ruby-2.6) ]]; then
+#         print_red "[!] Ruby 2.6 has not been installed correctly with RVM"
+#         exit 1
+#     else
+#         rvm list
+#         print_green "[+] Ruby 2.6 has been successfully installed with RVM"
+#     fi
+# else
+#     print_green "[+] Ruby 2.6 is already installed"
+# fi
+# print_delimiter
 
 # -----------------------------------------------------------------------------
 
-print_blue "[~] Update Ruby bundler"
-gem install bundler
-print_delimiter
+# print_blue "[~] Update Ruby bundler"
+# gem install bundler
+# print_delimiter
 
 # -----------------------------------------------------------------------------
 # Install Perl
