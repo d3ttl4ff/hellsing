@@ -204,7 +204,7 @@ class Toolbox:
 
         for tool in self.tools:
             original_name = self.config.get(tool, 'name')
-            result = self.install_tool(original_name)  # Use original tool name for case sensitivity
+            result = self.install_tool(original_name)
             if result:
                 success_count += 1
             else:
