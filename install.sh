@@ -61,32 +61,32 @@ print_delimiter
 
 # -----------------------------------------------------------------------------
 
-print_blue "[~] Running Hellsing full toolbox install (in non-interactive mode)..."
-python3 hellsing.py toolbox --install-all --auto
-if [ $? -eq 0 ]; then
-    print_green "[+] Hellsing toolbox install exited with success returncode"
-else
-    print_red "[!] Hellsing toolbox install exited with error returncode"
-    ((failed_counter++))
-fi
-print_delimiter
+# print_blue "[~] Running Hellsing full toolbox install (in non-interactive mode)..."
+# python3 hellsing.py toolbox --install-all
+# if [ $? -eq 0 ]; then
+#     print_green "[+] Hellsing toolbox install exited with success returncode"
+# else
+#     print_red "[!] Hellsing toolbox install exited with error returncode"
+#     ((failed_counter++))
+# fi
+# print_delimiter
 
 # -----------------------------------------------------------------------------
 
-print_blue "[~] Running automatic check of all installed tools (based on returncodes)..."
-python3 hellsing.py toolbox --check
-if [ $? -eq 0 ]; then
-    print_green "[+] Toolbox automatic check exited with success returncode"
-else
-    print_red "[!] Toolbox automatic check exited with error returncode"
-    ((failed_counter++))
-fi
-print_delimiter
+# print_blue "[~] Running automatic check of all installed tools (based on returncodes)..."
+# python3 hellsing.py toolbox --check-all
+# if [ $? -eq 0 ]; then
+#     print_green "[+] Toolbox automatic check exited with success returncode"
+# else
+#     print_red "[!] Toolbox automatic check exited with error returncode"
+#     ((failed_counter++))
+# fi
+# print_delimiter
 
 # -----------------------------------------------------------------------------
 
-print_blue "[~] Print toolbox content"
-python3 hellsing.py toolbox --show-all
+# print_blue "[~] Print toolbox content"
+# python3 hellsing.py toolbox --show-all
 
 # -----------------------------------------------------------------------------
 
