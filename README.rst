@@ -180,7 +180,7 @@ Update
 Quick usage examples
 ====================
 
-Pentest Toolbox management
+Toolbox management
 --------------------------
 
 * Show all the tools in the toolbox:
@@ -190,7 +190,7 @@ Pentest Toolbox management
     python3 jok3r.py toolbox --show-all
 
 
-
+.. -----------------------------------------------------------------------------
 Debugging
 -----------
 
@@ -201,7 +201,8 @@ Debugging
     python3 hellsing.py -h
 
 
-Debugging
+.. -----------------------------------------------------------------------------
+Toolbox Management
 -----------
 
 * Show all the tools in the toolbox:
@@ -217,50 +218,206 @@ Debugging
 
     python3 hellsing.py toolbox --install-all
 
+
 * Install specific tool(s) in the toolbox:
 
 .. code-block:: console
 
     python3 hellsing.py toolbox --install ‘tool1,tool2,…’	
 
+
 * Update all the tools in the toolbox:
 
 .. code-block:: console
 
-    python3 hellsing.py toolbox --install ‘tool1,tool2,…’	
+    python3 hellsing.py toolbox --update-all
 
 
-Security Assessment
-----------------
-* Display all tools in the toolbox:
+* Update specific tool(s) in the toolbox:
+
+.. code-block:: console
+
+    python3 hellsing.py toolbox --update-tool ‘tool1,tool2,…’
+
+
+* Uninstall all the tools in the toolbox:
+
+.. code-block:: console
+
+    python3 hellsing.py toolbox --uninstall-all
+
+
+* Uninstall specific tool(s) in the toolbox:
+
+.. code-block:: console
+
+    python3 hellsing.py toolbox --uninstall-tool ‘tool1,tool2,…’
+
+
+* Check the status of all the tools in the toolbox:
 
 .. code-block:: console
 
     python3 hellsing.py toolbox --show-all
 
 
+* Check the operational status of the tools in the toolbox:
+
+.. code-block:: console
+
+    python3 hellsing.py toolbox --check-all
+
+
+.. -----------------------------------------------------------------------------
+Security Assessment
+----------------
+* Run all security checks against a URL:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL]
+
+
+* Run all security checks against an IP address:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [IP]
+
+
+* Specify the target port:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL/IP]:[PORT]
+
+
+* Run only checks in specified category(ies):
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL] --run-only [CAT1,CAT2,…]
+
+
+* Run all checks except the ones in specified category(ies): 
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL] --run-exclude [CAT1,CAT2,…]
+
+
+* Run security checks using a pre-defined attack profile:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL] --profile [PROFILE_NAME]
+
+
+* Add/Update the target into a given task scope:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t [URL] --addop [TASK_NAME]
+.. -----------------------------------------------------------------------------
 **Usage examples:** 
 
-* Run all security checks against an URL in interactive mode and add results to the "mayhem" mission:
+* Example 1: Run all security checks against a URL:
 
 .. code-block:: console
 
-    python3 jok3r.py attack -t https://www.example.com/ --add2db mayhem
+    python3 hellsing.py attack -t http://example.com
 
 
-* Run security checks against a MS-SQL service (without user-interaction) and add results to the mission:
-
-.. code-block:: console
-
-    python3 jok3r.py attack -t 192.168.1.42:1433 -s mssql --add2db mayhem --fast
-
-
-* Run only "recon" and "vulnscan" security checks against an FTP service and add results to the mission:
+* Example 2: Run all security checks against an IP address:
 
 .. code-block:: console
 
-    python3 jok3r.py attack -t 192.168.1.142:21 -s ftp --cat-only recon,vulnscan --add2db mayhem
+    python3 hellsing.py attack -t 0.0.0.0
 
+
+* Example 3: Run all security checks against a URL and specify the target port:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t http://example.com:8080
+
+
+* Example 4: Run only checks in specified category(ies):
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t http://example.com --run-only recon,vulnlscan
+
+* Example 5: Add/Update the target into a given task scope:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -t http://example.com --addop [castle]
+
+
+.. -----------------------------------------------------------------------------
+Database and Reporting
+----------------
+* Create a new task in the local database:
+
+.. code-block:: console
+
+    python3 hellsing.py db 
+
+    helldb[default]> task -a [TASK_ID] 
+
+    [+] Task “bayonet” successfully added 
+    [*] Selected task is now bayonet 
+
+    helldb[TASK_ID]>
+
+
+* Select a task:
+
+.. code-block:: console
+
+    python3 hellsing.py db 
+
+    helldb[default]> task [TASK_ID] 
+
+    [+] Selected task is now [TASK_ID] 
+    [*] Task “[TASK_ID]” does not exist
+
+
+* Display services, hosts, detected products, found credentials and found vulnerabilities in the selected task:
+
+.. code-block:: console
+
+    helldb[TASK_ID]> services
+    helldb[TASK_ID]> hosts 
+    helldb[TASK_ID]> products
+    helldb[TASK_ID]> creds 
+    helldb[TASK_ID]> vulns
+
+
+* Generate a HTML report for the selected task: 
+
+.. code-block:: console
+
+    helldb[TASK_ID]> report
+
+.. -----------------------------------------------------------------------------
+=====================================
+Security Checks Categories 
+=====================================
+
+**Updated on: 17/03/2024**
+
+-  `recon`_
+-  `vulnscan`_
+-  `exploit`_
+-  `bruteforce`_
+-  `discovery`_
+-  `postexploit`_
+-  `report`_
+
+
+.. -----------------------------------------------------------------------------
 =====================================
 Supported Services & Security Checks 
 =====================================
@@ -269,6 +426,8 @@ Supported Services & Security Checks
 
 -  `HTTP (default 80/tcp)`_
 -  `HTTPS (default 443/tcp)`_
+
+.. -----------------------------------------------------------------------------
 HTTP (default 80/tcp)
 ---------------------
 
