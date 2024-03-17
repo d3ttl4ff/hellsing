@@ -388,10 +388,11 @@ Supported Services & Security Checks
 **Updated on: 17/03/2024**
 
 -  `HTTP (default 80/tcp)`_
--  `HTTPS (default 443/tcp)`_`
+-  `HTTPS (default 443/tcp)`_
 
 .. -----------------------------------------------------------------------------
 HTTP (default 80/tcp)
+---------------------
 HTTPS (default 443/tcp)
 ---------------------
 
