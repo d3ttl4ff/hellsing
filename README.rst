@@ -87,10 +87,15 @@ Architecture
 .. .. image:: ./pictures/visio/flowchart/jok3r-flow-chart.svg
 ..     :alt: hellsing.py architecture
 
+.. raw:: html
+
+   <h1 align="center">
 
 .. image:: ./resources/hellsing.py_process_flow.png
     :width: 700px
     :alt: hellsing.py process flow
+
+.. raw:: html
 
 
 ============
