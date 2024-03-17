@@ -179,7 +179,7 @@ Toolbox Management
 
 .. code-block:: console
 
-    python3 hellsing.py toolbox --install ‘tool1,tool2,…’	
+    python3 hellsing.py toolbox --install tool1,tool2,…	
 
 
 * Update all the tools in the toolbox:
@@ -193,7 +193,7 @@ Toolbox Management
 
 .. code-block:: console
 
-    python3 hellsing.py toolbox --update-tool ‘tool1,tool2,…’
+    python3 hellsing.py toolbox --update-tool tool1,tool2,…
 
 
 * Uninstall all the tools in the toolbox:
@@ -207,7 +207,7 @@ Toolbox Management
 
 .. code-block:: console
 
-    python3 hellsing.py toolbox --uninstall-tool ‘tool1,tool2,…’
+    python3 hellsing.py toolbox --uninstall-tool tool1,tool2,…
 
 
 * Check the status of all the tools in the toolbox:
