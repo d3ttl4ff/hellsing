@@ -37,7 +37,7 @@
 =============
 Introduction
 =============
-**hellsing.py** is a web penetration testing automation CLI tool which is created using Python3 language.
+**`hellsing.py`** is a web penetration testing automation CLI tool which is created using Python3 language.
 
 It's integrating more than 40+ open-source CLI tools and various scripts. Designed for both security professionals and passionate enthusiasts, 
 it offers a streamlined approach to web security testing. From probing the digital fortress to exploit web systems upon vulnerabilities.
