@@ -302,7 +302,6 @@ Security Assessment
 * Example 3: Run all security checks against a URL and specify the target port:
 
 .. code-block:: console
-    # Example 3: Run all security checks against a URL and specify the target port:
     python3 hellsing.py attack -t http://example.com:8080
 
 
