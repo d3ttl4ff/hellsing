@@ -128,7 +128,7 @@ Installation
 Update
 ============
 
-    **In order to update, just pull the latest version of the tool from git repository.**
+   **In order to update, just pull the latest version of the tool from git repository.**
 
     .. code-block:: console
 
