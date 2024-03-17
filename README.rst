@@ -116,55 +116,28 @@ Architecture
 ============
 Installation
 ============
-**IMPORTANT: The recommended way to use Jok3r is by pulling the Docker Image so you will not have 
-to worry about dependencies issues and installing the various hacking tools of the toolbox.
-Everything is tested from the Docker container available on Docker Hub !**
+** To install just clone the git repository and run the setup script.**
 
-.. image:: https://raw.githubusercontent.com/koutto/jok3r/master/pictures/docker-logo.png
-
-A Docker image is available on Docker Hub and automatically re-built at each update: 
-https://hub.docker.com/r/koutto/jok3r/. It is initially based on official Kali
-Linux Docker image (kalilinux/kali-linux-docker).
-
-.. image:: https://images.microbadger.com/badges/image/koutto/jok3r.svg
-   :target: https://microbadger.com/images/koutto/jok3r
-   :alt: Docker Image size
-
-
-1. **Pull Jok3r Docker Image:**
+1. **Clone the git repository:**
 
     .. code-block:: console
 
-        sudo docker pull koutto/jok3r
-
-2. **Run fresh Docker container:**
-
-    .. code-block:: console
-
-        sudo docker run -i -t --name jok3r-container -w /root/jok3r -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --shm-size 2g --net=host koutto/jok3r
-
-Notes:
-
-* ``-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix`` is required in order to be able to start GUI applicationfrom the Docker container (e.g. open web browser to read reports). It requires running ``xhost +local:root`` on the host.
-
-* ``--shm-size 2g`` is used to increase the size of the shared memory, it is required to avoid crashs of web browser when reading reports from the Docker container.
-
-* ``--net=host`` is required to share host's interface. It is needed for reverse connections (e.g. Ping to container when testing for RCE, Getting a reverse shell)
+        git clone https://github.com/d3ttl4ff/hellsing.git
 
 
-3. **To re-run a stopped container:**
+2. **Run the dependency installation script:**
 
     .. code-block:: console
 
-        sudo docker start -i jok3r-container
+        cd hellsing
+        sudo ./install.sh
 
 
-4. **To open multiple shells inside the container:**
+3. **Run the tool:**
 
     .. code-block:: console
 
-        sudo docker exec -it jok3r-container bash
-
+        python3 hellsing.py -h
 
 ============
 Update
@@ -175,19 +148,6 @@ Update
 .. code-block:: console
 
     sudo git pull
-
-====================
-Quick usage examples
-====================
-
-Toolbox management
---------------------------
-
-* Show all the tools in the toolbox:
-
-.. code-block:: console
-
-    python3 jok3r.py toolbox --show-all
 
 
 .. -----------------------------------------------------------------------------
@@ -204,6 +164,13 @@ Debugging
 .. -----------------------------------------------------------------------------
 Toolbox Management
 -----------
+
+* Show toolbox help menu:
+
+.. code-block:: console
+
+    python3 hellsing.py toolbox -h
+
 
 * Show all the tools in the toolbox:
 
@@ -271,6 +238,14 @@ Toolbox Management
 .. -----------------------------------------------------------------------------
 Security Assessment
 ----------------
+
+* Show security assessment help menu:
+
+.. code-block:: console
+
+    python3 hellsing.py attack -h
+
+
 * Run all security checks against a URL:
 
 .. code-block:: console
@@ -358,6 +333,14 @@ Security Assessment
 .. -----------------------------------------------------------------------------
 Database and Reporting
 ----------------
+
+* Show database help menu:
+
+.. code-block:: console
+
+    python3 hellsing.py db -h
+
+
 * Create a new task in the local database:
 
 .. code-block:: console
