@@ -371,7 +371,7 @@ Database and Reporting
 
 .. -----------------------------------------------------------------------------
 =====================================
-Security Checks Categories 
+Supported Security Checks Categories 
 =====================================
 
 **Updated on: 17/03/2024**
@@ -387,7 +387,7 @@ Security Checks Categories
 
 .. -----------------------------------------------------------------------------
 =====================================
-Supported Services & Security Checks 
+Supported Services
 =====================================
 
 **Updated on: 17/03/2024**
