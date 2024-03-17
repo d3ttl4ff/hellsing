@@ -2,7 +2,7 @@
 
    <h1 align="center">
 
-.. image:: resources\hellsing.jpg
+.. image:: ./resources/hellsing.jpg
 
 .. raw:: html
 
@@ -84,11 +84,11 @@ Local Database & Reporting
 ============
 Architecture
 ============
-.. .. image:: C:\Users\itzLuminara\Desktop\hellsing\resources\hellsing.jpg
-..     :alt: Jok3r architecture
+.. .. image:: ./pictures/visio/flowchart/jok3r-flow-chart.svg
+..     :alt: hellsing.py architecture
 
 
-.. image:: resources\hellsing.py_process_flow.png
+.. image:: ./resources/hellsing.py_process_flow.png
     :width: 700px
     :alt: hellsing.py process flow
 
