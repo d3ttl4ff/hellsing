@@ -101,7 +101,7 @@ Architecture
 ============
 Installation
 ============
-** To install just clone the git repository and run the setup script.**
+** To install just clone the git repository and run the setup script. **
 
 1. **Clone the git repository:**
 
