@@ -2,7 +2,7 @@
 
    <h1 align="center">
 
-.. image:: hellsing.jpg
+.. image:: resources\hellsing.jpg
 
 .. raw:: html
 
@@ -82,30 +82,15 @@ Local Database & Reporting
 
 
 ============
-Demos
+Architecture
 ============
-
-* **Example 1: Scan a JAVA-RMI (JMX) service:** 
-
-.. image:: pictures/video-01.png
-   :target: https://www.youtube.com/watch?v=FlbeBj5FPtI
-
-* **Example 2: Scan a Joomla website:** 
-
-.. image:: pictures/video-02.png
-   :target: https://www.youtube.com/watch?v=z4cf_8EQ59Q
-
-
-.. ============
-.. Architecture
-.. ============
-.. .. image:: ./pictures/visio/architecture/jok3r-architecture.png
+.. .. image:: C:\Users\itzLuminara\Desktop\hellsing\resources\hellsing.jpg
 ..     :alt: Jok3r architecture
 
 
-.. .. image:: ./pictures/visio/flowchart/jok3r-flow-chart.svg
-..     :width: 700px
-..     :alt: Jok3r flowchart
+.. image:: resources\hellsing.py_process_flow.png
+    :width: 700px
+    :alt: hellsing.py process flow
 
 
 ============
