@@ -149,7 +149,7 @@ class Attack:
         
         # Check if banner grab is specified
         if banner_condition:
-            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode
+            self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
         else:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
             
