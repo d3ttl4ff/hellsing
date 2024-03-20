@@ -145,7 +145,7 @@ class Attack:
                 # return
             else:
                 logger.success(f"IP address {ip_address} is reachable\n")
-                rechability = Tru
+                rechability = True
         
         # Check if banner grab is specified
         if banner_condition:
