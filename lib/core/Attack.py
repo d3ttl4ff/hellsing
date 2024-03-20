@@ -167,7 +167,7 @@ class Attack:
                 else:
                     return
                 
-            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories)
+            self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories, profile_condition=profile_condition, profile=profile)
         
     #------------------------------------------------------------------------------------  
     
@@ -211,6 +211,15 @@ class Attack:
         # Convert the comma-separated categories string into a set for efficient lookup
         included_categories = categories
         
+        # Retrieve profile-specific tools if profile_condition is True
+        profile_tools = []
+        if profile_condition and profile:
+            if profile:
+                profile_tools = profile.get('http', [])
+            else:
+                logger.error(f'Profile "{profile}" not found or has no tools specified.')
+                return
+        
         # To track the last printed category
         last_category = None
 
@@ -231,6 +240,11 @@ class Attack:
             elif run_exclude_condition:
                 # Skip the tools that are in the included categories
                 if current_category in included_categories:
+                    continue
+            elif profile_condition:
+                adjusted_tool_name = tool.replace('check_', '')
+                
+                if adjusted_tool_name not in profile_tools:
                     continue
 
             # Print the category title if it's different from the last one

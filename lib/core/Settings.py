@@ -125,6 +125,7 @@ class Settings:
 
         :param target: Target URL or IP address
         """
+        
         self.attack.set_target(target, 
                                banner_condition=banner_condition, 
                                run_only_condition=run_only_condition, 
@@ -148,13 +149,12 @@ class Settings:
         config.read(ATTACK_PROFILES_CONF_FILE + CONF_EXT)
         
         if profile_name in config:
-            # http_tools = config[profile_name].get('http', '').strip().split(',')
-            # # Filter out commented or empty lines
-            # http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
-            # return {
-            #     'description': config[profile_name].get('description', '').strip(),
-            #     'http': http_tools
-            # }
-            return True
+            http_tools = config[profile_name].get('http', '').strip().split(',')
+            # Filter out commented or empty lines
+            http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
+            return {
+                'description': config[profile_name].get('description', '').strip(),
+                'http': http_tools
+            }
         else:
             return None
