@@ -117,7 +117,7 @@ CONF_EXT                  = '.conf'
 TOOLBOX_CONF_FILE         = SETTINGS_DIR + '/toolbox'
 HTTP_CONF_FILE            = SETTINGS_DIR + '/http'
 
-ATTACK_PROFILES_CONF_FILE = 'attack_profiles'
+ATTACK_PROFILES_CONF_FILE = SETTINGS_DIR + '/attack_profiles'
 # INSTALL_STATUS_CONF_FILE  = '_install_status'
 # PREFIX_SECTION_CHECK      = 'check_'
 # MULTI_CONF                = 'multi'

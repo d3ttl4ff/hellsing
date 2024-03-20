@@ -290,119 +290,17 @@ class ArgumentsParser:
             else:
                 self.args.run_exclude = categories
                 
-        # # Select attack profile
-        # elif self.args.profile:
-        #     profile = self.settings.attack_profiles.get(self.args.profile.lower())
+        # Select attack profile
+        elif self.args.profile:
+            # profile = self.settings.attack_profiles.get(self.args.profile.lower())
+
+            profile_details = self.settings.get_profile_details(self.args.profile.lower())
             
-        #     if not profile:
-        #         logger.error('Attack profile "{profile}" does not exist. ' \
-        #             'Check "info --attack-profiles".'.format(profile=self.args.profile))
-        #         return False
-            
-        #     elif self.args.target_ip_or_url \
-        #          and not profile.is_service_supported(self.args.service):
-                     
-        #         logger.error('Attack profile "{profile}" does not support service ' \
-        #             'service "{service}"'.format(profile=self.args.profile, service=self.args.service))
-        #         return False
-            
-        #     # Store attack profile
-        #     self.args.profile = profile
+            if not profile_details:
+                logger.error(f'Profile "{self.args.profile}" is not supported. Check "attack -h" for more information.')
+                return False
+                
+            # Store attack profile
+            self.args.profile = profile_details
             
         return True
-    
-    # def check_args_target(self):
-    #     """Check arguments for subcommand Attack"""
-        
-    #     target = self.args.target_ip_or_url
-        
-    #     if not target:
-    #         return True
-        
-    #     # Check if target is an URL
-    #     if target.startswith('http://') or target.startswith('https://'):
-                        
-    #         if self.args.service and self.args.service.lower() != 'http':
-    #                 logger.warning('URL only supported for HTTP service. ' \
-    #                     'Automatically switch to HTTP')
-    #         elif not self.args.service:
-    #             logger.info('URL given as target, targeted service is HTTP')
-                
-    #         self.args.service = 'http' 
-    #         # self.args.target_port = NetworkUtils.get_port_from_url(target)
-        
-    #     # Check if target is an IP      
-    #     else:
-    #         self.args.target_mode = TargetMode.IP
-    #         self.args.target_port = None
-    #         port_section = target.split(':')
-    #         self.args.target_ip_or_url = port_section[0]
-            
-    #         # Extract port 
-    #         if len(port_section) == 2:
-    #             self.args.target_port = int(port_section[1])
-    #             NetworkUtils.is_valid_port(self.args.target_port)
-                
-    #             # if not (0 <= self.args.target_port <= 65535):
-    #             #     logger.error('Target port is invalid. Must be in the ' \
-    #             #         'range [0-65535]')
-    #             #     return False
-
-    #         elif len(port_section) > 2:
-    #             logger.error('Incorrect target format. Must be either an IP[:PORT] or ' \
-    #                 'an URL')
-    #             return False
-            
-        #     # Check or set target service and port
-        #     if self.args.service:
-                
-        #         # Check if service is supported
-        #         if not self.settings.services.is_service_supported(
-        #             self.args.service, multi=False):
-
-        #             logger.error('Service "{service}" is not supported. ' \
-        #                 'Check "info --services".'.format(
-        #                     service=self.args.service.upper()))
-        #             return False
-
-        #         # Get the default port for the service if not specified
-        #         if not self.args.target_port:
-        #             self.args.target_port = self.settings.services.get_default_port(
-        #                 self.args.service)
-                    
-        #             if not self.args.target_port:
-        #                 logger.info('Default port for service {service} will be used: ' \
-        #                     '{port}/{proto}'.format(
-        #                         service = self.args.service,
-        #                         port    = self.args.target_port,
-        #                         proto   = self.settings.services.get_protocol(
-        #                             self.args.service)))
-
-        #             else:
-        #                 logger.error('Target port is not specified and No default port for service {service}. ' \
-        #                     'You must specify a port.'.format(
-        #                         service=self.args.service))
-        #                 return False
-                    
-        #     # Try to get the default service for the provided port if not specified
-        #     else:
-        #         if not self.args.target_port:
-        #             logger.error('Target port and/or service must be specified')
-        #             return False
-                
-        #         else:
-        #             self.args.service = self.settings.services.get_service_by_port(
-        #                 self.args.target_port)
-                    
-        #             if not self.args.service:
-        #                 logger.error('Cannot automatically specify the target ' \
-        #                     'service for port {port}/tcp, use --target IP:PORT ' \
-        #                     'syntax'.format(port=self.args.target_port))
-        #                 return False
-                    
-        #             logger.info('Service {service} will be used for target'.format(
-        #                 service=self.args.service))
-                    
-        # return True
-                    
-    #------------------------------------------------------------------------------------ 

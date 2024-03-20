@@ -32,7 +32,12 @@ class AttackController:
                 self.settings.set_target(self.arguments.args.target_ip_or_url, 
                                          run_exclude_condition=True, 
                                          categories=self.arguments.args.run_exclude)
-                
+            # --profile
+            elif self.arguments.args.profile:
+                self.settings.set_target(self.arguments.args.target_ip_or_url, 
+                                         profile_condition=True, 
+                                         profile=self.arguments.args.profile)
+            
             # Default
             else:
                 self.settings.set_target(self.arguments.args.target_ip_or_url)

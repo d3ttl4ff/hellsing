@@ -3,12 +3,13 @@ import configparser
 import subprocess
 import sys
 import os
-from lib.core.Attack import Attack
 
+from configparser import ConfigParser
 from lib.core.Config import *
 from lib.core.Exceptions import SettingsException
 from lib.core.ServicesConfig import ServicesConfig
 from lib.core.Toolbox import Toolbox
+from lib.core.Attack import Attack
 from lib.utils.DefaultConfigParser import DefaultConfigParser
 from lib.utils.FileUtils import FileUtils
 
@@ -132,50 +133,25 @@ class Settings:
         
     #------------------------------------------------------------------------------------ 
 
-
-
-
-    # # Services configurations and checks parsing
-    # def __create_all_services_config_and_checks(self):
-    #     """Parse each <service_name>.conf file"""
-    #     for f in self.config_parsers:
-    #         if f in (TOOLBOX_CONF_FILE,
-    #                  ATTACK_PROFILES_CONF_FILE):
-    #             continue
-
-    #         self.__parse_service_checks_config_file(f)
-            
-    # def __parse_service_checks_config_file(self, service):
-    #     """
-    #     Parse a service checks configuration file <service_name>.conf, in order to
-    #     create a ServiceChecks object and to update ServicesConfig object with 
-    #     service information (default port, protocol, supported specific options,
-    #     supported products, authentication type for HTTP).
-
-    #     :param str service: Service name
-    #     """
-    #     service_config = defaultdict(str)
-
-    #     categories = self.__parse_section_config(service, service_config)
-    #     self.__parse_section_specific_options(service, service_config)
-    #     self.__parse_section_supported_list_options(service, service_config)
-    #     self.__parse_section_products(service, service_config)
-
-    #     # Add the service configuration from settings
-    #     self.services.add_service(
-    #         service,
-    #         service_config['default_port'],
-    #         service_config['protocol'],
-    #         service_config['specific_options'],
-    #         service_config['supported_list_options'],
-    #         service_config['products'],
-    #         service_config['auth_types'],
-    #         ServiceChecks(service, categories)
-    #     )
-
-    #     # Add the various checks for the service into the ServiceChecks object
-    #     self.__parse_all_checks_sections(service)
-            
-            
-    
-    
+    # Get profile details
+    def get_profile_details(self, profile_name):
+        """
+        Retrieve the details for a specified profile from the configuration file.
+        
+        :param config_file_path: Path to the configuration file.
+        :param profile_name: The name of the profile to retrieve.
+        :return: A dictionary with the profile's details, or None if the profile is not found.
+        """
+        config = configparser.ConfigParser()
+        config.read(ATTACK_PROFILES_CONF_FILE + CONF_EXT)
+        
+        if profile_name in config:
+            http_tools = config[profile_name].get('http', '').strip().split(',')
+            # Filter out commented or empty lines
+            http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
+            return {
+                'description': config[profile_name].get('description', '').strip(),
+                'http': http_tools
+            }
+        else:
+            return None
