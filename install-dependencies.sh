@@ -711,6 +711,12 @@ print_delimiter
 
 # -----------------------------------------------------------------------------
 
+print_blue "[~] Setting up the database..."
+python3 setup_db.py 
+print_delimiter 
+
+# -----------------------------------------------------------------------------
+
 print_green "[~] Dependencies installation finished."
 print_green "[~] IMPORTANT: Make sure to check if any error has been raised"
 echo
