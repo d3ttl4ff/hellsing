@@ -35,7 +35,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Attack methods    
-    def set_target(self, target, banner_condition=False, run_only_condition=False, run_exclude_condition=False, categories=None):
+    def set_target(self, target, banner_condition=False, run_only_condition=False, run_exclude_condition=False, categories=None, profile_condition=False, profile=None):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -204,7 +204,7 @@ class Attack:
     #------------------------------------------------------------------------------------
     
     # Run the attack tools in default mode
-    def run_default(self, protocol, base_target, domain, is_ip_address, ip_address, port, run_only_condition=False, run_exclude_condition=False, categories=None):
+    def run_default(self, protocol, base_target, domain, is_ip_address, ip_address, port, run_only_condition=False, run_exclude_condition=False,categories=None, profile_condition=False, profile=None):
         """
         Run the attack tools in default mode.
         """

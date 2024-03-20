@@ -119,7 +119,7 @@ class Settings:
     
     # Attack methods
     # Set the target for the attack and execute the relevant commands
-    def set_target(self, target, banner_condition=False, run_only_condition=False, run_exclude_condition=False, categories=None):
+    def set_target(self, target, banner_condition=False, run_only_condition=False, run_exclude_condition=False, categories=None, profile_condition=False, profile=None):
         """
         Set the target for the attack and execute the relevant commands.
 
@@ -129,7 +129,9 @@ class Settings:
                                banner_condition=banner_condition, 
                                run_only_condition=run_only_condition, 
                                run_exclude_condition=run_exclude_condition, 
-                               categories=categories)
+                               categories=categories,
+                               profile_condition=profile_condition,
+                               profile=profile)
         
     #------------------------------------------------------------------------------------ 
 
@@ -146,12 +148,13 @@ class Settings:
         config.read(ATTACK_PROFILES_CONF_FILE + CONF_EXT)
         
         if profile_name in config:
-            http_tools = config[profile_name].get('http', '').strip().split(',')
-            # Filter out commented or empty lines
-            http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
-            return {
-                'description': config[profile_name].get('description', '').strip(),
-                'http': http_tools
-            }
+            # http_tools = config[profile_name].get('http', '').strip().split(',')
+            # # Filter out commented or empty lines
+            # http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
+            # return {
+            #     'description': config[profile_name].get('description', '').strip(),
+            #     'http': http_tools
+            # }
+            return True
         else:
             return None

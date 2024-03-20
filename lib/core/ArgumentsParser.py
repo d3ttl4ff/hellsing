@@ -292,8 +292,7 @@ class ArgumentsParser:
                 
         # Select attack profile
         elif self.args.profile:
-            # profile = self.settings.attack_profiles.get(self.args.profile.lower())
-
+            
             profile_details = self.settings.get_profile_details(self.args.profile.lower())
             
             if not profile_details:
