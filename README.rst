@@ -7,12 +7,12 @@
 .. raw:: html
 
    <br class="title">
-   hellsing.py v 0.0
+   hellsing.py v0.0
    <br>
 
-.. .. image:: https://img.shields.io/badge/python-3.6-blue.svg
-..     :target: https://www.python.org/downloads/release/python-366/
-..     :alt: Python 3.6
+.. image:: https://img.shields.io/badge/python-3.11-blue.svg
+    :target: https://www.python.org/downloads/release/python-3118/
+    :alt: Python 3.11
 
 .. .. image:: https://readthedocs.org/projects/jok3r/badge/?version=latest
 ..    :target: https://jok3r.readthedocs.io/en/latest/
