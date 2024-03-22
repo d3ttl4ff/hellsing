@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 
 from lib.core.Config import *
 from lib.output import Output
+from lib.output.Spinner import Spinner
 from lib.output.Logger import logger
 from lib.utils.StringUtils import StringUtils
 from lib.utils.NetworkUtils import NetworkUtils
@@ -29,9 +30,12 @@ class Attack:
         
         # creating NetworkUtils object
         self.netutils = NetworkUtils()
+        
         # creating Output object
         self.output = Output()
-
+        
+        # creating spinner object
+        self.spinner = Spinner()
     #------------------------------------------------------------------------------------
     
     # Attack methods    
@@ -292,8 +296,9 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
+                    self.spinner.start()
+                    
                     subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
-                    # subprocess.run(command, shell=True, check=True)
                     
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}")
@@ -301,6 +306,8 @@ class Attack:
                     # Change back to the original directory after execution
                     if os.path.isdir(tool_dir_path):
                         os.chdir(TOOL_BASEPATH)
+                        
+                    self.spinner.stop()
                 print('\n')
             else:
                 logger.error(f"No command template found for {tool}.\n")
