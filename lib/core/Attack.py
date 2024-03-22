@@ -298,16 +298,26 @@ class Attack:
                     
                     self.spinner.start()
                     
-                    subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
+                    # subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
+                    
+                    proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
+                    stdout, stderr = proc.communicate()
+                    
+                    # # store stdout and stderr
+                    # with open("command_output.txt", "wb") as file:
+                    #     file.write(stdout)
+                    #     file.write(stderr)
                     
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}")
+                    
                 finally:
                     # Change back to the original directory after execution
                     if os.path.isdir(tool_dir_path):
                         os.chdir(TOOL_BASEPATH)
                         
                     self.spinner.stop()
+                    
                 print('\n')
             else:
                 logger.error(f"No command template found for {tool}.\n")
