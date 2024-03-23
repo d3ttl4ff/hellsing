@@ -21,8 +21,8 @@ class Settings:
         self.toolbox = None
         # Instantiate Attack with the current settings instance
         self.attack = None
-        # Instantiate ServicesConfig with the current settings instance
-        self.services = None
+        # # Instantiate ServicesConfig with the current settings instance
+        # self.services = None
 
         # Check for the Settings Directory 
         if not os.path.isdir(SETTINGS_DIR):
@@ -56,7 +56,7 @@ class Settings:
             # Utf8 to avoid encoding issues
             self.config_parsers.read(full_path, 'utf8') 
 
-        self.services = ServicesConfig(services)
+        # self.services = ServicesConfig(services)
 
     #------------------------------------------------------------------------------------
     

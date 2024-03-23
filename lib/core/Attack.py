@@ -36,6 +36,8 @@ class Attack:
         
         # creating spinner object
         self.spinner = Spinner()
+        
+        self.ERASE_LINE = '\x1b[2K'
     #------------------------------------------------------------------------------------
     
     # Attack methods    
@@ -317,6 +319,7 @@ class Attack:
                         os.chdir(TOOL_BASEPATH)
                         
                     self.spinner.stop()
+                    sys.stdout.write(self.ERASE_LINE)
                     
                 print('\n')
             else:

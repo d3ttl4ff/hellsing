@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 ### Hellsing main function
 
+import signal
 import sys
 import traceback
 
@@ -13,9 +14,16 @@ from lib.controller.MainController import MainController
 # from lib.db.Session import *
 from lib.output.Logger import logger
 
+# Signal handler for SIGTSTP (Ctrl+Z)
+def sigtstp_handler(signum, frame):
+    print()
+    logger.error('Ctrl+Z received! Terminating...')
+    sys.exit(0)
 
 class Program:
     def __init__(self):
+        # Register the SIGTSTP (Ctrl+Z) handler
+        signal.signal(signal.SIGTSTP, sigtstp_handler)
 
         try:
             print(BANNER)
