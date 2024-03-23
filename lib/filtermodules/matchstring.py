@@ -1,6 +1,7 @@
 import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.output.Logger import logger  
+from lib.output import Output
 
 class MatchString:
     def __init__(self):
@@ -21,6 +22,7 @@ class MatchString:
 
         if tool_name == "nmap":
             filtered_results = self.nmap_simple_recon_output(output)
+            print(filtered_results)
             
             for result in filtered_results:
                 logger.success("Port: " + result['PORT'])
@@ -28,6 +30,15 @@ class MatchString:
                 logger.success("Version: " + result['VERSION'])
                 logger.success("State: " + result['STATE'])
                 print("\n")
+                
+            # columns = ['Port', 'Service', 'Version', 'State']
+            # data = []
+            # for result in filtered_results:
+            #     row = [result['PORT'], result['SERVICE'], result['VERSION'], result['STATE']]
+            #     data.append(row)
+                
+            # Output.table(columns, data)
+            # print("\n")
                 
         elif tool_name == "wafw00f":
             detected_wafs = self.waf_detector.detect_waf(output)

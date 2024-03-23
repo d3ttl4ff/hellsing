@@ -179,7 +179,8 @@ class Attack:
                     pass
                 else:
                     return
-                
+            
+            self.clear_results_directory()
             self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories, profile_condition=profile_condition, profile=profile)
         
     #------------------------------------------------------------------------------------  
@@ -326,8 +327,6 @@ class Attack:
                         cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
                         file.write(cleaned_output)
                         # file.write(stderr)
-                        
-                    self.matchstring.process_tool_output(tool_name, results_file_path)
                                         
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
@@ -351,28 +350,47 @@ class Attack:
                     sys.stdout.write(self.ERASE_LINE + '\r')
                     sys.stdout.flush()
                     
+                    # Process the tool output
+                    try:
+                        self.matchstring.process_tool_output(tool_name, results_file_path)    
+                    except Exception as e:
+                        pass
+                    
                     if scan_stop - scan_start > 60:
                         logger.info(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
                     else:
                         logger.info(f"Scan completed in {scan_stop - scan_start:.2f} seconds\n")
                     
-                    self.cleanup_files()
+                    # self.clear_results_directory()
                      
             else:
                 logger.error(f"No command template found for {tool}.\n")
                 
         logger.success("All applicable tools have been executed for the target.\n")
-        self.cleanup_files()
+        self.clear_results_directory()
     
     #------------------------------------------------------------------------------------
         
-    # Cleanup the created files
-    def cleanup_files(self):
-        """Remove all created results files."""
-        for file_path in self.created_files:
-            try:
-                os.remove(file_path)
-            except OSError as e:
-                pass
-        self.created_files = [] 
+    # # Cleanup the created files
+    # def cleanup_files(self):
+    #     """Remove all created results files."""
+    #     for file_path in self.created_files:
+    #         try:
+    #             os.remove(file_path)
+    #         except OSError as e:
+    #             pass
+    #     self.created_files = [] 
     
+    def clear_results_directory(self):
+        """
+        Clears all files from the results directory.
+        """
+        for filename in os.listdir(RESULTS_DIR):
+            file_path = os.path.join(RESULTS_DIR, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                logger.error(f'Failed to delete {file_path}. Reason: {e}')
