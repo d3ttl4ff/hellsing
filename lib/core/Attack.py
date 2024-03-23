@@ -261,6 +261,8 @@ class Attack:
                 
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)
+            tool_description = tool_config.get('description', None)
+            
             if command_template:
                 command = command_template
                 if "[URL]" in command:
