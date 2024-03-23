@@ -100,6 +100,10 @@ WEBSHELLS_DIR      = TOOL_BASEPATH + '/webshells'
 WORDLISTS_DIR      = TOOL_BASEPATH + '/wordlists'
 DB_FILE            = TOOL_BASEPATH + '/hellsing.db'
 # DB_HIST_FILE       = TOOL_BASEPATH + '/.dbhistory'
+
+RESULTS_DIR     = TOOL_BASEPATH + '/results'
+RESULTS_EXT          = '.txt'
+
 # REPORT_TPL_DIR     = TOOL_BASEPATH + '/lib/reporter/templates'
 # REPORT_PATH        = TOOL_BASEPATH + '/reports'
 # VIRTUALENVS_DIR    = TOOL_BASEPATH + '/toolbox/virtualenvs'

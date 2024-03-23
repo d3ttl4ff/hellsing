@@ -19,14 +19,15 @@ class MatchString:
         with open(output_file_path, "r") as file:
             output = file.read()
 
-        if tool_name == "nmap-simple-recon":
+        if tool_name == "nmap":
             filtered_results = self.nmap_simple_recon_output(output)
             
             for result in filtered_results:
-                print(result['SERVICE'])
-                print(result['VERSION'])
-                print(result['STATE'])
-                print(result['PORT'])
+                logger.success("Port: " + result['PORT'])
+                logger.success("Service: " + result['SERVICE'])
+                logger.success("Version: " + result['VERSION'])
+                logger.success("State: " + result['STATE'])
+                print("\n")
                 
         elif tool_name == "wafw00f":
             detected_wafs = self.waf_detector.detect_waf(output)
@@ -34,7 +35,7 @@ class MatchString:
                 logger.success(f"Detected WAF: {waf}\n")
             
         elif tool_name == "whatweb":
-            print(output)
+            pass
 
     #------------------------------------------------------------------------------------
     

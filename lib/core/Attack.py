@@ -42,6 +42,8 @@ class Attack:
         # creating matchstring object
         self.matchstring = MatchString()
         
+        self.created_files = []
+        
         self.ERASE_LINE = '\x1b[2K'
     #------------------------------------------------------------------------------------
     
@@ -303,6 +305,10 @@ class Attack:
                 display_check_name = tool_config.get('name', None)
                 display_check_tool_name = tool_config.get('tool', None)
                 
+                # Define the results file path for this tool
+                results_file_path = os.path.join(RESULTS_DIR, f"{tool}_results.txt")
+                self.created_files.append(results_file_path)
+                
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
@@ -315,7 +321,7 @@ class Attack:
                     stdout, stderr = proc.communicate()
                     
                     # store stdout and stderr
-                    with open("/home/kali/Desktop/hellsing/test.txt", "w") as file:
+                    with open(results_file_path, "w") as file:
                         decoded_output = stdout.decode("utf-8")
                         cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
                         file.write(cleaned_output)
@@ -343,7 +349,7 @@ class Attack:
                     sys.stdout.write(self.ERASE_LINE + '\r')
                     sys.stdout.flush()
                     
-                    self.matchstring.process_tool_output(tool_name, "/home/kali/Desktop/hellsing/test.txt")
+                    self.matchstring.process_tool_output(tool_name, results_file_path)
                     
                     if scan_stop - scan_start > 60:
                         logger.warning(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
@@ -354,8 +360,17 @@ class Attack:
                 logger.error(f"No command template found for {tool}.\n")
                 
         logger.success("All applicable tools have been executed for the target.\n")
+        self.cleanup_files()
     
     #------------------------------------------------------------------------------------
         
-        
+    # Cleanup the created files
+    def cleanup_files(self):
+        """Remove all created results files."""
+        for file_path in self.created_files:
+            try:
+                os.remove(file_path)
+            except OSError as e:
+                logger.error(f"Error deleting file {file_path}: {e}")
+        self.created_files = [] 
     
