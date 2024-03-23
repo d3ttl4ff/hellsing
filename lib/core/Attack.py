@@ -6,6 +6,7 @@ import socket
 import subprocess
 import sys
 import shutil
+import time
 from urllib.parse import urlparse
 
 from lib.core.Config import *
@@ -299,6 +300,7 @@ class Attack:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
                     self.spinner.start()
+                    scan_start = time.time()
                     
                     # subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
                     
@@ -311,17 +313,32 @@ class Attack:
                     #     file.write(stderr)
                     
                 except subprocess.CalledProcessError as e:
-                    logger.error(f"Error executing {tool}: {e}")
+                    logger.error(f"Error executing {tool}: {e}\n")
                     
+                except KeyboardInterrupt:
+                    self.spinner.stop()
+                    sys.stdout.write(self.ERASE_LINE + '\r')
+                    sys.stdout.flush()
+                    
+                    logger.warning(f"Execution of {tool} was skipped by user.")
+                    continue  # This skips to the next iteration of the loop
+                
                 finally:
                     # Change back to the original directory after execution
                     if os.path.isdir(tool_dir_path):
                         os.chdir(TOOL_BASEPATH)
                         
                     self.spinner.stop()
-                    sys.stdout.write(self.ERASE_LINE)
                     
-                print('\n')
+                    scan_stop = time.time()
+                    sys.stdout.write(self.ERASE_LINE + '\r')
+                    sys.stdout.flush()
+                    
+                    if scan_stop - scan_start > 60:
+                        logger.warning(f"Scan duration: {round((scan_stop - scan_start) / 60, 2)} minutes\n")
+                    else:
+                        logger.info(f"Scan duration: {scan_stop - scan_start:.2f} seconds\n")
+                     
             else:
                 logger.error(f"No command template found for {tool}.\n")
                 

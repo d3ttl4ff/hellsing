@@ -4,6 +4,7 @@
 import signal
 import sys
 import traceback
+import os
 
 from lib.core.ArgumentsParser import ArgumentsParser
 from lib.core.Config import *
@@ -22,6 +23,11 @@ def sigtstp_handler(signum, frame):
 
 class Program:
     def __init__(self):
+        # Check for root privileges
+        if os.geteuid() != 0:
+            logger.error("This program needs to be run with sudo or as root.")
+            sys.exit(1)
+        
         # Register the SIGTSTP (Ctrl+Z) handler
         signal.signal(signal.SIGTSTP, sigtstp_handler)
 

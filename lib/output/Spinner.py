@@ -69,7 +69,7 @@ class Spinner:
                     sys.stdout.flush()
 
         except (KeyboardInterrupt, SystemExit):
-            print("\n\t"+ bcolors.BG_ERR_TXT+"Terminating..." +bcolors.ENDC)
+            # print("\n\t"+ bcolors.BG_ERR_TXT+"Terminating..." +bcolors.ENDC)
             sys.exit(1)
 
     def start(self):
@@ -84,6 +84,6 @@ class Spinner:
             self.busy = False
             time.sleep(self.delay)
         except (KeyboardInterrupt, SystemExit):
-            print("\n\t"+ bcolors.BG_ERR_TXT+"Terminating..." +bcolors.ENDC)
+            # print("\n\t"+ bcolors.BG_ERR_TXT+"Terminating..." +bcolors.ENDC)
             sys.exit(1)
             
