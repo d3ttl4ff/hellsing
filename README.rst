@@ -9,7 +9,6 @@
    <br class="title">
    hellsing.py v0.0
    <br>
-   <br>
 
 .. image:: https://img.shields.io/badge/python-3122?style=for-the-badge&logo=python&logoColor=white&color=blue&link=https%3A%2F%2Fwww.python.org%2Fdownloads%2Frelease%2Fpython-3122%2F
     :target: https://www.python.org/downloads/release/python-3122/
