@@ -10,6 +10,7 @@ import time
 from urllib.parse import urlparse
 
 from lib.core.Config import *
+from lib.filtermodules.matchstring import MatchString
 from lib.output import Output
 from lib.output.Spinner import Spinner
 from lib.output.Logger import logger
@@ -37,6 +38,9 @@ class Attack:
         
         # creating spinner object
         self.spinner = Spinner()
+        
+        # creating matchstring object
+        self.matchstring = MatchString()
         
         self.ERASE_LINE = '\x1b[2K'
     #------------------------------------------------------------------------------------
@@ -262,6 +266,7 @@ class Attack:
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)
             tool_description = tool_config.get('description', None)
+            check_name = tool_config.get('name', None)
             
             if command_template:
                 command = command_template
@@ -309,11 +314,11 @@ class Attack:
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                     
-                    # # store stdout and stderr
-                    # with open("command_output.txt", "wb") as file:
-                    #     file.write(stdout)
-                    #     file.write(stderr)
-                    
+                    # store stdout and stderr
+                    with open("/home/kali/Desktop/hellsing/test.txt", "wb") as file:
+                        file.write(stdout)
+                        # file.write(stderr)
+                                        
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
                     
@@ -335,6 +340,8 @@ class Attack:
                     scan_stop = time.time()
                     sys.stdout.write(self.ERASE_LINE + '\r')
                     sys.stdout.flush()
+                    
+                    self.matchstring.process_tool_output(check_name, "/home/kali/Desktop/hellsing/test.txt")
                     
                     if scan_stop - scan_start > 60:
                         logger.warning(f"Scan duration: {round((scan_stop - scan_start) / 60, 2)} minutes\n")
