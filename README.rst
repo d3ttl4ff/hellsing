@@ -10,9 +10,9 @@
    hellsing.py v0.0
    <br>
 
-.. image:: https://img.shields.io/badge/python-3.11-blue.svg
-    :target: https://www.python.org/downloads/release/python-3118/
-    :alt: Python 3.11
+.. image:: https://img.shields.io/badge/python-3122?style=for-the-badge&logo=python&logoColor=white&color=blue&link=https%3A%2F%2Fwww.python.org%2Fdownloads%2Frelease%2Fpython-3122%2F
+    :target: https://www.python.org/downloads/release/python-3122/
+    :alt: Python 3.12
 
 .. .. image:: https://readthedocs.org/projects/jok3r/badge/?version=latest
 ..    :target: https://jok3r.readthedocs.io/en/latest/
