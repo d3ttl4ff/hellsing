@@ -1,11 +1,25 @@
 import re
+from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
+from lib.output.Logger import logger  
 
 class MatchString:
-    def process_tool_output(self, check_name, output_file_path):
+    def __init__(self):
+        # Initialize the WAF detection class
+        self.waf_detector = httpWebApplicationFirewallProducts()
+        
+    #------------------------------------------------------------------------------------
+    
+    def strip_ansi_codes(self, text):
+        ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+        return ansi_escape.sub('', text)
+
+    #------------------------------------------------------------------------------------
+    
+    def process_tool_output(self, tool_name, output_file_path):
         with open(output_file_path, "r") as file:
             output = file.read()
 
-        if check_name == "nmap-simple-recon":
+        if tool_name == "nmap-simple-recon":
             filtered_results = self.nmap_simple_recon_output(output)
             
             for result in filtered_results:
@@ -14,11 +28,17 @@ class MatchString:
                 print(result['STATE'])
                 print(result['PORT'])
                 
-        # elif tool_name == "another_tool":
-        #     pass
+        elif tool_name == "wafw00f":
+            detected_wafs = self.waf_detector.detect_waf(output)
+            for waf in detected_wafs:
+                logger.success(f"Detected WAF: {waf}\n")
+            
+        elif tool_name == "whatweb":
+            print(output)
 
-     #------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------
     
+    # filter nmap simple recon output
     def nmap_simple_recon_output(self, nmap_output):
         # Regular expression to match the lines containing port, state, service, and version information
         port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
@@ -40,3 +60,8 @@ class MatchString:
                 })
 
         return parsed_results
+
+    #------------------------------------------------------------------------------------
+    
+    
+    

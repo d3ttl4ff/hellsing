@@ -315,8 +315,10 @@ class Attack:
                     stdout, stderr = proc.communicate()
                     
                     # store stdout and stderr
-                    with open("/home/kali/Desktop/hellsing/test.txt", "wb") as file:
-                        file.write(stdout)
+                    with open("/home/kali/Desktop/hellsing/test.txt", "w") as file:
+                        decoded_output = stdout.decode("utf-8")
+                        cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
+                        file.write(cleaned_output)
                         # file.write(stderr)
                                         
                 except subprocess.CalledProcessError as e:
@@ -341,12 +343,12 @@ class Attack:
                     sys.stdout.write(self.ERASE_LINE + '\r')
                     sys.stdout.flush()
                     
-                    self.matchstring.process_tool_output(check_name, "/home/kali/Desktop/hellsing/test.txt")
+                    self.matchstring.process_tool_output(tool_name, "/home/kali/Desktop/hellsing/test.txt")
                     
                     if scan_stop - scan_start > 60:
-                        logger.warning(f"Scan duration: {round((scan_stop - scan_start) / 60, 2)} minutes\n")
+                        logger.warning(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
                     else:
-                        logger.info(f"Scan duration: {scan_stop - scan_start:.2f} seconds\n")
+                        logger.info(f"Scan completed in {scan_stop - scan_start:.2f} seconds\n")
                      
             else:
                 logger.error(f"No command template found for {tool}.\n")
