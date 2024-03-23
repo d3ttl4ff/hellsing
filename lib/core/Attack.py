@@ -180,7 +180,7 @@ class Attack:
                 else:
                     return
             
-            self.clear_results_directory()
+            # self.clear_results_directory()
             self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories, profile_condition=profile_condition, profile=profile)
         
     #------------------------------------------------------------------------------------  

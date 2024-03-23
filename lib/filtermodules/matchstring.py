@@ -22,23 +22,22 @@ class MatchString:
 
         if tool_name == "nmap":
             filtered_results = self.nmap_simple_recon_output(output)
-            print(filtered_results)
             
-            for result in filtered_results:
-                logger.success("Port: " + result['PORT'])
-                logger.success("Service: " + result['SERVICE'])
-                logger.success("Version: " + result['VERSION'])
-                logger.success("State: " + result['STATE'])
-                print("\n")
-                
-            # columns = ['Port', 'Service', 'Version', 'State']
-            # data = []
             # for result in filtered_results:
-            #     row = [result['PORT'], result['SERVICE'], result['VERSION'], result['STATE']]
-            #     data.append(row)
+            #     logger.success("Port: " + result['PORT'])
+            #     logger.success("Service: " + result['SERVICE'])
+            #     logger.success("Version: " + result['VERSION'])
+            #     logger.success("State: " + result['STATE'])
+            #     print("\n")
                 
-            # Output.table(columns, data)
-            # print("\n")
+            columns = ['Port', 'Service', 'Version', 'State']
+            data = []
+            for result in filtered_results:
+                row = [result['PORT'], result['SERVICE'], result['VERSION'], result['STATE']]
+                data.append(row)
+                
+            Output.table(columns, data)
+            print("\n")
                 
         elif tool_name == "wafw00f":
             detected_wafs = self.waf_detector.detect_waf(output)
@@ -54,7 +53,7 @@ class MatchString:
     def nmap_simple_recon_output(self, nmap_output):
         # Regular expression to match the lines containing port, state, service, and version information
         # port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
-        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+([\w\/]+)\s+(\w+-\w+)\s+(.*)$')
+        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+([^\s]+)\s+(.*)$')
 
         parsed_results = []
 
