@@ -53,7 +53,8 @@ class MatchString:
     # filter nmap simple recon output
     def nmap_simple_recon_output(self, nmap_output):
         # Regular expression to match the lines containing port, state, service, and version information
-        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
+        # port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
+        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+([\w\/]+)\s+(\w+-\w+)\s+(.*)$')
 
         parsed_results = []
 
