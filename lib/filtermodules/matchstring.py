@@ -6,19 +6,20 @@ class MatchString:
             output = file.read()
 
         if check_name == "nmap-simple-recon":
-            filtered_results = self.filter_nmap_output(output)
+            filtered_results = self.nmap_simple_recon_output(output)
             
             for result in filtered_results:
                 print(result['SERVICE'])
                 print(result['VERSION'])
                 print(result['STATE'])
                 print(result['PORT'])
+                
         # elif tool_name == "another_tool":
         #     pass
 
      #------------------------------------------------------------------------------------
     
-    def filter_nmap_output(self, nmap_output):
+    def nmap_simple_recon_output(self, nmap_output):
         # Regular expression to match the lines containing port, state, service, and version information
         port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
 
