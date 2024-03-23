@@ -326,6 +326,8 @@ class Attack:
                         cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
                         file.write(cleaned_output)
                         # file.write(stderr)
+                        
+                    self.matchstring.process_tool_output(tool_name, results_file_path)
                                         
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
@@ -336,7 +338,7 @@ class Attack:
                     sys.stdout.flush()
                     
                     logger.warning(f"Execution of {tool} was skipped by user.")
-                    continue  # This skips to the next iteration of the loop
+                    continue
                 
                 finally:
                     # Change back to the original directory after execution
@@ -349,12 +351,12 @@ class Attack:
                     sys.stdout.write(self.ERASE_LINE + '\r')
                     sys.stdout.flush()
                     
-                    self.matchstring.process_tool_output(tool_name, results_file_path)
-                    
                     if scan_stop - scan_start > 60:
                         logger.warning(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
                     else:
                         logger.info(f"Scan completed in {scan_stop - scan_start:.2f} seconds\n")
+                    
+                    # self.cleanup_files()
                      
             else:
                 logger.error(f"No command template found for {tool}.\n")
@@ -371,6 +373,6 @@ class Attack:
             try:
                 os.remove(file_path)
             except OSError as e:
-                logger.error(f"Error deleting file {file_path}: {e}")
+                pass
         self.created_files = [] 
     

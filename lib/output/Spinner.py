@@ -4,6 +4,7 @@ import time
 import sys
 import random
 import subprocess
+from colored import fg, bg, attr
 
 # Initializing the color module class
 class bcolors:
@@ -45,26 +46,40 @@ class Spinner:
             #for cursor in '|/-\\/': yield cursor #←↑↓→
             #for cursor in '←↑↓→': yield cursor
             #for cursor in '....scanning...please..wait....': yield cursor
-            for cursor in ' ': yield cursor
+            for cursor in '░': yield cursor
     def __init__(self, delay=None):
         self.spinner_generator = self.spinning_cursor()
         if delay and float(delay): self.delay = delay
         self.disabled = False
+        self.colors = [10, 16]
 
     def spinner_task(self):
         inc = 0
         try:
             while self.busy:
                 if not self.disabled:
-                    x = bcolors.BG_SCAN_TXT_START+next(self.spinner_generator)+bcolors.BG_SCAN_TXT_END
+                    # x = bcolors.BG_SCAN_TXT_START+next(self.spinner_generator)+bcolors.BG_SCAN_TXT_END
+                    # inc = inc + 1
+                    # print(x,end='')
+                    
+                    # if inc>random.uniform(0,terminal_size()): #30 init
+                    #     print(end="\r")
+                    #     bcolors.BG_SCAN_TXT_START = '\x1b[6;30;'+str(round(random.uniform(40,47)))+'m'
+                    #     inc = 0
+                    
+                    current_color = random.choice(self.colors) # Randomly choose a color
+                    x = fg('white') + bg(current_color) + next(self.spinner_generator) + attr('reset')
                     inc = inc + 1
-                    print(x,end='')
-                    if inc>random.uniform(0,terminal_size()): #30 init
+                    print(x, end='')
+                    
+                    if inc > random.uniform(0, terminal_size()):
                         print(end="\r")
-                        bcolors.BG_SCAN_TXT_START = '\x1b[6;30;'+str(round(random.uniform(40,47)))+'m'
                         inc = 0
+                        
                     sys.stdout.flush()
+                    
                 time.sleep(self.delay)
+                
                 if not self.disabled:
                     sys.stdout.flush()
 
