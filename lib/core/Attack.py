@@ -352,11 +352,11 @@ class Attack:
                     sys.stdout.flush()
                     
                     if scan_stop - scan_start > 60:
-                        logger.warning(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
+                        logger.info(f"Scan completed in {round((scan_stop - scan_start) / 60, 2)} minutes\n")
                     else:
                         logger.info(f"Scan completed in {scan_stop - scan_start:.2f} seconds\n")
                     
-                    # self.cleanup_files()
+                    self.cleanup_files()
                      
             else:
                 logger.error(f"No command template found for {tool}.\n")
