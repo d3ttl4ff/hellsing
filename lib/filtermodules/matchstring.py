@@ -37,7 +37,7 @@ class MatchString:
                 data.append(row)
                 
             Output.table(columns, data)
-            print("\n")
+            # print("\n")
                 
         elif tool_name == "wafw00f":
             detected_wafs = self.waf_detector.detect_waf(output)
