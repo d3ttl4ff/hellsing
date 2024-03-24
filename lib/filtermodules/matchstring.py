@@ -44,18 +44,8 @@ class MatchString:
         elif tool_name == "wafw00f":
             detected_wafs = self.waf_detector.detect_waf(output)
             
-            columns = ['Vendor', 'WAF']
-            data = []
-            
             for waf in detected_wafs:
                 logger.success(f"Detected WAF: {waf}\n")
-                row = [waf['vendor'], waf['waf']]
-                data.append(row)
-                
-            if data!=[]:
-                logger.success("Detected WAFs:")
-                Output.table(columns, data)
-            print("\n")
             
         elif tool_name == "whatweb":
             pass
