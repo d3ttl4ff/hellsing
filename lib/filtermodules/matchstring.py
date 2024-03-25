@@ -42,11 +42,9 @@ class MatchString:
             if tool_name == "wafw00f":
                 detected_wafs = self.waf_detector.parse_wafw00f_output(output)
                 
-                for waf in detected_wafs:
-                    vendor, waf_name = waf.split('/', 1)
-                    print("Debug: Vendor -", vendor, "WAF Name -", waf_name)
-                    self.waf_results.add_or_update(vendor, waf_name)
-                print("Debug: Current WAF Results after wafw00f:", self.waf_results.results)
+                for entry in detected_wafs:
+                    self.waf_results.add_or_update(entry['vendor'], entry['waf'])
+                # print("Debug: Current WAF Results after wafw00f:", self.waf_results.results)
             
             elif tool_name == "identywaf":
                 waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
