@@ -22,13 +22,6 @@ class MatchString:
 
         if tool_name == "nmap":
             filtered_results = self.nmap_simple_recon_output(output)
-            
-            # for result in filtered_results:
-            #     logger.success("Port: " + result['PORT'])
-            #     logger.success("Service: " + result['SERVICE'])
-            #     logger.success("Version: " + result['VERSION'])
-            #     logger.success("State: " + result['STATE'])
-            #     print("\n")
                 
             columns = ['Port', 'Service', 'Version', 'State']
             data = []
@@ -40,25 +33,45 @@ class MatchString:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
             print("\n")
-                
-        elif tool_name == "wafw00f":
-            detected_wafs = self.waf_detector.detect_waf(output)
             
-            # for waf in detected_wafs:
-            #     logger.success(f"Detected WAF: {waf}\n")
+        elif tool_name in ["wafw00f", "identywaf"]:
+            if tool_name == "wafw00f":
+                detected_wafs = self.waf_detector.detect_waf(output)
+                for waf in detected_wafs:
+                    vendor, waf_name = waf.split('/', 1)
+                    self.waf_results.add_or_update(vendor, waf_name)
             
-            if detected_wafs:
-                # Prepare the header and data for the table
-                columns = ['Vendor', 'WAF']
-                data = [[entry['vendor'], entry['waf']] for entry in detected_wafs]
+            elif tool_name == "identywaf":
+                waf_data, blocked_categories = self.parse_identywaf_output(output)
+                for entry in waf_data:
+                    self.waf_results.add_or_update(entry['vendor'], entry['waf'], blocked_categories)
 
-                # Assuming Output.table is capable of handling this structure
-                logger.success("Detected WAF(s):")
+            if self.waf_results.results:
+                logger.success("Detected WAFs, Vendors, and Blocked Categories:")
+                columns = ['Vendor', 'WAF', 'Blocked Categories']
+                data = []
+                for entry in self.waf_results.results:
+                    wafs = ", ".join(entry['waf'])
+                    data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
             else:
                 logger.info("No WAFs detected.")
+                
+        # elif tool_name == "wafw00f":
+        #     detected_wafs = self.waf_detector.parse_wafw00f_output(output)
             
-        elif tool_name == "whatweb":
+        #     if detected_wafs:
+        #         # Prepare the header and data for the table
+        #         columns = ['Vendor', 'WAF']
+        #         data = [[entry['vendor'], entry['waf']] for entry in detected_wafs]
+
+        #         # Assuming Output.table is capable of handling this structure
+        #         logger.success("Detected WAF(s):")
+        #         Output.table(columns, data)
+        #     else:
+        #         logger.info("No WAFs detected.")
+            
+        elif tool_name == "identywaf":
             pass
 
     #------------------------------------------------------------------------------------

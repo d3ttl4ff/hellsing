@@ -141,7 +141,7 @@ class httpWebApplicationFirewallProducts:
 
         return waf_patterns
 
-    def detect_waf(self, output):
+    def parse_wafw00f_output(self, output):
         detected_wafs = []
         
         # for waf_name, pattern in self.waf_patterns.items():
@@ -154,3 +154,18 @@ class httpWebApplicationFirewallProducts:
                 detected_wafs.append({'vendor': vendor, 'waf': waf})
 
         return detected_wafs
+    
+    def parse_identywaf_output(self, output):
+        # Extracting WAFs and vendors
+        waf_pattern = re.compile(r'\[\+\] non-blind match: \'([^\']+)\'')
+        wafs = waf_pattern.findall(output)
+
+        # Structuring WAF and Vendor data
+        waf_data = [{'vendor': waf.split(' (')[1][:-1], 'waf': waf.split(' (')[0]} for waf in wafs]
+
+        # Extracting Blocked Categories
+        blocked_categories_pattern = re.compile(r'\[\=\] blocked categories: ([^\n]+)')
+        blocked_categories_matches = blocked_categories_pattern.search(output)
+        blocked_categories = blocked_categories_matches.group(1) if blocked_categories_matches else "Not Available"
+
+        return waf_data, blocked_categories
