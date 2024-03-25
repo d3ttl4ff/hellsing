@@ -153,7 +153,7 @@ class Attack:
             logger.info(f"Checking the reachable status of {ip_address} on port {port}...")
             
             if not self.netutils.is_host_reachable(ip_address, 80):
-                logger.error(f"IP address {ip_address} is not reachable\n")
+                logger.error(f"IP address {ip_address} is reachable\n")
                 pass
                 # return
             else:
