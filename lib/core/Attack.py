@@ -174,7 +174,7 @@ class Attack:
                 else:
                     return
             else:
-                rechability_input = input(f"\033[1m[>] The target is reachable. Do you want to continue? (Y/n) :\033[0m ")
+                rechability_input = input(f"\033[1m[>] The target is not reachable. Do you want to continue? (Y/n) :\033[0m ")
                 if rechability_input.lower() == 'y':
                     pass
                 else:
