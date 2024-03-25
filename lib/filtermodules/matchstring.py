@@ -44,7 +44,6 @@ class MatchString:
                 
                 for entry in detected_wafs:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'])
-                # print("Debug: Current WAF Results after wafw00f:", self.waf_results.results)
             
             elif tool_name == "identywaf":
                 waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
