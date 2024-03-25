@@ -144,8 +144,13 @@ class httpWebApplicationFirewallProducts:
     def detect_waf(self, output):
         detected_wafs = []
         
+        # for waf_name, pattern in self.waf_patterns.items():
+        #     if pattern.search(output):
+        #         detected_wafs.append(waf_name)
+        
         for waf_name, pattern in self.waf_patterns.items():
             if pattern.search(output):
-                detected_wafs.append(waf_name)
+                vendor, waf = waf_name.split('/', 1)
+                detected_wafs.append({'vendor': vendor, 'waf': waf})
 
         return detected_wafs
