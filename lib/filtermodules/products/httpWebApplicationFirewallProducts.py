@@ -1,5 +1,23 @@
 import re
 
+class WAFDetectionResults:
+    def __init__(self):
+        self.results = []
+
+    def add_or_update(self, vendor, waf, blocked_categories=None):
+        for entry in self.results:
+            if entry['vendor'] == vendor:
+                entry['waf'].add(waf)  # Assuming waf can be multiple per vendor, use a set to avoid duplicates
+                if blocked_categories:
+                    entry['blocked_categories'] = blocked_categories
+                return
+        # If no existing vendor is found, add a new entry
+        self.results.append({
+            'vendor': vendor,
+            'waf': {waf},  # Use a set for potential multiple WAFs per vendor
+            'blocked_categories': blocked_categories or "Not Available"
+        })
+
 class httpWebApplicationFirewallProducts:
     def __init__(self):
         self.waf_patterns = self._generate_waf_patterns()

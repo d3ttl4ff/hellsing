@@ -1,5 +1,6 @@
 import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
+from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -7,6 +8,9 @@ class MatchString:
     def __init__(self):
         # Initialize the WAF detection class
         self.waf_detector = httpWebApplicationFirewallProducts()
+        
+        # Initialize the WAF detection results class
+        self.waf_results = WAFDetectionResults()
         
     #------------------------------------------------------------------------------------
     
@@ -36,26 +40,31 @@ class MatchString:
             
         elif tool_name in ["wafw00f", "identywaf"]:
             if tool_name == "wafw00f":
-                detected_wafs = self.waf_detector.detect_waf(output)
+                detected_wafs = self.waf_detector.parse_wafw00f_output(output)
+                
                 for waf in detected_wafs:
                     vendor, waf_name = waf.split('/', 1)
+                    print("Debug: Vendor -", vendor, "WAF Name -", waf_name)
                     self.waf_results.add_or_update(vendor, waf_name)
+                print("Debug: Current WAF Results after wafw00f:", self.waf_results.results)
             
             elif tool_name == "identywaf":
-                waf_data, blocked_categories = self.parse_identywaf_output(output)
+                waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
+                
                 for entry in waf_data:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'], blocked_categories)
 
             if self.waf_results.results:
-                logger.success("Detected WAFs, Vendors, and Blocked Categories:")
+                logger.success("WAF(s) Detected:")
                 columns = ['Vendor', 'WAF', 'Blocked Categories']
                 data = []
                 for entry in self.waf_results.results:
                     wafs = ", ".join(entry['waf'])
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
+                print("\n")
             else:
-                logger.info("No WAFs detected.")
+                logger.info("No WAFs detected.\n")
                 
         # elif tool_name == "wafw00f":
         #     detected_wafs = self.waf_detector.parse_wafw00f_output(output)
@@ -71,8 +80,8 @@ class MatchString:
         #     else:
         #         logger.info("No WAFs detected.")
             
-        elif tool_name == "identywaf":
-            pass
+        # elif tool_name == "identywaf":
+        #     pass
 
     #------------------------------------------------------------------------------------
     
