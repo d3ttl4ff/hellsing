@@ -3,6 +3,7 @@ import re
 class WAFDetectionResults:
     def __init__(self):
         self.results = []
+        self.first_detection = False
 
     def add_or_update(self, vendor, waf, blocked_categories=None):
         for entry in self.results:

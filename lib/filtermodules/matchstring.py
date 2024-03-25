@@ -39,8 +39,14 @@ class MatchString:
             print("\n")
             
         elif tool_name in ["wafw00f", "identywaf"]:
+            initial_detection = False
+            
             if tool_name == "wafw00f":
                 detected_wafs = self.waf_detector.parse_wafw00f_output(output)
+                
+                if detected_wafs and not self.waf_detected:
+                    initial_detection = True
+                    self.waf_detected = True
                 
                 for entry in detected_wafs:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'])
@@ -48,11 +54,19 @@ class MatchString:
             elif tool_name == "identywaf":
                 waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
                 
+                if waf_data and not self.waf_detected:
+                    initial_detection = True
+                    self.waf_detected = True
+                
                 for entry in waf_data:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'], blocked_categories)
 
             if self.waf_results.results:
-                logger.success("WAF(s) Detected:")
+                if initial_detection:
+                    logger.success("WAF(s) Detected:")
+                else:
+                    logger.success("WAF table is updated.")
+
                 columns = ['Vendor', 'WAF', 'Blocked Categories']
                 data = []
                 for entry in self.waf_results.results:
