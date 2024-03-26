@@ -12,6 +12,8 @@ class MatchString:
         # Initialize the WAF detection results class
         self.waf_results = WAFDetectionResults()
         
+        self.waf_detected = False
+        
     #------------------------------------------------------------------------------------
     
     def strip_ansi_codes(self, text):
@@ -65,7 +67,8 @@ class MatchString:
                 if initial_detection:
                     logger.success("WAF(s) Detected:")
                 else:
-                    logger.success("WAF table is updated.")
+                    logger.success("WAF(s) Detected:")
+                    logger.success("WAF table updated.")
 
                 columns = ['Vendor', 'WAF', 'Blocked Categories']
                 data = []
