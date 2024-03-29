@@ -75,7 +75,7 @@ class MatchString:
                     logger.success("WAF table updated.")
 
                 columns = ['Vendor', 'WAF', 'Blocked Categories']
-                data = []
+                data = [] 
                 for entry in self.waf_results.results:
                     wafs = ", ".join(entry['waf'])
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
@@ -100,7 +100,6 @@ class MatchString:
                     Output.table(columns, data)
                 else:
                     print("No significant plugin data detected.")
-
 
 
 
