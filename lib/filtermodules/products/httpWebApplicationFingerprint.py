@@ -38,31 +38,38 @@ class httpWebApplicationFingerprint:
                         self.results[-1]["Plugins"][name] = version
 
     def _extract_name_version(self, plugin):
-        # Handling for "HTML" and similar cases remains unchanged
+        # Special handling for "HTML" and similar cases
         if plugin.startswith("HTML"):
             return "HTML", plugin[4:]
-        
-        # Adjusted to validate email addresses
+
+        # Special handling for email addresses to extract just the email part
         if "Email" in plugin:
-            # Assuming the plugin variable contains potential email addresses at this point
-            emails = [email for email in plugin.split(',') if self.is_valid_email(email)]
-            if emails:
-                return "Email", ", ".join(emails)  # Joining valid emails with a comma
-            else:
-                return None, None  # Skip plugin if no valid emails are found
-        
-        # Other plugin handling remains unchanged
+            email_match = re.search(r'Email\[(.+)\]', plugin)
+            if email_match:
+                emails = email_match.group(1)
+                # Split by commas in case there are multiple emails, then validate
+                valid_emails = [email for email in emails.split(',') if self.is_valid_email(email)]
+                if valid_emails:
+                    # Join valid emails back with a comma and space
+                    return "Email", ", ".join(valid_emails)
+                else:
+                    # If no valid emails found, skip this plugin
+                    return None, None
+
+        # Handling for other plugins with name and version
         name_version_match = re.match(r'([^[]+)\[([^]]*)\]', plugin)
         if name_version_match:
-            return name_version_match.groups()
+            name, version = name_version_match.groups()
+            return name.strip(), version.strip()
+
+        # For plugins without a version specified
         return plugin.strip(), "N/A"
 
+
     
-    def is_valid_email(self, email):
-        # Regular expression pattern for validating email addresses
-        email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-        
+    def is_valid_email(self, email):  
         # Basic check to exclude strings that likely aren't emails
         if "@" in email and not email.endswith((".png", ".jpg", ".jpeg")) and not "-@" in email:
-            return email_pattern.match(email) is not None
+            return email is not None
         return False
+    
