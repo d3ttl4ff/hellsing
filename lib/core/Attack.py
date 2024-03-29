@@ -369,16 +369,6 @@ class Attack:
         self.clear_results_directory()
     
     #------------------------------------------------------------------------------------
-        
-    # # Cleanup the created files
-    # def cleanup_files(self):
-    #     """Remove all created results files."""
-    #     for file_path in self.created_files:
-    #         try:
-    #             os.remove(file_path)
-    #         except OSError as e:
-    #             pass
-    #     self.created_files = [] 
     
     def clear_results_directory(self):
         """

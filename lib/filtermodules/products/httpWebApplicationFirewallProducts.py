@@ -15,7 +15,7 @@ class WAFDetectionResults:
         self.results.append({
             'vendor': vendor,
             'waf': {waf},  # Use a set for potential multiple WAFs per vendor
-            'blocked_categories': blocked_categories or "Not Available"
+            'blocked_categories': blocked_categories or "Could not detect"
         })
 
 class httpWebApplicationFirewallProducts:
@@ -180,6 +180,6 @@ class httpWebApplicationFirewallProducts:
         # Extracting Blocked Categories
         blocked_categories_pattern = re.compile(r'\[\=\] blocked categories: ([^\n]+)')
         blocked_categories_matches = blocked_categories_pattern.search(output)
-        blocked_categories = blocked_categories_matches.group(1) if blocked_categories_matches else "Could not detect."
+        blocked_categories = blocked_categories_matches.group(1) if blocked_categories_matches else "Could not detect"
 
         return waf_data, blocked_categories
