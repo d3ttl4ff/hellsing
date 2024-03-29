@@ -162,10 +162,6 @@ class httpWebApplicationFirewallProducts:
     def parse_wafw00f_output(self, output):
         detected_wafs = []
         
-        # for waf_name, pattern in self.waf_patterns.items():
-        #     if pattern.search(output):
-        #         detected_wafs.append(waf_name)
-        
         for waf_name, pattern in self.waf_patterns.items():
             if pattern.search(output):
                 vendor, waf = waf_name.split('/', 1)

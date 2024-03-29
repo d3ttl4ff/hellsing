@@ -79,23 +79,9 @@ class MatchString:
                 print("\n")
             else:
                 logger.info("No WAFs detected.\n")
-                
-        # elif tool_name == "wafw00f":
-        #     detected_wafs = self.waf_detector.parse_wafw00f_output(output)
-            
-        #     if detected_wafs:
-        #         # Prepare the header and data for the table
-        #         columns = ['Vendor', 'WAF']
-        #         data = [[entry['vendor'], entry['waf']] for entry in detected_wafs]
-
-        #         # Assuming Output.table is capable of handling this structure
-        #         logger.success("Detected WAF(s):")
-        #         Output.table(columns, data)
-        #     else:
-        #         logger.info("No WAFs detected.")
-            
-        # elif tool_name == "identywaf":
-        #     pass
+              
+        elif tool_name == "nikto":
+            pass  
 
     #------------------------------------------------------------------------------------
     
