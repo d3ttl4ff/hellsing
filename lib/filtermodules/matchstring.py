@@ -87,19 +87,41 @@ class MatchString:
         elif tool_name == "whatweb":
             self.fingerprinter.parse_output(output)
 
-            for result in self.fingerprinter.results:
-                location_header = f"WhatWeb report for: {result['Location']}"
-                print(f"\n{location_header}")
+            # Initialize a dictionary to hold consolidated plugin information
+            consolidated_plugins = {}
 
-                # Prepare columns and data for the table
-                columns = ['Plugin', 'Version']
-                data = [[plugin, version] for plugin, version in result["Plugins"].items()]
-                
-                # Display the table for the current section
-                if data:
-                    Output.table(columns, data)
-                else:
-                    print("No significant plugin data detected.")
+            for result in self.fingerprinter.results:
+                for plugin, version in result["Plugins"].items():
+                    # Create a unique key for each plugin-version pair
+                    plugin_version_key = f"{plugin}:{version}"
+
+                    if plugin_version_key not in consolidated_plugins:
+                        consolidated_plugins[plugin_version_key] = {
+                            "Plugin": plugin,
+                            "Version": version,
+                            "Locations": [result["Location"]]
+                        }
+                    else:
+                        # If this plugin-version pair is already listed, append the location
+                        consolidated_plugins[plugin_version_key]["Locations"].append(result["Location"])
+
+            # Prepare columns and data for the consolidated table
+            columns = ['Plugin', 'Version', 'Locations']
+            data = []
+
+            for details in consolidated_plugins.values():
+                # Join all locations into a single string for display
+                locations_str = ", ".join(details["Locations"])
+                data.append([details["Plugin"], details["Version"], locations_str])
+
+            # Display the consolidated table
+            if data:
+                logger.success("WhatWeb Report:")
+                Output.table(columns, data)
+                print("\n")
+            else:
+                print("No significant plugin data detected.\n")
+
 
 
 
