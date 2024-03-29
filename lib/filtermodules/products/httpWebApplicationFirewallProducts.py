@@ -180,6 +180,6 @@ class httpWebApplicationFirewallProducts:
         # Extracting Blocked Categories
         blocked_categories_pattern = re.compile(r'\[\=\] blocked categories: ([^\n]+)')
         blocked_categories_matches = blocked_categories_pattern.search(output)
-        blocked_categories = blocked_categories_matches.group(1) if blocked_categories_matches else "Not Available"
+        blocked_categories = blocked_categories_matches.group(1) if blocked_categories_matches else "Could not detect."
 
         return waf_data, blocked_categories
