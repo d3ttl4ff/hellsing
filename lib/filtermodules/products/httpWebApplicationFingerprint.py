@@ -4,7 +4,10 @@ class httpWebApplicationFingerprint:
     def __init__(self):
         self.results = []
 
-    def parse_output(self, output):
+    #------------------------------------------------------------------------------------
+
+    # filter whatweb output
+    def parse_whatweb_output(self, output):
         self.results.clear()
 
         # Pattern to capture the beginning of each WhatWeb report section
@@ -65,11 +68,29 @@ class httpWebApplicationFingerprint:
         # For plugins without a version specified
         return plugin.strip(), "N/A"
 
-
-    
     def is_valid_email(self, email):  
         # Basic check to exclude strings that likely aren't emails
         if "@" in email and not email.endswith((".png", ".jpg", ".jpeg")) and not "-@" in email:
             return email is not None
         return False
     
+    #------------------------------------------------------------------------------------
+    
+    # filter cmsseek output
+    def parse_cmseek_results(self, output):
+        """
+        Parses the CMSeeK results from a given text file and extracts CMS name and URL.
+        Returns a dictionary with extracted data.
+        """
+        data = {"Product": "N/A", "Type": "CMS", "Version": "N/A", "Info": "N/A"}
+    
+        cms_name_match = re.search(r'CMS: (.+)', output)
+        cms_url_match = re.search(r'URL: (.+)', output)
+        
+
+        if cms_name_match:
+            data["Product"] = cms_name_match.group(1).strip()
+        if cms_url_match:
+            data["Info"] = f"{cms_url_match.group(1).strip()}"
+
+        return data

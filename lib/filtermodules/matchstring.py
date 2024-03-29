@@ -85,7 +85,7 @@ class MatchString:
                 logger.info("No WAFs detected.\n")
               
         elif tool_name == "whatweb":
-            self.fingerprinter.parse_output(output)
+            self.fingerprinter.parse_whatweb_output(output)
 
             # Initialize a dictionary to hold consolidated plugin information
             consolidated_plugins = {}
@@ -121,8 +121,17 @@ class MatchString:
                 print("\n")
             else:
                 print("No significant plugin data detected.\n")
-
-
+                
+        elif tool_name == "cmseek":
+            cmseek_data = self.fingerprinter.parse_cmseek_results(output)
+    
+            if cmseek_data:
+                logger.success("CMS Detected:")
+                columns = ['Product', 'Type', 'Version', 'Info']
+                
+                data = [[cmseek_data['Product'], cmseek_data['Type'], cmseek_data['Version'], cmseek_data['Info']]]
+                Output.table(columns, data)
+                print("\n")
 
 
     #------------------------------------------------------------------------------------

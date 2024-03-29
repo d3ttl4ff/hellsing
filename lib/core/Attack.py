@@ -366,7 +366,7 @@ class Attack:
                 logger.error(f"No command template found for {tool}.\n")
                 
         logger.success("All applicable tools have been executed for the target.\n")
-        self.clear_results_directory()
+        # self.clear_results_directory()
     
     #------------------------------------------------------------------------------------
     
