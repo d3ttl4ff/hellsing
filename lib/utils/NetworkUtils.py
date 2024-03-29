@@ -126,7 +126,7 @@ class NetworkUtils:
             "exploit": "Exploitation",
             "postexploit": "Post-exploitation",
             "bruteforce": "Brute Force",
-            # "report": "Reporting",
+            "report": "Reporting",
             "discovery": "Discovery",
         }
         return categories

@@ -1,6 +1,7 @@
 import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
+from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -11,6 +12,9 @@ class MatchString:
         
         # Initialize the WAF detection results class
         self.waf_results = WAFDetectionResults()
+        
+        # Initialize the fingerprinting class
+        self.fingerprinter = httpWebApplicationFingerprint()
         
         self.waf_detected = False
         
@@ -80,8 +84,25 @@ class MatchString:
             else:
                 logger.info("No WAFs detected.\n")
               
-        elif tool_name == "nikto":
-            pass  
+        elif tool_name == "whatweb":
+            self.fingerprinter.parse_output(output)
+
+            for result in self.fingerprinter.results:
+                location_header = f"WhatWeb report for: {result['Location']}"
+                print(f"\n{location_header}")
+
+                # Prepare columns and data for the table
+                columns = ['Plugin', 'Version']
+                data = [[plugin, version] for plugin, version in result["Plugins"].items()]
+                
+                # Display the table for the current section
+                if data:
+                    Output.table(columns, data)
+                else:
+                    print("No significant plugin data detected.")
+
+
+
 
     #------------------------------------------------------------------------------------
     
