@@ -106,17 +106,17 @@ class MatchString:
                         consolidated_plugins[plugin_version_key]["Locations"].append(result["Location"])
 
             # Prepare columns and data for the consolidated table
-            columns = ['Plugin', 'Version', 'Locations']
+            columns = ['Plugin', 'Version']
             data = []
 
             for details in consolidated_plugins.values():
                 # Join all locations into a single string for display
                 locations_str = ", ".join(details["Locations"])
-                data.append([details["Plugin"], details["Version"], locations_str])
+                data.append([details["Plugin"], details["Version"]])
 
             # Display the consolidated table
             if data:
-                logger.success("WhatWeb Report:")
+                logger.success("Plugins Found:")
                 Output.table(columns, data)
                 print("\n")
             else:

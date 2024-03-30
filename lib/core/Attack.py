@@ -312,10 +312,10 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
-                    # self.spinner.start()
+                    self.spinner.start()
                     scan_start = time.time()
                     
-                    subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
+                    # subprocess.run(command, shell=True, check=True, cwd=tool_dir_path)
                     
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
