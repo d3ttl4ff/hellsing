@@ -42,7 +42,6 @@ class MatchString:
             if data!=[]:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
-            # print("\n")
             
         elif tool_name in ["wafw00f", "identywaf"]:
             initial_detection = False
@@ -80,10 +79,8 @@ class MatchString:
                     wafs = ", ".join(entry['waf'])
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
-                # print("\n")
             else:
                 logger.info("No WAFs detected.")
-                # print("\n")
               
         elif tool_name == "whatweb":
             self.fingerprinter.parse_whatweb_output(output)
@@ -119,14 +116,11 @@ class MatchString:
             if data:
                 logger.success("Plugins Found:")
                 Output.table(columns, data)
-                # print("\n")
             else:
                 print("No significant plugin data detected.")
-                # print("\n")
                 
         elif tool_name in ["cmseek", "drupwn"]:
             self.display_cms_detection_results(tool_name, output)
-            # print("\n")
             
         elif tool_name == "harvester":
             harvester_data = self.fingerprinter.parse_harvester_output(output)
@@ -140,7 +134,6 @@ class MatchString:
                     ["The Harvester", "Email Discovery", "N/A", "\n".join(harvester_data['Emails'])]  # Include emails
                 ]
                 Output.table(columns, data)
-            # print("\n")
 
         elif tool_name == "sublist3r":
             domain, sublist3r_subdomains = self.fingerprinter.parse_sublist3r_output(output)
@@ -152,7 +145,9 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 print(f"No subdomains detected for {domain}.")
-            # print("\n")
+                
+        
+                
         print("\n")
 
 
