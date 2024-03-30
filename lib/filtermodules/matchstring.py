@@ -42,7 +42,7 @@ class MatchString:
             if data!=[]:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
-            print("\n")
+            # print("\n")
             
         elif tool_name in ["wafw00f", "identywaf"]:
             initial_detection = False
@@ -80,9 +80,10 @@ class MatchString:
                     wafs = ", ".join(entry['waf'])
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
-                print("\n")
+                # print("\n")
             else:
-                logger.info("No WAFs detected.\n")
+                logger.info("No WAFs detected.")
+                # print("\n")
               
         elif tool_name == "whatweb":
             self.fingerprinter.parse_whatweb_output(output)
@@ -118,38 +119,17 @@ class MatchString:
             if data:
                 logger.success("Plugins Found:")
                 Output.table(columns, data)
-                print("\n")
+                # print("\n")
             else:
-                print("No significant plugin data detected.\n")
-                
-        # elif tool_name == "cmseek":
-        #     cmseek_data = self.fingerprinter.parse_cmseek_output(output)
-    
-        #     if cmseek_data:
-        #         logger.success("CMS Detected:")
-        #         columns = ['Product', 'Type', 'Version', 'Info']
-                
-        #         data = [[cmseek_data['Product'], cmseek_data['Type'], cmseek_data['Version'], cmseek_data['Info']]]
-        #         Output.table(columns, data)
-        #         print("\n")
-        
-        # elif tool_name == "drupwn":
-        #     drupwn_data = self.fingerprinter.parse_drupwn_output(output)
-
-        #     if drupwn_data:
-        #         print("CMS Detected:")
-        #         columns = ['Product', 'Type', 'Version', 'Info']
-        #         data = [[drupwn_data['Product'], drupwn_data['Type'], drupwn_data['Version'], drupwn_data['Info']]]
-
-        #         Output.table(columns, data)
-        #     else:
-        #         print("No CMS version detected.")
+                print("No significant plugin data detected.")
+                # print("\n")
                 
         elif tool_name in ["cmseek", "drupwn"]:
             self.display_cms_detection_results(tool_name, output)
+            # print("\n")
             
         elif tool_name == "harvester":
-            harvester_data = self.parse_harvester_output(output)
+            harvester_data = self.fingerprinter.parse_harvester_output(output)
             
             if harvester_data:
                 logger.success("Information Gathered:")
@@ -160,6 +140,20 @@ class MatchString:
                     ["The Harvester", "Email Discovery", "N/A", "\n".join(harvester_data['Emails'])]  # Include emails
                 ]
                 Output.table(columns, data)
+            # print("\n")
+
+        elif tool_name == "sublist3r":
+            domain, sublist3r_subdomains = self.fingerprinter.parse_sublist3r_output(output)
+            
+            if sublist3r_subdomains:
+                logger.success(f"Subdomain Discovery Detected for: {domain}")
+                columns = ['Domain', 'Subdomains']
+                data = [[domain, "\n".join(sublist3r_subdomains)]]
+                Output.table(columns, data)
+            else:
+                print(f"No subdomains detected for {domain}.")
+            # print("\n")
+        print("\n")
 
 
 

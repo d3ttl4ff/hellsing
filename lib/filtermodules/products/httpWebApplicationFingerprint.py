@@ -132,7 +132,7 @@ class httpWebApplicationFingerprint:
         # Flags to track which section we are currently parsing
         parsing_hosts = False
         parsing_ips = False
-        parsing_emails = False  # New flag for emails
+        parsing_emails = False
         
         for line in lines:
             # Check for the start of the hosts section
@@ -147,7 +147,7 @@ class httpWebApplicationFingerprint:
                 parsing_ips = True
                 parsing_emails = False
                 continue
-            # New: Check for the start of the emails section
+            # Check for the start of the emails section
             elif line.strip() == "[*] Emails found:":
                 parsing_hosts = False
                 parsing_ips = False
@@ -163,10 +163,36 @@ class httpWebApplicationFingerprint:
                 ip = line.split()[0].strip()
                 if ip not in ips:
                     ips.append(ip)
-            elif parsing_emails and line.strip() and not line.startswith("[*]"):  # Extract emails
+            elif parsing_emails and line.strip() and not line.startswith("[*]"):
                 email = line.strip()
                 if email not in emails:
                     emails.append(email)
                     
         # Return the extracted data, including emails
         return {"Hosts": hosts, "IPs": ips, "Emails": emails}
+
+    #------------------------------------------------------------------------------------
+    
+    # filter sublit3r output
+    def parse_sublist3r_output(self, output):
+        """
+        Parses Sublist3r output to extract subdomains and the targeted domain.
+        """
+        subdomains = []
+        target_domain = "Not found"  # Default value in case domain is not parsed correctly
+        
+        lines = output.split('\n')
+        start_capture = False
+        
+        for line in lines:
+            if "Enumerating subdomains now for" in line:
+                target_domain = line.split()[-1]  # Get the last part of the line, which should be the domain
+            elif line.strip() == "[-] Total Unique Subdomains Found:":
+                start_capture = False
+            elif start_capture and line.strip():
+                subdomains.append(line.strip())
+            elif "Unique Subdomains Found" in line:
+                start_capture = True
+                
+        return target_domain, subdomains
+
