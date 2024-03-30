@@ -122,7 +122,7 @@ class NetworkUtils:
         """
         categories = {
             "recon": "Reconnaissance",
-            "vuln": "Vulnerability Scan",
+            "vulnscan": "Vulnerability Scan",
             "exploit": "Exploitation",
             "postexploit": "Post-exploitation",
             "bruteforce": "Brute Force",
