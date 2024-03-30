@@ -2,6 +2,7 @@ import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
+from lib.filtermodules.vuln.httpVulnerabilityFilterModule import httpVulnerabilityFilterModule
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -15,6 +16,9 @@ class MatchString:
         
         # Initialize the fingerprinting class
         self.fingerprinter = httpWebApplicationFingerprint()
+        
+        # Initialize the vulnfilter class
+        self.vulnfilter = httpVulnerabilityFilterModule()
         
         self.waf_detected = False
         
@@ -146,12 +150,25 @@ class MatchString:
             else:
                 print(f"No subdomains detected for {domain}.")
                 
-        
+        elif tool_name == "testssl.sh":
+            vulnerabilities = self.vulnfilter.parse_testssl_output(output)
+
+            if vulnerabilities:
+                logger.success("Vulnerabilities Detected:")
+                columns = ['Name', 'CVE', 'Status', 'Severity', 'Description']
+                data = []
                 
+                for vuln in vulnerabilities:  # Directly iterate over the list
+                    severity = vuln.get('severity', "N/A")
+                    description = vuln.get('description', "N/A")
+                    status = vuln.get('status', "N/A")
+                    cve = vuln.get('cve', "N/A")
+                    name = vuln.get('name', "N/A")
+                    row = [name, cve, status, severity, description]
+                    data.append(row)
+                Output.table(columns, data)
+    
         print("\n")
-
-
-
 
     #------------------------------------------------------------------------------------
     
