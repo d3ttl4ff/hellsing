@@ -122,16 +122,46 @@ class MatchString:
             else:
                 print("No significant plugin data detected.\n")
                 
-        elif tool_name == "cmseek":
-            cmseek_data = self.fingerprinter.parse_cmseek_results(output)
+        # elif tool_name == "cmseek":
+        #     cmseek_data = self.fingerprinter.parse_cmseek_output(output)
     
-            if cmseek_data:
-                logger.success("CMS Detected:")
-                columns = ['Product', 'Type', 'Version', 'Info']
+        #     if cmseek_data:
+        #         logger.success("CMS Detected:")
+        #         columns = ['Product', 'Type', 'Version', 'Info']
                 
-                data = [[cmseek_data['Product'], cmseek_data['Type'], cmseek_data['Version'], cmseek_data['Info']]]
+        #         data = [[cmseek_data['Product'], cmseek_data['Type'], cmseek_data['Version'], cmseek_data['Info']]]
+        #         Output.table(columns, data)
+        #         print("\n")
+        
+        # elif tool_name == "drupwn":
+        #     drupwn_data = self.fingerprinter.parse_drupwn_output(output)
+
+        #     if drupwn_data:
+        #         print("CMS Detected:")
+        #         columns = ['Product', 'Type', 'Version', 'Info']
+        #         data = [[drupwn_data['Product'], drupwn_data['Type'], drupwn_data['Version'], drupwn_data['Info']]]
+
+        #         Output.table(columns, data)
+        #     else:
+        #         print("No CMS version detected.")
+                
+        elif tool_name in ["cmseek", "drupwn"]:
+            self.display_cms_detection_results(tool_name, output)
+            
+        elif tool_name == "harvester":
+            harvester_data = self.parse_harvester_output(output)
+            
+            if harvester_data:
+                logger.success("Information Gathered:")
+                columns = ['Hosts', 'IPs', 'Emails']
+                data = [
+                    ["The Harvester", "Host Discovery", "N/A", "\n".join(harvester_data['Hosts'])],
+                    ["The Harvester", "IP Discovery", "N/A", "\n".join(harvester_data['IPs'])],
+                    ["The Harvester", "Email Discovery", "N/A", "\n".join(harvester_data['Emails'])]  # Include emails
+                ]
                 Output.table(columns, data)
-                print("\n")
+
+
 
 
     #------------------------------------------------------------------------------------
@@ -162,5 +192,30 @@ class MatchString:
 
     #------------------------------------------------------------------------------------
     
+    def display_cms_detection_results(self, tool_name, output):
+        parser_functions = {
+            "cmseek": self.fingerprinter.parse_cmseek_output,
+            "drupwn": self.fingerprinter.parse_drupwn_output,
+            # Add more tools and their parsers as needed
+        }
+        
+        # Get the relevant parser function based on the tool_name
+        parser_function = parser_functions.get(tool_name)
+        
+        if not parser_function:
+            print(f"No parser available for tool: {tool_name}")
+            return
+        
+        # Parse the output using the selected parser function
+        parsed_data = parser_function(output)
+        
+        if parsed_data:
+            print(f"{tool_name.capitalize()} CMS Detected:")
+            columns = ['Product', 'Type', 'Version', 'Info']
+            data = [[parsed_data['Product'], parsed_data['Type'], parsed_data['Version'], parsed_data['Info']]]
+            Output.table(columns, data)
+        else:
+            print(f"No CMS version detected by {tool_name}.")
+
     
     

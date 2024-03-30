@@ -77,7 +77,7 @@ class httpWebApplicationFingerprint:
     #------------------------------------------------------------------------------------
     
     # filter cmsseek output
-    def parse_cmseek_results(self, output):
+    def parse_cmseek_output(self, output):
         """
         Parses the CMSeeK results from a given text file and extracts CMS name and URL.
         Returns a dictionary with extracted data.
@@ -94,3 +94,79 @@ class httpWebApplicationFingerprint:
             data["Info"] = f"{cms_url_match.group(1).strip()}"
 
         return data
+    
+    #------------------------------------------------------------------------------------
+    
+    # filter drupwn output
+    def parse_drupwn_output(output):
+        """
+        Parses the output of the drupwn tool to extract CMS version information.
+        """
+        pattern = r'Version detected: ([\d.]+)'
+        match = re.search(pattern, output)
+        if match:
+            return {
+                "Product": "Drupal",
+                "Type": "CMS",
+                "Version": match.group(1),
+                "Info": ""
+            }
+        else:
+            return None
+        
+    #------------------------------------------------------------------------------------
+    
+    # filter theharvester output
+    def parse_harvester_output(self, output):
+        """
+        Parses The Harvester output to extract hosts, IP addresses, and emails.
+        """
+        # Initialize the lists to store hosts, IPs, and emails
+        hosts = []
+        ips = []
+        emails = []
+        
+        # Split the output into lines for processing
+        lines = output.split('\n')
+        
+        # Flags to track which section we are currently parsing
+        parsing_hosts = False
+        parsing_ips = False
+        parsing_emails = False  # New flag for emails
+        
+        for line in lines:
+            # Check for the start of the hosts section
+            if line.strip() == "[*] Hosts found:":
+                parsing_hosts = True
+                parsing_ips = False
+                parsing_emails = False
+                continue
+            # Check for the start of the IPs section
+            elif line.strip() == "[*] IPs found:":
+                parsing_hosts = False
+                parsing_ips = True
+                parsing_emails = False
+                continue
+            # New: Check for the start of the emails section
+            elif line.strip() == "[*] Emails found:":
+                parsing_hosts = False
+                parsing_ips = False
+                parsing_emails = True
+                continue
+            
+            # Extract the information based on the current section
+            if parsing_hosts and line.strip() and not line.startswith("[*]"):
+                host = line.split()[0].strip()
+                if host not in hosts:
+                    hosts.append(host)
+            elif parsing_ips and line.strip() and not line.startswith("[*]"):
+                ip = line.split()[0].strip()
+                if ip not in ips:
+                    ips.append(ip)
+            elif parsing_emails and line.strip() and not line.startswith("[*]"):  # Extract emails
+                email = line.strip()
+                if email not in emails:
+                    emails.append(email)
+                    
+        # Return the extracted data, including emails
+        return {"Hosts": hosts, "IPs": ips, "Emails": emails}
