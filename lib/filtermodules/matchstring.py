@@ -123,7 +123,7 @@ class MatchString:
             else:
                 print("No significant plugin data detected.")
                 
-        elif tool_name in ["cmseek", "drupwn"]:
+        elif tool_name in ["cmseek"]:
             self.display_cms_detection_results(tool_name, output)
             
         elif tool_name == "harvester":
@@ -201,8 +201,6 @@ class MatchString:
     def display_cms_detection_results(self, tool_name, output):
         parser_functions = {
             "cmseek": self.fingerprinter.parse_cmseek_output,
-            "drupwn": self.fingerprinter.parse_drupwn_output,
-            # Add more tools and their parsers as needed
         }
         
         # Get the relevant parser function based on the tool_name
@@ -216,7 +214,7 @@ class MatchString:
         parsed_data = parser_function(output)
         
         if parsed_data:
-            print(f"{tool_name.capitalize()} CMS Detected:")
+            logger.success(f"{tool_name.capitalize()} CMS Detected:")
             columns = ['Product', 'Type', 'Version', 'Info']
             data = [[parsed_data['Product'], parsed_data['Type'], parsed_data['Version'], parsed_data['Info']]]
             Output.table(columns, data)
