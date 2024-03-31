@@ -149,26 +149,7 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 print(f"No subdomains detected for {domain}.")
-                
-        elif tool_name == "testssl.sh":
-            vulnerabilities = self.vulnfilter.parse_testssl_output(output)
-
-            if vulnerabilities:
-                logger.success("Vulnerabilities Detected:")
-                columns = ['Name', 'CVE', 'Status', 'Severity', 'Description']
-                data = []
-                
-                for vuln in vulnerabilities:  # Directly iterate over the list
-                    severity = vuln.get('severity', "N/A")
-                    description = vuln.get('description', "N/A")
-                    status = vuln.get('status', "N/A")
-                    cve = vuln.get('cve', "N/A")
-                    name = vuln.get('name', "N/A")
-                    row = [name, cve, status, severity, description]
-                    data.append(row)
-                Output.table(columns, data)
-    
-        print("\n")
+        # print("\n")
 
     #------------------------------------------------------------------------------------
     
