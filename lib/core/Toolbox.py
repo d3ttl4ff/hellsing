@@ -77,7 +77,7 @@ class Toolbox:
                 
                 try:
                     check_command = self.config.get(tool, 'check_command')
-                    result = subprocess.run(check_command, shell=True, check=True, cwd=tool_dir_path, text=True, capture_output=True)
+                    result = subprocess.run(check_command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
                     # If the check_command runs successfully, the tool is operational
                     status = Output.colored('READY', color='green')      
                 except (subprocess.CalledProcessError, configparser.NoOptionError, OSError):
@@ -135,7 +135,7 @@ class Toolbox:
                 if tool_exists:
                     try:
                         check_command = self.config.get(tool, 'check_command')
-                        subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.run(check_command, shell=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                         operational = True
                     except subprocess.CalledProcessError:
                         operational = False
@@ -167,7 +167,7 @@ class Toolbox:
                         return True
                     else:
                         try:
-                            subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
+                            subprocess.run(install_command, shell=True, cwd=tool_dir)
                             logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
                             
                             # Write the current date to installed_date.txt
@@ -241,14 +241,14 @@ class Toolbox:
                     # Check if the tool is operational
                     logger.info(f"Checking operational status of {tool_name}...")
                     check_command = self.config.get(tool, 'check_command')
-                    subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    subprocess.run(check_command, shell=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     logger.success(f"{tool_name} is operational.")
 
                     # Proceed with update
                     update_command = self.config.get(tool, 'update')
                     logger.info(f"Updating {tool_name}...")
                     Output.begin_cmd(update_command)
-                    subprocess.run(update_command, shell=True, check=True, cwd=tool_dir)
+                    subprocess.run(update_command, shell=True, cwd=tool_dir)
                     logger.success(f"{tool_name} updated successfully.\n")
                     
                      # Write the current date to last_update.txt
@@ -359,7 +359,7 @@ class Toolbox:
                 try:
                     check_command = self.config.get(tool, 'check_command')
                     logger.info(f"Checking {config_name} in {tool_dir}...")
-                    subprocess.run(check_command, shell=True, check=True, cwd=tool_dir, text=True, capture_output=True)
+                    subprocess.run(check_command, shell=True, cwd=tool_dir, text=True, capture_output=True)
                     # Success message without showing stdout
                     logger.success(f"{config_name} is operational.\n")
                     return
