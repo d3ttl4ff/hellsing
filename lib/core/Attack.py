@@ -206,7 +206,7 @@ class Attack:
             logger.info(f"Target------------| {target}")
             logger.info(f"Port--------------| {port}")
             logger.info(f"Specified Port----| {specified_port}")
-            logger.info(f"Domain------------| {domain}")
+            logger.info(f"Host--------------| {domain}")
             logger.info(f"IP Address--------| {ip_address}")
             logger.info(f"Protocol----------| {protocol}")
             logger.info(f"Reachable Status--| {rechable_status}")
