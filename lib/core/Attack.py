@@ -279,6 +279,8 @@ class Attack:
                 if "[DOMAIN]" in command:
                     extracted_domain = self.netutils.extract_secondary_domain(domain)
                     command = command.replace("[DOMAIN]", extracted_domain)
+                if "[HOST]" in command:
+                    command = command.replace("[HOST]", domain)
                 command = command.replace("[PORT]", port)
                 
                 # Check if the tool's execution directory exists
