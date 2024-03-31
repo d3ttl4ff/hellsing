@@ -1,5 +1,5 @@
 
-References for Wordlists used in Jok3r:
+References for Wordlists used in hellsing.py:
 
 * Metasploit
 * https://github.com/govolution/betterdefaultpasslist
