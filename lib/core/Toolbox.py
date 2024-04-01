@@ -78,8 +78,12 @@ class Toolbox:
                 try:
                     check_command = self.config.get(tool, 'check_command')
                     result = subprocess.run(check_command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
-                    # If the check_command runs successfully, the tool is operational
-                    status = Output.colored('READY', color='green')      
+                    
+                    if result.returncode == 0 or "Usage" in result.stdout or "Usage" in result.stderr:
+                        status = Output.colored('READY', color='green')
+                    else:
+                        status = Output.colored('Not operational', color='red')
+                        
                 except (subprocess.CalledProcessError, configparser.NoOptionError, OSError):
                     # If the check_command fails or doesn't exist, the tool is not operational
                     status = Output.colored('Not operational', color='red')
@@ -136,7 +140,13 @@ class Toolbox:
                     try:
                         check_command = self.config.get(tool, 'check_command')
                         subprocess.run(check_command, shell=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        operational = True
+                        result = subprocess.run(check_command, shell=True, cwd=tool_dir, text=True, capture_output=True)
+                        
+                        if result.returncode == 0 or "Usage" in result.stdout or "Usage" in result.stderr:
+                            operational = True
+                        else:
+                            operational = False
+                          
                     except subprocess.CalledProcessError:
                         operational = False
 
@@ -167,7 +177,7 @@ class Toolbox:
                         return True
                     else:
                         try:
-                            subprocess.run(install_command, shell=True, cwd=tool_dir)
+                            subprocess.run(install_command, shell=True, check=True, cwd=tool_dir)
                             logger.success(f"{tool_name} installed successfully in {tool_dir}\n")
                             
                             # Write the current date to installed_date.txt
@@ -242,13 +252,19 @@ class Toolbox:
                     logger.info(f"Checking operational status of {tool_name}...")
                     check_command = self.config.get(tool, 'check_command')
                     subprocess.run(check_command, shell=True, cwd=tool_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    logger.success(f"{tool_name} is operational.")
+                    result = subprocess.run(check_command, shell=True, cwd=tool_dir, text=True, capture_output=True)
+                    
+                    if result.returncode == 0 or "Usage" in result.stdout or "Usage" in result.stderr:
+                        logger.success(f"{tool_name} is operational.")
+                    else:
+                        logger.error(f"{tool_name} is not operational. Update cancelled.\n")
+                        return
 
                     # Proceed with update
                     update_command = self.config.get(tool, 'update')
                     logger.info(f"Updating {tool_name}...")
                     Output.begin_cmd(update_command)
-                    subprocess.run(update_command, shell=True, cwd=tool_dir)
+                    subprocess.run(update_command, shell=True, check=True, cwd=tool_dir)
                     logger.success(f"{tool_name} updated successfully.\n")
                     
                      # Write the current date to last_update.txt
@@ -359,14 +375,19 @@ class Toolbox:
                 try:
                     check_command = self.config.get(tool, 'check_command')
                     logger.info(f"Checking {config_name} in {tool_dir}...")
-                    subprocess.run(check_command, shell=True, cwd=tool_dir, text=True, capture_output=True)
-                    # Success message without showing stdout
-                    logger.success(f"{config_name} is operational.\n")
+                    result = subprocess.run(check_command, shell=True, cwd=tool_dir, text=True, capture_output=True)
+                
+                    # Check if the tool's help menu was displayed successfully
+                    if result.returncode == 0 or "Usage" in result.stdout or "Usage" in result.stderr:
+                        logger.success(f"{config_name} is operational.\n")
+                    else:
+                        logger.error(f"Error checking {config_name}: Command '{check_command}' returned non-zero exit status {result.returncode}.\nError Output:\n{result.stderr}")
+                    
                     return
-                except subprocess.CalledProcessError as e:
-                    # Print error details including stderr
-                    logger.error(f"Error checking {config_name}: {e}\nError Output:\n{e.stderr}")
-                    return
+                # except subprocess.CalledProcessError as e:
+                #     # Print error details including stderr
+                #     logger.error(f"Error checking {config_name}: {e}\nError Output:\n{e.stderr}")
+                #     return
                 except configparser.NoOptionError:
                     logger.error(f"Check command not defined for {config_name}.\n")
                     return
