@@ -2,7 +2,7 @@ import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
-from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic, vuln_remed
+from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -220,15 +220,6 @@ class MatchString:
             if vulnerability_found:
                 print(f"Vulnerability found: {response}")
                 print(f"Criticality: {criticality}")
-                
-                for vuln in vuln_remed:
-                    if vuln["ref_no"] == remed_ref:
-                        description = vuln["description"]
-                        remediation = vuln["remediation"]
-                        print(f"Description: {description}")
-                        print(f"Remediation: {remediation}")
-                    # print(f"Description: {description}")
-                    # print(f"Remediation: {remediation}")
 
                 # remed_info = vuln_dic.get(remed_ref)
                 # description = vuln_dic.get(int(remed_ref))
