@@ -16,6 +16,7 @@ from lib.output.Spinner import Spinner
 from lib.output.Logger import logger
 from lib.utils.StringUtils import StringUtils
 from lib.utils.NetworkUtils import NetworkUtils
+from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 
 class Attack:
     def __init__ (self, settings):
@@ -41,6 +42,9 @@ class Attack:
         
         # creating matchstring object
         self.matchstring = MatchString()
+        
+        # creating httpVulnRemediation object
+        self.httpVulnRemediation = vuln_dic
         
         self.created_files = []
         
@@ -269,6 +273,11 @@ class Attack:
             command_template = tool_config.get('command_1', None)
             tool_description = tool_config.get('description', None)
             check_name = tool_config.get('name', None)
+            criticality = tool_config.get('criticality', None)
+            response = tool_config.get('response', None)
+            vuln_pattern = tool_config.get('vuln_pattern', None)
+            response_code = tool_config.get('response_code', None)
+            remed_ref = tool_config.get('remed_ref', None)
             
             if command_template:
                 command = command_template
@@ -353,7 +362,25 @@ class Attack:
                     
                     # Process the tool output
                     try:
-                        self.matchstring.process_tool_output(tool_name, results_file_path)    
+                        if current_category == "vuln":
+                            with open(results_file_path, "r") as file:
+                                output = file.read()
+                            
+                            if ((response_code == 0 and vuln_pattern in output) or
+                                (response_code == 1 and vuln_pattern not in output)):
+                                print(f"Vulnerability found: {response}")
+                                print(f"Criticality: {criticality}")
+                                remed_info = self.httpVulnRemediation.vuln_dic.get(remed_ref)
+                                if remed_info:
+                                    print(f"Description: \n{remed_info[0]}")
+                                    print(f"Remediation: \n{remed_info[1]}")
+                            else:
+                                print("No vulnerabilities detected for this check.")
+                            print("")
+                            
+                        else:
+                            self.matchstring.process_tool_output(tool_name, results_file_path)    
+                            
                     except Exception as e:
                         pass
                     

@@ -2,7 +2,7 @@ import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
-from lib.filtermodules.vuln.httpVulnerabilityFilterModule import httpVulnerabilityFilterModule
+# from lib.filtermodules.vuln.httpVulnRemediation import httpVulnerabilityFilterModule
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -17,8 +17,8 @@ class MatchString:
         # Initialize the fingerprinting class
         self.fingerprinter = httpWebApplicationFingerprint()
         
-        # Initialize the vulnfilter class
-        self.vulnfilter = httpVulnerabilityFilterModule()
+        # # Initialize the vulnfilter class
+        # self.vulnfilter = httpVulnerabilityFilterModule()
         
         self.waf_detected = False
         
@@ -202,5 +202,6 @@ class MatchString:
         else:
             print(f"No CMS version detected by {tool_name}.")
 
+    #------------------------------------------------------------------------------------
     
     
