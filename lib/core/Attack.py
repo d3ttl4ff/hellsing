@@ -1,6 +1,7 @@
 import configparser
 from datetime import datetime
 import os
+import re
 import shlex
 import socket
 import subprocess
@@ -326,7 +327,8 @@ class Attack:
                     # self.spinner.start()
                     scan_start = time.time()
                     
-                    subprocess.run(command, shell=True, cwd=tool_dir_path)
+                    # subprocess.run(command, shell=True, cwd=tool_dir_path)
+                    result = subprocess.run(command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
                     
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
@@ -362,23 +364,31 @@ class Attack:
                     
                     # Process the tool output
                     try:
-                        if current_category == "postexploit":
-                            with open(results_file_path, "r") as file:
-                                output = file.read()
+                        if current_category == "vuln":
+                            # vulnerability_found = False
                             
-                            if (vuln_pattern in output):
-                                print(f"Vulnerability found: {response}")
-                                print(f"Criticality: {criticality}")
-                                remed_info = vuln_dic.get(remed_ref)
-                                
-                                print(remed_info)
+                            # pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
                             
-                                if remed_info:
-                                    print(f"Description: \n{remed_info[0]}")
-                                    print(f"Remediation: \n{remed_info[1]}")
-                            else:
-                                print("No vulnerabilities detected for this check.")
-                            print("")
+                            # print(result.stdout)
+                            
+                            # for line in result.stdout.splitlines():
+                            #     if pattern.search(line):
+                            #         vulnerability_found = True
+
+                            # if vulnerability_found:
+                            #     print(f"Vulnerability found: {response}")
+                            #     print(f"Criticality: {criticality}")
+
+                            #     remed_info = vuln_dic.get(remed_ref)
+
+                            #     if remed_info:
+                            #         # description, remediation = remed_info
+                            #         print(f"Description: \n{remed_info[0]}")
+                            #         print(f"Remediation: \n{remed_info[1]}")
+                            # else:
+                            #     print("No vulnerabilities detected for this check.")
+                            # print("")
+                            self.matchstring.process_vuln(tool_name, results_file_path, vuln_pattern, response, criticality, remed_ref)
                             
                         else:
                             self.matchstring.process_tool_output(tool_name, results_file_path)    

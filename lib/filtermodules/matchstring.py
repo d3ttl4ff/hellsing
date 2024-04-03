@@ -2,7 +2,7 @@ import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
-# from lib.filtermodules.vuln.httpVulnRemediation import httpVulnerabilityFilterModule
+from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 from lib.output.Logger import logger  
 from lib.output import Output
 
@@ -16,9 +16,6 @@ class MatchString:
         
         # Initialize the fingerprinting class
         self.fingerprinter = httpWebApplicationFingerprint()
-        
-        # # Initialize the vulnfilter class
-        # self.vulnfilter = httpVulnerabilityFilterModule()
         
         self.waf_detected = False
         
@@ -149,6 +146,7 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 print(f"No subdomains detected for {domain}.")
+                
         # print("\n")
 
     #------------------------------------------------------------------------------------
@@ -204,4 +202,32 @@ class MatchString:
 
     #------------------------------------------------------------------------------------
     
+    # vulnerability filter
+    def process_vuln(self, tool_name, output_file_path, vuln_pattern, response, criticality, remed_ref):
+        with open(output_file_path, "r") as file:
+            output = file.read()
+
+        if tool_name == "whois":
+            vulnerability_found = False
+            pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
+            
+            print(output)
+            
+            for line in output.splitlines():
+                if pattern.search(line):
+                    vulnerability_found = True
+
+            if vulnerability_found:
+                print(f"Vulnerability found: {response}")
+                print(f"Criticality: {criticality}")
+
+                remed_info = vuln_dic.get(remed_ref)
+
+                if remed_info:
+                    # description, remediation = remed_info
+                    print(f"Description: \n{remed_info[0]}")
+                    print(f"Remediation: \n{remed_info[1]}")
+            else:
+                print("No vulnerabilities detected for this check.")
+            print("")
     
