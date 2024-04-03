@@ -362,15 +362,17 @@ class Attack:
                     
                     # Process the tool output
                     try:
-                        if current_category == "vuln":
+                        if current_category == "postexploit":
                             with open(results_file_path, "r") as file:
                                 output = file.read()
                             
-                            if ((response_code == 0 and vuln_pattern in output) or
-                                (response_code == 1 and vuln_pattern not in output)):
+                            if (vuln_pattern in output):
                                 print(f"Vulnerability found: {response}")
                                 print(f"Criticality: {criticality}")
-                                remed_info = self.httpVulnRemediation.vuln_dic.get(remed_ref)
+                                remed_info = vuln_dic.get(remed_ref)
+                                
+                                print(remed_info)
+                            
                                 if remed_info:
                                     print(f"Description: \n{remed_info[0]}")
                                     print(f"Remediation: \n{remed_info[1]}")
