@@ -221,14 +221,26 @@ class MatchString:
                 print(f"Vulnerability found: {response}")
                 print(f"Criticality: {criticality}")
 
-                # remed_info = vuln_dic.get(remed_ref)
-                # description = vuln_dic.get(int(remed_ref))
-                # print(f"Description: \n{description}")
-
-                # if remed_info:
-                #     # description, remediation = remed_info
-                #     print(f"Description: \n{remed_info[0]}")
-                #     print(f"Remediation: \n{remed_info[1]}")
+                vuln_info = vuln_dic.get(int(remed_ref))
+                
+                if vuln_info:
+                    description_text = vuln_info['description']
+                    remediation_text = vuln_info['remediation']
+                    
+                    print(f"Description: \n{description_text}")
+                    print(f"Remediation: \n{remediation_text}")
+                
+                #now I want it to be printed in a table. it should have only one column and multiple rows.
+                #1st raw - "Vulnerability"
+                #2nd raw - response 
+                #3rd raw - Critical status
+                #4th raw - criticality
+                #5th raw - Description 
+                #6th raw - description_text
+                #7th raw - Remediation
+                #8th raw - remediation_text
+                raws = ['']
+                
             else:
                 print("No vulnerabilities detected for this check.")
             print("")
