@@ -1,10 +1,12 @@
 import re
+
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
 from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 from lib.output.Logger import logger  
 from lib.output import Output
+from lib.utils.StringUtils import StringUtils
 
 class MatchString:
     def __init__(self):
@@ -43,7 +45,8 @@ class MatchString:
             if data!=[]:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
-            
+                
+        #------------------------------------------------------------------------------------
         elif tool_name in ["wafw00f", "identywaf"]:
             initial_detection = False
             
@@ -56,7 +59,7 @@ class MatchString:
                 
                 for entry in detected_wafs:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'])
-            
+                    
             elif tool_name == "identywaf":
                 waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
                 
@@ -82,7 +85,8 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 logger.info("No WAFs detected.")
-              
+                
+        #------------------------------------------------------------------------------------
         elif tool_name == "whatweb":
             self.fingerprinter.parse_whatweb_output(output)
 
@@ -119,10 +123,12 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 print("No significant plugin data detected.")
-                
+        
+        #------------------------------------------------------------------------------------
         elif tool_name in ["cmseek"]:
             self.display_cms_detection_results(tool_name, output)
-            
+        
+        #------------------------------------------------------------------------------------
         elif tool_name == "harvester":
             harvester_data = self.fingerprinter.parse_harvester_output(output)
             
@@ -136,6 +142,7 @@ class MatchString:
                 ]
                 Output.table(columns, data)
 
+        #------------------------------------------------------------------------------------
         elif tool_name == "sublist3r":
             domain, sublist3r_subdomains = self.fingerprinter.parse_sublist3r_output(output)
             
@@ -145,8 +152,7 @@ class MatchString:
                 data = [[domain, "\n".join(sublist3r_subdomains)]]
                 Output.table(columns, data)
             else:
-                print(f"No subdomains detected for {domain}.")
-                
+                print(f"No subdomains detected for {domain}.")   
         # print("\n")
 
     #------------------------------------------------------------------------------------
@@ -218,29 +224,30 @@ class MatchString:
                     vulnerability_found = True
 
             if vulnerability_found:
-                print(f"Vulnerability found: {response}")
-                print(f"Criticality: {criticality}")
-
+                # print(f"Vulnerability found: {response}")
+                # print(f"Criticality: {criticality}")
+ 
                 vuln_info = vuln_dic.get(int(remed_ref))
                 
                 if vuln_info:
-                    description_text = vuln_info['description']
-                    remediation_text = vuln_info['remediation']
+                    response = response.replace('"', '').replace("'", "")
+                    criticality = criticality.replace('"', '').replace("'", "")
                     
-                    print(f"Description: \n{description_text}")
-                    print(f"Remediation: \n{remediation_text}")
-                
-                #now I want it to be printed in a table. it should have only one column and multiple rows.
-                #1st raw - "Vulnerability"
-                #2nd raw - response 
-                #3rd raw - Critical status
-                #4th raw - criticality
-                #5th raw - Description 
-                #6th raw - description_text
-                #7th raw - Remediation
-                #8th raw - remediation_text
-                raws = ['']
-                
+                    description_text = StringUtils.wrap(vuln_info['description'], 100)
+                    remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
+
+                    colname_vulnerability_info = Output.colored("Vulnerbility Information", attrs="bold")
+                    columns = [colname_vulnerability_info]
+                    
+                    data = [
+                        ["Vulnerability Name"], [response],
+                        ["Criticality"], [criticality],
+                        ["Description"], [description_text],
+                        ["Remediation"], [remediation_text]
+                    ]
+                    Output.table(columns, data)
+
+        
             else:
                 print("No vulnerabilities detected for this check.")
             print("")
