@@ -273,43 +273,48 @@ class MatchString:
                     description_text = StringUtils.wrap(vuln_info['description'], 100)
                     remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
 
-                    colname_vulnerability_info = Output.colored("[~] Vulnerbility Information", attrs="bold")
+                    colname_vulnerability_info = Output.colored("👾 Vulnerbility Information ", attrs="bold")
                     columns = [colname_vulnerability_info]
                     
                     # variables for vulnerability information
-                    rowname_vulnerability_name = Output.colored("[+] Vulnerability Name ", attrs="bold")    
-                    rowname_criticality = Output.colored("[+] Criticality ", attrs="bold")
-                    rowname_description = Output.colored("[+] Description ", attrs="bold")
+                    rowname_vulnerability_name = Output.colored("[~] Vulnerability Name ", attrs="bold")    
+                    rowname_criticality = Output.colored("[*] Criticality ", attrs="bold")
+                    rowname_description = Output.colored("[-] Description ", attrs="bold")
                     rowname_remediation = Output.colored("[+] Remediation ", attrs="bold")
                     
-                    response = Output.colored(response, color=6)
+                    response = Output.colored(response, color=99)
                     
+                    criticality = "low"
         
                     if criticality == "informational":
                         criticality_color = 16
-                        criticality_highlight = 46
+                        criticality_highlight = 76
                     elif criticality == "low":
-                        criticality = Output.colored("Low", color=4, highlight=1)
+                        criticality_color = 16
+                        criticality_highlight = 45
                     elif criticality == "medium":
-                        criticality = Output.colored("Medium", color=2, highlight=1)
+                        criticality_color = 16
+                        criticality_highlight = 184
                     elif criticality == "high":
-                        criticality = Output.colored("High", color=3, highlight=1)
+                        criticality_color = 15
+                        criticality_highlight = 160
                     elif criticality == "critical":
-                        criticality = Output.colored("Critical", color=7, highlight=1)
+                        criticality_color = 16
+                        criticality_highlight = 199
                         
-                    temp_criticality = Output.colored(criticality, color=criticality_color, highlight=criticality_highlight)
-                    criticality_left_connector = Output.colored("▒ ", color=criticality_highlight)
-                    criticality_right_connector = Output.colored(" ▒", color=criticality_highlight)
+                    temp_criticality = Output.colored(f" {criticality} ", color=criticality_color, highlight=criticality_highlight)
+                    criticality_left_connector = Output.colored("▒", color=criticality_highlight)
+                    criticality_right_connector = Output.colored("▒ ●", color=criticality_highlight)
                         
-                    final_criticality = criticality_left_connector + temp_criticality + criticality_right_connector
-                    description_text = Output.colored(description_text)
-                    remediation_text = Output.colored(remediation_text)
+                    final_criticality = temp_criticality + criticality_right_connector
+                    description_text = Output.colored(description_text, color=214)
+                    remediation_text = Output.colored(remediation_text, color=70)
                     
                     data = [
                         [rowname_vulnerability_name], [response],
                         [rowname_criticality], [final_criticality],
                         [rowname_description], [description_text],
-                        [rowname_remediation], [remediation_text]
+                        [rowname_remediation], [remediation_text],
                     ]
                     Output.table(columns, data)
                     
