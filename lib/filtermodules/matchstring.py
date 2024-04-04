@@ -44,6 +44,8 @@ class MatchString:
             if data!=[]:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
+            else:
+                logger.info("No ports found.")
                 
         #------------------------------------------------------------------------------------
         elif tool_name in ["wafw00f", "identywaf"]:
@@ -128,10 +130,10 @@ class MatchString:
             self.display_cms_detection_results(tool_name, output)
         
         #------------------------------------------------------------------------------------
-        elif tool_name == "harvester":
+        elif tool_name == "theharvester":
             harvester_data = self.fingerprinter.parse_harvester_output(output)
             
-            if harvester_data:
+            if harvester_data and not harvester_data['Hosts'] == [] and not harvester_data['IPs'] == [] and not harvester_data['Emails'] == []:
                 logger.success("Information Gathered:")
                 columns = ['Hosts', 'IPs', 'Emails']
                 data = [
@@ -140,6 +142,8 @@ class MatchString:
                     ["The Harvester", "Email Discovery", "N/A", "\n".join(harvester_data['Emails'])]  # Include emails
                 ]
                 Output.table(columns, data)
+            else:   
+                logger.info("No Hosts, IPs, or Emails detected by The Harvester.")
 
         #------------------------------------------------------------------------------------
         elif tool_name == "sublist3r":
@@ -197,13 +201,13 @@ class MatchString:
         # Parse the output using the selected parser function
         parsed_data = parser_function(output)
         
-        if parsed_data:
+        if parsed_data and not parsed_data.get("Product") == "<name and/or cms url>":
             logger.success(f"{tool_name.capitalize()} CMS Detected:")
             columns = ['Product', 'Type', 'Version', 'Info']
             data = [[parsed_data['Product'], parsed_data['Type'], parsed_data['Version'], parsed_data['Info']]]
             Output.table(columns, data)
         else:
-            print(f"No CMS version detected by {tool_name}.")
+            logger.info(f"No CMS version detected by {tool_name}.")
 
     #------------------------------------------------------------------------------------
     
