@@ -28,7 +28,6 @@ class MatchString:
         return ansi_escape.sub('', text)
 
     #------------------------------------------------------------------------------------
-    
     def process_tool_output(self, tool_name, output_file_path):
         with open(output_file_path, "r") as file:
             output = file.read()
@@ -213,20 +212,58 @@ class MatchString:
         with open(output_file_path, "r") as file:
             output = file.read()
 
-        if tool_name == "whois":
-            vulnerability_found = False
-            pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-            
-            print(output)
-            
-            for line in output.splitlines():
-                if pattern.search(line):
-                    vulnerability_found = True
+        try:
+            if tool_name == "whois":
+                vulnerability_found = False
+                pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
+                
+                print(output)
+                
+                # for line in output.splitlines():
+                #     if pattern.search(line):
+                #         vulnerability_found = True
 
+                # if vulnerability_found:
+                #     # print(f"Vulnerability found: {response}")
+                #     # print(f"Criticality: {criticality}")
+    
+                #     vuln_info = vuln_dic.get(int(remed_ref))
+                    
+                #     if vuln_info:
+                #         response = response.replace('"', '').replace("'", "")
+                #         criticality = criticality.replace('"', '').replace("'", "")
+                        
+                #         description_text = StringUtils.wrap(vuln_info['description'], 100)
+                #         remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
+
+                #         colname_vulnerability_info = Output.colored("Vulnerbility Information", attrs="bold")
+                #         columns = [colname_vulnerability_info]
+                        
+                #         rowname_vulnerability_name = Output.colored("Vulnerability Name", attrs="bold")
+                #         rowname_criticality = Output.colored("Criticality", attrs="bold")
+                #         rowname_description = Output.colored("Description", attrs="bold")
+                #         rowname_remediation = Output.colored("Remediation", attrs="bold")
+                        
+                #         data = [
+                #             ["Vulnerability Name"], [response],
+                #             ["Criticality"], [criticality],
+                #             ["Description"], [description_text],
+                #             ["Remediation"], [remediation_text]
+                #         ]
+                #         Output.table(columns, data)
+                    
+        except Exception as e:
+            print(f"Error: {e}")
+            
+        finally:
+            for line in output.splitlines():
+                    if pattern.search(line):
+                        vulnerability_found = True
+            
             if vulnerability_found:
                 # print(f"Vulnerability found: {response}")
                 # print(f"Criticality: {criticality}")
- 
+
                 vuln_info = vuln_dic.get(int(remed_ref))
                 
                 if vuln_info:
@@ -236,18 +273,46 @@ class MatchString:
                     description_text = StringUtils.wrap(vuln_info['description'], 100)
                     remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
 
-                    colname_vulnerability_info = Output.colored("Vulnerbility Information", attrs="bold")
+                    colname_vulnerability_info = Output.colored("[~] Vulnerbility Information", attrs="bold")
                     columns = [colname_vulnerability_info]
                     
+                    # variables for vulnerability information
+                    rowname_vulnerability_name = Output.colored("[+] Vulnerability Name ", attrs="bold")    
+                    rowname_criticality = Output.colored("[+] Criticality ", attrs="bold")
+                    rowname_description = Output.colored("[+] Description ", attrs="bold")
+                    rowname_remediation = Output.colored("[+] Remediation ", attrs="bold")
+                    
+                    response = Output.colored(response, color=6)
+                    
+        
+                    if criticality == "informational":
+                        criticality_color = 16
+                        criticality_highlight = 46
+                    elif criticality == "low":
+                        criticality = Output.colored("Low", color=4, highlight=1)
+                    elif criticality == "medium":
+                        criticality = Output.colored("Medium", color=2, highlight=1)
+                    elif criticality == "high":
+                        criticality = Output.colored("High", color=3, highlight=1)
+                    elif criticality == "critical":
+                        criticality = Output.colored("Critical", color=7, highlight=1)
+                        
+                    temp_criticality = Output.colored(criticality, color=criticality_color, highlight=criticality_highlight)
+                    criticality_left_connector = Output.colored("▒ ", color=criticality_highlight)
+                    criticality_right_connector = Output.colored(" ▒", color=criticality_highlight)
+                        
+                    final_criticality = criticality_left_connector + temp_criticality + criticality_right_connector
+                    description_text = Output.colored(description_text)
+                    remediation_text = Output.colored(remediation_text)
+                    
                     data = [
-                        ["Vulnerability Name"], [response],
-                        ["Criticality"], [criticality],
-                        ["Description"], [description_text],
-                        ["Remediation"], [remediation_text]
+                        [rowname_vulnerability_name], [response],
+                        [rowname_criticality], [final_criticality],
+                        [rowname_description], [description_text],
+                        [rowname_remediation], [remediation_text]
                     ]
                     Output.table(columns, data)
-
-        
+                    
             else:
                 print("No vulnerabilities detected for this check.")
             print("")
