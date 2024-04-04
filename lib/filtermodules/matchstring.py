@@ -216,41 +216,9 @@ class MatchString:
             if tool_name == "whois":
                 vulnerability_found = False
                 pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                
                 print(output)
                 
-                # for line in output.splitlines():
-                #     if pattern.search(line):
-                #         vulnerability_found = True
-
-                # if vulnerability_found:
-                #     # print(f"Vulnerability found: {response}")
-                #     # print(f"Criticality: {criticality}")
-    
-                #     vuln_info = vuln_dic.get(int(remed_ref))
-                    
-                #     if vuln_info:
-                #         response = response.replace('"', '').replace("'", "")
-                #         criticality = criticality.replace('"', '').replace("'", "")
-                        
-                #         description_text = StringUtils.wrap(vuln_info['description'], 100)
-                #         remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
-
-                #         colname_vulnerability_info = Output.colored("Vulnerbility Information", attrs="bold")
-                #         columns = [colname_vulnerability_info]
-                        
-                #         rowname_vulnerability_name = Output.colored("Vulnerability Name", attrs="bold")
-                #         rowname_criticality = Output.colored("Criticality", attrs="bold")
-                #         rowname_description = Output.colored("Description", attrs="bold")
-                #         rowname_remediation = Output.colored("Remediation", attrs="bold")
-                        
-                #         data = [
-                #             ["Vulnerability Name"], [response],
-                #             ["Criticality"], [criticality],
-                #             ["Description"], [description_text],
-                #             ["Remediation"], [remediation_text]
-                #         ]
-                #         Output.table(columns, data)
+                
                     
         except Exception as e:
             print(f"Error: {e}")
@@ -307,7 +275,7 @@ class MatchString:
                     criticality_right_connector = Output.colored("▒ ●", color=criticality_highlight)
                         
                     final_criticality = temp_criticality + criticality_right_connector
-                    description_text = Output.colored(description_text, color=214)
+                    description_text = Output.colored(description_text, color=197)
                     remediation_text = Output.colored(remediation_text, color=70)
                     
                     data = [
