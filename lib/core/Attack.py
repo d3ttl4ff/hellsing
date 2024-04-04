@@ -313,6 +313,9 @@ class Attack:
                 if "[LOCALIP]" in command:
                     local_ip = self.netutils.get_local_ip_address()
                     command = command.replace("[LOCALIP]", local_ip)
+                    
+                if "[RESULTS_DIR]" in command:
+                    command = command.replace("[RESULTS_DIR]", RESULTS_DIR)
 
                 display_check_name = tool_config.get('name', None)
                 display_check_tool_name = tool_config.get('tool', None)
@@ -324,7 +327,7 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
-                    # self.spinner.start()
+                    self.spinner.start()
                     scan_start = time.time()
                     
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
@@ -333,12 +336,15 @@ class Attack:
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                     
-                    # store stdout and stderr
-                    with open(results_file_path, "w") as file:
-                        decoded_output = stdout.decode("utf-8")
-                        cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
-                        file.write(cleaned_output)
-                        # file.write(stderr)
+                    if tool_name == 'wget':
+                        pass
+                    else:
+                        # store stdout and stderr
+                        with open(results_file_path, "w") as file:
+                            decoded_output = stdout.decode("utf-8")
+                            cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
+                            file.write(cleaned_output)
+                            # file.write(stderr)
                                         
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
@@ -365,29 +371,6 @@ class Attack:
                     # Process the tool output
                     try:
                         if current_category == "vuln":
-                            # vulnerability_found = False
-                            
-                            # pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                            
-                            # print(result.stdout)
-                            
-                            # for line in result.stdout.splitlines():
-                            #     if pattern.search(line):
-                            #         vulnerability_found = True
-
-                            # if vulnerability_found:
-                            #     print(f"Vulnerability found: {response}")
-                            #     print(f"Criticality: {criticality}")
-
-                            #     remed_info = vuln_dic.get(remed_ref)
-
-                            #     if remed_info:
-                            #         # description, remediation = remed_info
-                            #         print(f"Description: \n{remed_info[0]}")
-                            #         print(f"Remediation: \n{remed_info[1]}")
-                            # else:
-                            #     print("No vulnerabilities detected for this check.")
-                            # print("")
                             self.matchstring.process_vuln(tool_name, results_file_path, vuln_pattern, response, criticality, remed_ref)
                             
                         else:

@@ -211,17 +211,18 @@ class MatchString:
     def process_vuln(self, tool_name, output_file_path, vuln_pattern, response, criticality, remed_ref):
         with open(output_file_path, "r") as file:
             output = file.read()
+        # print(output)
 
         try:
             if tool_name == "whois":
                 vulnerability_found = False
                 pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                print(output)
+                # print(output)
                 
                 
                     
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
             
         finally:
             for line in output.splitlines():
@@ -287,6 +288,6 @@ class MatchString:
                     Output.table(columns, data)
                     
             else:
-                print("No vulnerabilities detected for this check.")
-            print("")
+                logger.success("No vulnerabilities detected for this check.")
+            # print("")
     
