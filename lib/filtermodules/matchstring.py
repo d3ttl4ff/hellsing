@@ -221,10 +221,7 @@ class MatchString:
             if tool_name == "whois":
                 vulnerability_found = False
                 pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                # print(output)
-                
-                
-                    
+                   
         except Exception as e:
             logger.error(f"Error: {e}")
             
@@ -234,9 +231,6 @@ class MatchString:
                         vulnerability_found = True
             
             if vulnerability_found:
-                # print(f"Vulnerability found: {response}")
-                # print(f"Criticality: {criticality}")
-
                 vuln_info = vuln_dic.get(int(remed_ref))
                 
                 if vuln_info:
