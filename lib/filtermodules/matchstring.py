@@ -218,53 +218,7 @@ class MatchString:
         # print(output)
 
         try:
-            vulnerability_found = self.check_vulnerability(check_name, output, response_code)
-            # vulnerability_found = False
-            
-            # #------------------------------------------------------------------------------------
-            # if check_name == "host-ipv6":
-            #     pattern = re.compile(r"has IPv6 address ([\w:]+)")
-                
-            #     for line in output.splitlines():
-            #         if pattern.search(line):
-            #             vulnerability_found = False
-            #             break
-            #         else:
-            #             vulnerability_found = True
-
-            # #------------------------------------------------------------------------------------
-            # elif check_name == "aspnet-config-error" or check_name == "wordpress-check" or check_name == "drupal-check" or check_name == "joomla-check":
-            #     pattern = re.compile(r"HTTP request sent, awaiting response... 200 OK")
-                
-            #     for line in output.splitlines():
-            #         if pattern.search(line):
-            #             vulnerability_found = True
-                        
-            # #------------------------------------------------------------------------------------
-            # elif check_name == "uniscan-robots-&-sitemap":
-            #     pattern = re.compile(r"[+]")
-                
-            #     for line in output.splitlines():
-            #         if pattern.search(line):
-            #             vulnerability_found = True
-            
-            # #------------------------------------------------------------------------------------
-            # elif check_name == "dnsrecon-multiple-zone-transfers":
-            #     pattern = re.compile(r"Zone Transfer was successful!!")
-                
-            #     for line in output.splitlines():
-            #         if pattern.search(line):
-            #             vulnerability_found = True
-                
-            # #------------------------------------------------------------------------------------
-            # elif check_name == "whois-admin-contact":
-            #     pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                
-            #     for line in output.splitlines():
-            #         if pattern.search(line):
-            #             vulnerability_found = True
-            
-            #------------------------------------------------------------------------------------       
+            vulnerability_found = self.check_vulnerability(check_name, output, response_code) 
                 
         except Exception as e:
             logger.error(f"Error: {e}")
