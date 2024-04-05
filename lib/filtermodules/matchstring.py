@@ -218,7 +218,7 @@ class MatchString:
         # print(output)
 
         try:
-            vulnerability_found = self.decide_vuln(check_name, output, response_code)
+            vulnerability_found = self.check_vulnerability(check_name, output, response_code)
             # vulnerability_found = False
             
             # #------------------------------------------------------------------------------------
@@ -290,7 +290,7 @@ class MatchString:
                     rowname_remediation = Output.colored("[+] Remediation ", attrs="bold")
                     
                     response = Output.colored(response, color=135)
-                    # criticality = "critical"
+                    
                     if criticality == "informational":
                         criticality_color = 16
                         criticality_highlight = 76
@@ -329,7 +329,7 @@ class MatchString:
             print("")
     
     #------------------------------------------------------------------------------------
-    def decide_vuln(self, check_name, output, response_code):
+    def check_vulnerability(self, check_name, output, response_code):
         print(output)
         # Mapping of check names to their regex patterns
         check_patterns = {
