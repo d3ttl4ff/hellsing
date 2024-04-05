@@ -341,6 +341,21 @@ class MatchString:
             "uniscan-robots-&-sitemap": r"[+]",
             "dnsrecon-multiple-zone-transfers": r"Zone Transfer was successful!!",
             "whois-admin-contact": r"Admin Email: ([\w.-]+@[\w.-]+)",
+            "xss-protection-header": r"XSS filter is disabled.",
+            "slowloris-denial-of-service": r"Vulnerable:",
+            "sslyze-heartbleed-vulnerability": r"Server is vulnerable to Heartbleed",
+            "nmap-heartbleed-vulnerability": r"VULNERABLE",
+            "nmap-poodle-vulnerability": r"VULNERABLE",
+            "nmap-ccs-injection-vulnerability": r"VULNERABLE",
+            "nmap-freak-vulnerability": r"vulnerable",
+            "nmap-logjam-vulnerability": r"VULNERABLE",
+            "sslyze-ocsp-stapling": r"NOT SUPPORTED - Server did not send back an OCSP response",
+            "sslyze-zlib-deflate-compression": r"VULNERABLE",
+            "sslyze-secure-renegotiation": r"VULNERABLE",
+            "sslyze-session-resumption": r"VULNERABLE",
+            # "lbd-dns-http-load-balancers": r"",
+            
+            
         }
 
         # Default to False, will be set to True if a pattern match is found
