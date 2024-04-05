@@ -119,7 +119,7 @@ vuln_dic = {
         },
         30: {
                 "description": "Particular Scanner found multiple vulnerabilities that an attacker may try to exploit the target.",
-                "remediation": "Refer to RS-Vulnerability-Report to view the complete information of the vulnerability, once the scan gets completed."
+                "remediation": "Refer to Hellsing-Vulnerability-Report to view the complete information of the vulnerability, once the scan gets completed."
         },
         31: {
                 "description": "Attackers may gather more information from subdomains relating to the parent domain. Attackers may even find other services from the subdomains and try to learn the architecture of the target. There are even chances for the attacker to find vulnerabilities as the attack surface gets larger with more subdomains discovered.",
