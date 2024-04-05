@@ -327,7 +327,7 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, command)
                     
-                    self.spinner.start()
+                    # self.spinner.start()
                     scan_start = time.time()
                     
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
@@ -371,7 +371,7 @@ class Attack:
                     # Process the tool output
                     try:
                         if current_category == "vuln":
-                            self.matchstring.process_vuln(tool_name, results_file_path, vuln_pattern, response, criticality, remed_ref)
+                            self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref)
                             
                         else:
                             self.matchstring.process_tool_output(tool_name, results_file_path)    

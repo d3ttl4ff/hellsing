@@ -212,24 +212,47 @@ class MatchString:
     #------------------------------------------------------------------------------------
     
     # vulnerability filter
-    def process_vuln(self, tool_name, output_file_path, vuln_pattern, response, criticality, remed_ref):
+    def process_vuln(self, tool_name, check_name, output_file_path, vuln_pattern, response, criticality, remed_ref):
         with open(output_file_path, "r") as file:
             output = file.read()
-        # print(output)
+        print(output)
 
         try:
-            if tool_name == "whois":
-                vulnerability_found = False
+            vulnerability_found = False
+            
+            #------------------------------------------------------------------------------------
+            if check_name == "host-ipv6":
+                pattern = re.compile(r"has IPv6 address ([\w:]+)")
+                
+                for line in output.splitlines():
+                    if pattern.search(line):
+                        vulnerability_found = False
+                        break
+                    else:
+                        vulnerability_found = True
+
+            #------------------------------------------------------------------------------------
+            elif check_name == "aspnet-config-error":
+                pattern = re.compile(r"ASP.NET is not installed")
+                
+                for line in output.splitlines():
+                    if pattern.search(line):
+                        vulnerability_found = True
+            
+            #------------------------------------------------------------------------------------
+            elif check_name == "whois-admin-contact":
                 pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
-                   
+                
+                for line in output.splitlines():
+                    if pattern.search(line):
+                        vulnerability_found = True
+            
+            #------------------------------------------------------------------------------------       
+                
         except Exception as e:
             logger.error(f"Error: {e}")
             
         finally:
-            for line in output.splitlines():
-                    if pattern.search(line):
-                        vulnerability_found = True
-            
             if vulnerability_found:
                 vuln_info = vuln_dic.get(int(remed_ref))
                 
@@ -240,7 +263,7 @@ class MatchString:
                     description_text = StringUtils.wrap(vuln_info['description'], 100)
                     remediation_text = StringUtils.wrap(vuln_info['remediation'], 100)
 
-                    colname_vulnerability_info = Output.colored("👾 Vulnerbility Information ", attrs="bold")
+                    colname_vulnerability_info = Output.colored("[~] Vulnerbility Information ", attrs="bold")
                     columns = [colname_vulnerability_info]
                     
                     # variables for vulnerability information
@@ -278,7 +301,7 @@ class MatchString:
                     remediation_text = Output.colored(remediation_text, color=70)
                     
                     data = [
-                        [rowname_vulnerability_name], [response],
+                        [response],
                         [rowname_criticality], [final_criticality],
                         [rowname_description], [description_text],
                         [rowname_remediation], [remediation_text],
