@@ -330,7 +330,7 @@ class MatchString:
     
     #------------------------------------------------------------------------------------
     def check_vulnerability(self, check_name, output, response_code):
-        print(output)
+        # print(output)
         # Mapping of check names to their regex patterns
         check_patterns = {
             "host-ipv6": r"has IPv6 address ([\w:]+)",
