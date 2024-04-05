@@ -212,51 +212,57 @@ class MatchString:
     #------------------------------------------------------------------------------------
     
     # vulnerability filter
-    def process_vuln(self, tool_name, check_name, output_file_path, vuln_pattern, response, criticality, remed_ref):
+    def process_vuln(self, tool_name, check_name, output_file_path, vuln_pattern, response, criticality, remed_ref, response_code):
         with open(output_file_path, "r") as file:
             output = file.read()
-        print(output)
+        # print(output)
 
         try:
-            vulnerability_found = False
+            vulnerability_found = self.decide_vuln(check_name, output, response_code)
+            # vulnerability_found = False
             
-            #------------------------------------------------------------------------------------
-            if check_name == "host-ipv6":
-                pattern = re.compile(r"has IPv6 address ([\w:]+)")
+            # #------------------------------------------------------------------------------------
+            # if check_name == "host-ipv6":
+            #     pattern = re.compile(r"has IPv6 address ([\w:]+)")
                 
-                for line in output.splitlines():
-                    if pattern.search(line):
-                        vulnerability_found = False
-                        break
-                    else:
-                        vulnerability_found = True
+            #     for line in output.splitlines():
+            #         if pattern.search(line):
+            #             vulnerability_found = False
+            #             break
+            #         else:
+            #             vulnerability_found = True
 
-            #------------------------------------------------------------------------------------
-            elif check_name == "aspnet-config-error" or check_name == "wordpress-check" or check_name == "drupal-check" or check_name == "joomla-check":
-                pattern = re.compile(r"HTTP request sent, awaiting response... 200 OK")
+            # #------------------------------------------------------------------------------------
+            # elif check_name == "aspnet-config-error" or check_name == "wordpress-check" or check_name == "drupal-check" or check_name == "joomla-check":
+            #     pattern = re.compile(r"HTTP request sent, awaiting response... 200 OK")
                 
-                for line in output.splitlines():
-                    if pattern.search(line):
-                        vulnerability_found = True
+            #     for line in output.splitlines():
+            #         if pattern.search(line):
+            #             vulnerability_found = True
                         
-            #------------------------------------------------------------------------------------
-            elif check_name == "uniscan-robots-&-sitemap":
-                pattern = re.compile(r"[+]")
+            # #------------------------------------------------------------------------------------
+            # elif check_name == "uniscan-robots-&-sitemap":
+            #     pattern = re.compile(r"[+]")
                 
-                for line in output.splitlines():
-                    if pattern.search(line):
-                        vulnerability_found = True
+            #     for line in output.splitlines():
+            #         if pattern.search(line):
+            #             vulnerability_found = True
             
-            #------------------------------------------------------------------------------------
+            # #------------------------------------------------------------------------------------
             # elif check_name == "dnsrecon-multiple-zone-transfers":
-            
-            #------------------------------------------------------------------------------------
-            elif check_name == "whois-admin-contact":
-                pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
+            #     pattern = re.compile(r"Zone Transfer was successful!!")
                 
-                for line in output.splitlines():
-                    if pattern.search(line):
-                        vulnerability_found = True
+            #     for line in output.splitlines():
+            #         if pattern.search(line):
+            #             vulnerability_found = True
+                
+            # #------------------------------------------------------------------------------------
+            # elif check_name == "whois-admin-contact":
+            #     pattern = re.compile(r"Admin Email: ([\w.-]+@[\w.-]+)")
+                
+            #     for line in output.splitlines():
+            #         if pattern.search(line):
+            #             vulnerability_found = True
             
             #------------------------------------------------------------------------------------       
                 
@@ -284,8 +290,6 @@ class MatchString:
                     rowname_remediation = Output.colored("[+] Remediation ", attrs="bold")
                     
                     response = Output.colored(response, color=99)
-                    
-                    criticality = "low"
         
                     if criticality == "informational":
                         criticality_color = 16
@@ -324,3 +328,39 @@ class MatchString:
                 logger.success("No vulnerabilities detected for this check.")
             # print("")
     
+    #------------------------------------------------------------------------------------
+    def decide_vuln(self, check_name, output, response_code):
+        print(output)
+        # Mapping of check names to their regex patterns
+        check_patterns = {
+            "host-ipv6": r"has IPv6 address ([\w:]+)",
+            "aspnet-config-error": r"HTTP request sent, awaiting response... 200 OK",
+            "wordpress-check": r"HTTP request sent, awaiting response... 200 OK",
+            "drupal-check": r"HTTP request sent, awaiting response... 200 OK",
+            "joomla-check": r"HTTP request sent, awaiting response... 200 OK",
+            "uniscan-robots-&-sitemap": r"[+]",
+            "dnsrecon-multiple-zone-transfers": r"Zone Transfer was successful!!",
+            "whois-admin-contact": r"Admin Email: ([\w.-]+@[\w.-]+)",
+        }
+
+        # Default to False, will be set to True if a pattern match is found
+        vulnerability_found = False
+        
+        # Get the appropriate pattern for the current check
+        pattern = re.compile(check_patterns.get(check_name, ""))
+        
+        if check_name in check_patterns:
+            for line in output.splitlines():
+                match = pattern.search(line)
+                if response_code == "1":
+                    if match:
+                        vulnerability_found = False
+                        break
+                    else:
+                        vulnerability_found = True
+                else:
+                    if match:
+                        vulnerability_found = True
+                        break
+
+        return vulnerability_found

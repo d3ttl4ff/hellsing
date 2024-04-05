@@ -371,7 +371,7 @@ class Attack:
                     # Process the tool output
                     try:
                         if current_category == "vuln":
-                            self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref)
+                            self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref, response_code)
                             
                         else:
                             self.matchstring.process_tool_output(tool_name, results_file_path)    
