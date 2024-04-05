@@ -397,12 +397,12 @@ class MatchString:
             "nmap-rdp-tcp": r"open",
             "nmap-snmp-service": r"open",
             "aspnet-elmah-logger": r"HTTP request sent, awaiting response... 200 OK",
-            # "nmap-tcp-smb": r"",
-            # "nmap-udp-smb": r"",
-            # "wapiti-sqli-rce-xss": r"",
-            # "nmap-iis-webdav-vuln": r"",
-            # "whatweb-x-xss-protection": r"",
-            # "dmitry-subdomain-scan": r""
+            "nmap-tcp-smb": r"open",
+            "nmap-udp-smb": r"open",
+            "wapiti-sqli-rce-xss": r"Host:",
+            "nmap-iis-webdav-vuln": r"WebDAV is ENABLED",
+            "whatweb-x-xss-protection": r"X-XSS-Protection[1",
+            "dmitry-subdomain-scan": r"Found 0 possible subdomain(s)"
         }
 
         # Default to False, will be set to True if a pattern match is found

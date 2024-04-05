@@ -336,7 +336,7 @@ class Attack:
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                     
-                    if tool_name == 'wget':
+                    if tool_name == 'wget' or tool_name == 'wapiti':
                         pass
                     else:
                         # store stdout and stderr
