@@ -353,7 +353,12 @@ class MatchString:
             "sslyze-zlib-deflate-compression": r"VULNERABLE",
             "sslyze-secure-renegotiation": r"VULNERABLE",
             "sslyze-session-resumption": r"VULNERABLE",
-            # "lbd-dns-http-load-balancers": r"",
+            "lbd-dns-http-load-balancers": r"does NOT use Load-balancing",
+            "golismero-dns-malware-scan": r"No vulnerabilities found",
+            "golismero-heartbleed-scan": r"No vulnerabilities found",
+            "golismero-brute-url-predictables-scan": r"No vulnerabilities found",
+            "golismero-brute-directories-scan": r"No vulnerabilities found",
+            "golismero-sqlmap-scan": r"No vulnerabilities found",
             
             
         }
