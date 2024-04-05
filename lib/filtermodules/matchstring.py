@@ -359,7 +359,7 @@ class MatchString:
             "golismero-brute-url-predictables-scan": r"No vulnerabilities found",
             "golismero-brute-directories-scan": r"No vulnerabilities found",
             "golismero-sqlmap-scan": r"No vulnerabilities found",
-            
+            "dirb-brute-open-directories": r"FOUND: 0",
             
         }
 
