@@ -232,12 +232,23 @@ class MatchString:
                         vulnerability_found = True
 
             #------------------------------------------------------------------------------------
-            elif check_name == "aspnet-config-error":
-                pattern = re.compile(r"ASP.NET is not installed")
+            elif check_name == "aspnet-config-error" or check_name == "wordpress-check" or check_name == "drupal-check" or check_name == "joomla-check":
+                pattern = re.compile(r"HTTP request sent, awaiting response... 200 OK")
                 
                 for line in output.splitlines():
                     if pattern.search(line):
                         vulnerability_found = True
+                        
+            #------------------------------------------------------------------------------------
+            elif check_name == "uniscan-robots-&-sitemap":
+                pattern = re.compile(r"[+]")
+                
+                for line in output.splitlines():
+                    if pattern.search(line):
+                        vulnerability_found = True
+            
+            #------------------------------------------------------------------------------------
+            # elif check_name == "dnsrecon-multiple-zone-transfers":
             
             #------------------------------------------------------------------------------------
             elif check_name == "whois-admin-contact":
@@ -306,6 +317,7 @@ class MatchString:
                         [rowname_description], [description_text],
                         [rowname_remediation], [remediation_text],
                     ]
+                    logger.success("Vulnerability Detected:")
                     Output.table(columns, data)
                     
             else:
