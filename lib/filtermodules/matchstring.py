@@ -245,27 +245,28 @@ class MatchString:
                     
                     response = Output.colored(response, color=135)
                     
-                    if criticality == "informational":
-                        criticality_color = 16
-                        criticality_highlight = 76
-                    elif criticality == "low":
-                        criticality_color = 16
-                        criticality_highlight = 45
-                    elif criticality == "medium":
-                        criticality_color = 16
-                        criticality_highlight = 184
-                    elif criticality == "high":
-                        criticality_color = 15
-                        criticality_highlight = 160
-                    elif criticality == "critical":
-                        criticality_color = 15
-                        criticality_highlight = 197
+                    # if criticality == "informational":
+                    #     criticality_color = 16
+                    #     criticality_highlight = 76
+                    # elif criticality == "low":
+                    #     criticality_color = 16
+                    #     criticality_highlight = 45
+                    # elif criticality == "medium":
+                    #     criticality_color = 16
+                    #     criticality_highlight = 184
+                    # elif criticality == "high":
+                    #     criticality_color = 15
+                    #     criticality_highlight = 160
+                    # elif criticality == "critical":
+                    #     criticality_color = 15
+                    #     criticality_highlight = 197
                         
-                    temp_criticality = Output.colored(f" {criticality} ", color=criticality_color, highlight=criticality_highlight)
-                    criticality_left_connector = Output.colored("▒", color=criticality_highlight)
-                    criticality_right_connector = Output.colored("▒ ●", color=criticality_highlight)
+                    # temp_criticality = Output.colored(f" {criticality} ", color=criticality_color, highlight=criticality_highlight)
+                    # criticality_left_connector = Output.colored("▒", color=criticality_highlight)
+                    # criticality_right_connector = Output.colored("▒ ●", color=criticality_highlight)
                         
-                    final_criticality = temp_criticality + criticality_right_connector
+                    # final_criticality = temp_criticality + criticality_right_connector
+                    final_criticality = self.criticality_color(criticality)
                     description_text = Output.colored(description_text, color=197)
                     remediation_text = Output.colored(remediation_text, color=190)
                     
@@ -380,3 +381,29 @@ class MatchString:
                         break
 
         return vulnerability_found
+    
+    #------------------------------------------------------------------------------------
+    def criticality_color(self, criticality):
+        if criticality == "informational":
+            criticality_color = 16
+            criticality_highlight = 76
+        elif criticality == "low":
+            criticality_color = 16
+            criticality_highlight = 45
+        elif criticality == "medium":
+            criticality_color = 16
+            criticality_highlight = 184
+        elif criticality == "high":
+            criticality_color = 15
+            criticality_highlight = 160
+        elif criticality == "critical":
+            criticality_color = 15
+            criticality_highlight = 197
+            
+        temp_criticality = Output.colored(f" {criticality} ", color=criticality_color, highlight=criticality_highlight)
+        criticality_left_connector = Output.colored("▒", color=criticality_highlight)
+        criticality_right_connector = Output.colored("▒ ●", color=criticality_highlight)
+            
+        final_criticality = temp_criticality + criticality_right_connector
+        
+        return final_criticality

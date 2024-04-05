@@ -270,6 +270,28 @@ class Attack:
                 self.output.print_title(current_category)
                 last_category = current_category
                 
+                if current_category == "vuln":
+                    criticality_dashboard = {1: {"crit": "informational",
+                                                 "des": "Requires immediate attention as it may lead to compromise or service unavailability."}, 
+                                             2: {"crit": "low",
+                                                 "des": "May not lead to an immediate compromise, but there are considerable chances for probability."},
+                                             3: {"crit": "medium",
+                                                "des": "Attacker may correlate multiple vulnerabilities of this type to launch a sophisticated attack."},
+                                             4: {"crit": "high",
+                                                "des": "Not a serious issue, but it is recommended to tend to the finding."},
+                                             5: {"crit": "critical",
+                                                "des": "Not classified as a vulnerability, simply an useful informational alert to be considered."}
+                                            }
+
+                    for key in criticality_dashboard.items():
+                        print (f"{key}. {value['crit'].capitalize()} - {value['des']}")
+                        tmp_criticality = self.output.colored(value['crit'])
+                        columns = ['Criticality', 'Description']
+                        data = [[tmp_criticality], value['des']]
+                        Output.table(columns, data)
+                        
+                    print("\n")
+                
             tool_config = self.config[tool]
             command_template = tool_config.get('command_1', None)
             tool_description = tool_config.get('description', None)
@@ -370,9 +392,8 @@ class Attack:
                     
                     # Process the tool output
                     try:
-                        if current_category == "vuln":
+                        if current_category == "vuln":              
                             self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref, response_code)
-                            
                         else:
                             self.matchstring.process_tool_output(tool_name, results_file_path)    
                             
