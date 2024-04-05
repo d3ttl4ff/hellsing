@@ -272,33 +272,32 @@ class Attack:
                 
                 if current_category == "vuln":
                     criticality_dashboard = {1: {"crit": "info",
-                                                 "des": "Requires immediate attention as it may lead to compromise or service unavailability."}, 
+                                                 "des": "Not classified as a vulnerability, just useful information."}, 
                                              2: {"crit": "low",
-                                                 "des": "May not lead to an immediate compromise, but there are considerable chances for probability."},
+                                                 "des": "Not critical, but recommended to address this issue."},
                                              3: {"crit": "medium",
-                                                "des": "Attacker may correlate multiple vulnerabilities of this type to launch a sophisticated attack."},
+                                                "des": "Potential for sophisticated attacks if correlated with other vulnerabilities."},
                                              4: {"crit": "high",
-                                                "des": "Not a serious issue, but it is recommended to tend to the finding."},
+                                                "des": "Significant probability of compromise if not addressed."},
                                              5: {"crit": "critical",
-                                                "des": "Not classified as a vulnerability, simply an useful informational alert to be considered."}
+                                                "des": "Requires immediate attention to prevent compromise or service unavailability."}
                                             }
                     columns = ['Criticality', 'Description']
                     data = []
                     
+                    logger.info(f"Criticality Dashboard:")
+                    Output.print("=================================================================================================\n", color=247)    
+                      
                     for i in range(1, 6):
                         crit_category = criticality_dashboard.get(i)
                         tmp_criticality = self.matchstring.criticality_color(crit_category['crit'])
                         tmp_description = self.output.colored(crit_category['des'])
-                        data.append([tmp_criticality, tmp_description])
-                    Output.table(columns, data)
+                        print(f"{tmp_criticality} {tmp_description}\n")
+                        # data.append([tmp_criticality, tmp_description])
+                    # Output.print("=================================================================================================", color=247)
+                    # Output.table(columns, data)  
                     
-                    # for key in criticality_dashboard.items():
-                    #     # print (f"{key}. {value['crit'].capitalize()} - {value['des']}")
-                    #     tmp_criticality = self.output.colored(criticality_dashboard['crit'])
-                    #     columns = ['Criticality', 'Description']
-                    #     data = [[tmp_criticality], criticality_dashboard['des']]
-                    #     Output.table(columns, data)
-                        
+                    Output.print("=================================================================================================", color=247)      
                     print("\n")
                 
             tool_config = self.config[tool]
@@ -356,7 +355,7 @@ class Attack:
                 self.created_files.append(results_file_path)
                 
                 try:
-                    self.output.print_subtitle(display_check_name, display_check_tool_name, command)
+                    self.output.print_subtitle(display_check_name, display_check_tool_name, tool_description)
                     
                     self.spinner.start()
                     scan_start = time.time()
