@@ -384,7 +384,7 @@ class MatchString:
     
     #------------------------------------------------------------------------------------
     def criticality_color(self, criticality):
-        if criticality == "informational":
+        if criticality == "info":
             criticality_color = 16
             criticality_highlight = 76
         elif criticality == "low":

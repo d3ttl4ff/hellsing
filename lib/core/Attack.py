@@ -271,7 +271,7 @@ class Attack:
                 last_category = current_category
                 
                 if current_category == "vuln":
-                    criticality_dashboard = {1: {"crit": "informational",
+                    criticality_dashboard = {1: {"crit": "info",
                                                  "des": "Requires immediate attention as it may lead to compromise or service unavailability."}, 
                                              2: {"crit": "low",
                                                  "des": "May not lead to an immediate compromise, but there are considerable chances for probability."},
@@ -282,13 +282,22 @@ class Attack:
                                              5: {"crit": "critical",
                                                 "des": "Not classified as a vulnerability, simply an useful informational alert to be considered."}
                                             }
-
-                    for key in criticality_dashboard.items():
-                        print (f"{key}. {value['crit'].capitalize()} - {value['des']}")
-                        tmp_criticality = self.output.colored(value['crit'])
-                        columns = ['Criticality', 'Description']
-                        data = [[tmp_criticality], value['des']]
-                        Output.table(columns, data)
+                    columns = ['Criticality', 'Description']
+                    data = []
+                    
+                    for i in range(1, 6):
+                        crit_category = criticality_dashboard.get(i)
+                        tmp_criticality = self.matchstring.criticality_color(crit_category['crit'])
+                        tmp_description = self.output.colored(crit_category['des'])
+                        data.append([tmp_criticality, tmp_description])
+                    Output.table(columns, data)
+                    
+                    # for key in criticality_dashboard.items():
+                    #     # print (f"{key}. {value['crit'].capitalize()} - {value['des']}")
+                    #     tmp_criticality = self.output.colored(criticality_dashboard['crit'])
+                    #     columns = ['Criticality', 'Description']
+                    #     data = [[tmp_criticality], criticality_dashboard['des']]
+                    #     Output.table(columns, data)
                         
                     print("\n")
                 
