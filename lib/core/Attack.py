@@ -298,7 +298,6 @@ class Attack:
                         tmp_description = self.output.colored(crit_category['des'])
                         print(f"{tmp_criticality} {tmp_description}\n")
                         # data.append([tmp_criticality, tmp_description])
-                    # Output.print("=================================================================================================", color=247)
                     # Output.table(columns, data)  
                     
                     Output.print("=================================================================================================", color=247)      
