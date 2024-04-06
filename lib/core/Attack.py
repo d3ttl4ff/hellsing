@@ -357,7 +357,7 @@ class Attack:
                 try:
                     self.output.print_subtitle(display_check_name, display_check_tool_name, tool_description)
                     
-                    self.spinner.start()
+                    # self.spinner.start()
                     scan_start = time.time()
                     
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
@@ -375,7 +375,11 @@ class Attack:
                             cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
                             file.write(cleaned_output)
                             # file.write(stderr)
-                                        
+                            
+                    with open(results_file_path, "r") as file:
+                        response = file.read()
+                        print(response)
+                                      
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
                     
