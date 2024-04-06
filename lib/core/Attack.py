@@ -367,8 +367,13 @@ class Attack:
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
                     # result = subprocess.run(command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
                     if current_category == "exploit":
-                        command = self.exploit_operations.please_exploit_tool(command, tool_name, check_name)
-                    
+                        try:
+                            command = self.exploit_operations.please_exploit_tool(command, tool_name, check_name)
+                        except Exception as e:
+                            print("\n")
+                            logger.error(f"Error: {e}")
+                            pass
+                            
                     subprocess.run(command, shell=True, cwd=tool_dir_path)
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
