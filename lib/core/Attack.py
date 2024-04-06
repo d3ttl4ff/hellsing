@@ -369,7 +369,7 @@ class Attack:
                     if current_category == "exploit":
                         command = self.exploit_operations.please_exploit_tool(command, tool_name, check_name)
                     
-                    print(command)
+                    subprocess.run(command, shell=True, cwd=tool_dir_path)
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                 
