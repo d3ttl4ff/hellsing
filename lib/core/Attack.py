@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 from lib.core.Config import *
 from lib.filtermodules.matchstring import MatchString
+from lib.filtermodules.exploit_operations import ExploitOperations
 from lib.output import Output
 from lib.output.Spinner import Spinner
 from lib.output.Logger import logger
@@ -46,6 +47,9 @@ class Attack:
         
         # creating httpVulnRemediation object
         self.httpVulnRemediation = vuln_dic
+        
+        # creating exploit operations object
+        self.exploit_operations = ExploitOperations()
         
         self.created_files = []
         
@@ -363,22 +367,23 @@ class Attack:
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
                     # result = subprocess.run(command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
                     
-                    proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
-                    stdout, stderr = proc.communicate()
+                    if current_category != "exploit":
+                        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
+                        stdout, stderr = proc.communicate()
                     
-                    if tool_name == 'wget' or tool_name == 'wapiti':
-                        pass
-                    else:
-                        # store stdout and stderr
-                        with open(results_file_path, "w") as file:
-                            decoded_output = stdout.decode("utf-8")
-                            cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
-                            file.write(cleaned_output)
-                            # file.write(stderr)
-                            
-                    with open(results_file_path, "r") as file:
-                        response = file.read()
-                        print(response)
+                        if tool_name == 'wget' or tool_name == 'wapiti':
+                            pass
+                        else:
+                            # store stdout and stderr
+                            with open(results_file_path, "w") as file:
+                                decoded_output = stdout.decode("utf-8")
+                                cleaned_output = self.matchstring.strip_ansi_codes(decoded_output)
+                                file.write(cleaned_output)
+                                # file.write(stderr)
+                                
+                        # with open(results_file_path, "r") as file:
+                        #     response = file.read()
+                        #     print(response)
                                       
                 except subprocess.CalledProcessError as e:
                     logger.error(f"Error executing {tool}: {e}\n")
@@ -406,6 +411,10 @@ class Attack:
                     try:
                         if current_category == "vuln":              
                             self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref, response_code)
+                        elif current_category == "exploit":
+                            self.exploit_operations.please_exploit_tool(command, tool_name, check_name, results_file_path)
+                        elif current_category == "postexploit":
+                            pass
                         else:
                             self.matchstring.process_tool_output(tool_name, results_file_path)    
                             
