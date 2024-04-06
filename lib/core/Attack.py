@@ -373,7 +373,7 @@ class Attack:
                             logger.error(f"Error: {e}")
                             pass
                             
-                    subprocess.run(command, shell=True, cwd=tool_dir_path)
+                    # subprocess.run(command, shell=True, cwd=tool_dir_path)
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                 
