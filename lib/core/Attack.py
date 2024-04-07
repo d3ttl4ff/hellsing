@@ -373,10 +373,10 @@ class Attack:
                             logger.error(f"Error: {e}")
                             pass
                             
-                    # subprocess.run(command, shell=True, cwd=tool_dir_path)
+                    subprocess.run(command, shell=True, cwd=tool_dir_path)
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
-                
+                    
                     if tool_name == 'wget' or tool_name == 'wapiti':
                         pass
                     else:
@@ -417,10 +417,12 @@ class Attack:
                     try:
                         if current_category == "vuln":              
                             self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref, response_code)
+                        # elif current_category == "exploit":
+                        #     self.matchstring.process_tool_output(tool_name, check_name, results_file_path)
                         elif current_category == "postexploit":
                             pass
                         else:
-                            self.matchstring.process_tool_output(tool_name, results_file_path)    
+                            self.matchstring.process_tool_output(tool_name, check_name, results_file_path)    
                             
                     except Exception as e:
                         pass

@@ -3,6 +3,7 @@ import re
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
 from lib.filtermodules.products.httpWebApplicationFingerprint import httpWebApplicationFingerprint 
+from lib.filtermodules.exploitation.httpFilterExploitation import httpFilterExploitation
 from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 from lib.output.Logger import logger  
 from lib.output import Output
@@ -19,6 +20,9 @@ class MatchString:
         # Initialize the fingerprinting class
         self.fingerprinter = httpWebApplicationFingerprint()
         
+        # InitInitialize the exploitation class
+        self.exploitation = httpFilterExploitation()
+        
         self.waf_detected = False
         
     #------------------------------------------------------------------------------------
@@ -28,7 +32,7 @@ class MatchString:
         return ansi_escape.sub('', text)
 
     #------------------------------------------------------------------------------------
-    def process_tool_output(self, tool_name, output_file_path):
+    def process_tool_output(self, tool_name, check_name, output_file_path):
         with open(output_file_path, "r") as file:
             output = file.read()
 
@@ -156,6 +160,17 @@ class MatchString:
                 Output.table(columns, data)
             else:
                 print(f"No subdomains detected for {domain}.")   
+                
+        #------------------------------------------------------------------------------------
+        elif tool_name == "hydra":
+            creds = self.exploitation.parse_hydra_output(output)
+            
+            if creds:
+                logger.success("Credentials Found:")
+                columns = ['Host', 'Username', 'Password']
+                data = [[creds['Host'], creds['Login'], creds['Password']]]
+                Output.table(columns, data)
+        
         # print("\n")
 
     #------------------------------------------------------------------------------------
