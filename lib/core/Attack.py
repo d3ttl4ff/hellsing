@@ -372,7 +372,7 @@ class Attack:
                             # print("\n")
                             logger.error(f"Error: {e}")
                             pass
-                        print("\n")
+                        # print("\n")
                     
                     self.spinner.start()
                             
