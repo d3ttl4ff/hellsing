@@ -166,7 +166,7 @@ class MatchString:
             creds = self.exploitation.parse_hydra_output(output)
             
             if creds:
-                logger.success("Credentials Found:")
+                logger.success("Login Credentials Found:")
                 columns = ['Host', 'Username', 'Password']
                 data = [[creds['Host'], creds['Login'], creds['Password']]]
                 Output.table(columns, data)
