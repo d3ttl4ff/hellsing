@@ -1,4 +1,0 @@
-[REQUEST_HEADER] login.php
-[USERNAME_FIELD] uname
-[PASSWORD_FIELD] pass
-[RESPONSE_STRING] you must login
