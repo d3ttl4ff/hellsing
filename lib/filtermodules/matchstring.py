@@ -36,7 +36,7 @@ class MatchString:
         with open(output_file_path, "r") as file:
             output = file.read()
 
-        if tool_name == "nmap":
+        if tool_name == "nmap" and check_name == "nmap-simple-recon" or check_name == "nmap-recon":
             filtered_results = self.nmap_simple_recon_output(output)
                 
             columns = ['Port', 'Service', 'Version', 'State']
@@ -55,7 +55,7 @@ class MatchString:
         elif tool_name in ["wafw00f", "identywaf"]:
             initial_detection = False
             
-            if tool_name == "wafw00f":
+            if tool_name == "wafw00f" and check_name == "waf-detection":
                 detected_wafs = self.waf_detector.parse_wafw00f_output(output)
                 
                 if detected_wafs and not self.waf_detected:
@@ -65,7 +65,7 @@ class MatchString:
                 for entry in detected_wafs:
                     self.waf_results.add_or_update(entry['vendor'], entry['waf'])
                     
-            elif tool_name == "identywaf":
+            elif tool_name == "identywaf" and check_name == "waf-detection2":
                 waf_data, blocked_categories = self.waf_detector.parse_identywaf_output(output)
                 
                 if waf_data and not self.waf_detected:
@@ -92,7 +92,7 @@ class MatchString:
                 logger.info("No WAFs detected.")
                 
         #------------------------------------------------------------------------------------
-        elif tool_name == "whatweb":
+        elif tool_name == "whatweb" and check_name == "fingerprinting-multi-whatweb":
             self.fingerprinter.parse_whatweb_output(output)
 
             # Initialize a dictionary to hold consolidated plugin information
@@ -130,11 +130,11 @@ class MatchString:
                 print("No significant plugin data detected.")
         
         #------------------------------------------------------------------------------------
-        elif tool_name in ["cmseek"]:
+        elif tool_name in ["cmseek"] and check_name == "fingerprinting-cms-cmseek":
             self.display_cms_detection_results(tool_name, output)
         
         #------------------------------------------------------------------------------------
-        elif tool_name == "theharvester":
+        elif tool_name == "theharvester" and check_name == "gathering-emails":
             harvester_data = self.fingerprinter.parse_harvester_output(output)
             
             if harvester_data and not harvester_data['Hosts'] == [] and not harvester_data['IPs'] == [] and not harvester_data['Emails'] == []:
@@ -150,7 +150,7 @@ class MatchString:
                 logger.info("No Hosts, IPs, or Emails detected by The Harvester.")
 
         #------------------------------------------------------------------------------------
-        elif tool_name == "sublist3r":
+        elif tool_name == "sublist3r" and check_name == "gathering-subdomains":
             domain, sublist3r_subdomains = self.fingerprinter.parse_sublist3r_output(output)
             
             if sublist3r_subdomains:
@@ -159,10 +159,10 @@ class MatchString:
                 data = [[domain, "\n".join(sublist3r_subdomains)]]
                 Output.table(columns, data)
             else:
-                print(f"No subdomains detected for {domain}.")   
+                logger.info(f"No subdomains detected for {domain}.")   
                 
         #------------------------------------------------------------------------------------
-        elif tool_name == "hydra":
+        elif tool_name == "hydra" and check_name == "hydra-http-post-form-brute":
             creds = self.exploitation.parse_hydra_output(output)
             
             if creds:
@@ -170,6 +170,46 @@ class MatchString:
                 columns = ['Host', 'Username', 'Password']
                 data = [[creds['Host'], creds['Login'], creds['Password']]]
                 Output.table(columns, data)
+            else:
+                logger.info("No login credentials found.")
+        
+        #------------------------------------------------------------------------------------
+        elif tool_name == "sqlmap" and check_name == "sqlmap-sql-db-scan":
+            db_scan_results = self.exploitation.parse_sqlmap_db_scan_output(output)
+            
+            if db_scan_results:
+                db_count = len(db_scan_results)
+                
+                logger.success(f"Database(s) Found: {db_count}")
+                columns = ['Database(s)']
+                data = []
+                for db in db_scan_results:
+                    data.append([Output.colored(db, color=226)])
+                    
+                Output.table(columns, data)
+                
+            else:
+                logger.info("No databases found.")
+                
+        #------------------------------------------------------------------------------------
+        elif tool_name == "sqlmap" and check_name == "sqlmap-sql-table-dump":
+            table_scan_results = self.exploitation.parse_sqlmap_table_dump_output(output)
+            
+            if table_scan_results:
+                table_count = len(table_scan_results)
+                
+                logger.success(f"Table(s) Found: {table_count}")
+                columns = ['Table(s)']
+                data = []
+                
+                table_names = '\n'.join([Output.colored(table, color=226) for table in table_scan_results])
+                
+                data = [[table_names]]
+                
+                Output.table(columns, data)
+                 
+            else:
+                logger.info("No tables dumped.")
         
         # print("\n")
 
@@ -223,7 +263,7 @@ class MatchString:
             Output.table(columns, data)
         else:
             logger.info(f"No CMS version detected by {tool_name}.")
-
+            
     #------------------------------------------------------------------------------------
     
     # vulnerability filter

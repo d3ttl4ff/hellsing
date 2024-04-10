@@ -363,7 +363,6 @@ class Attack:
                     # self.spinner.start()
                     # scan_start = time.time()
                     
-                    # subprocess.run(command, shell=True, cwd=tool_dir_path)
                     # result = subprocess.run(command, shell=True, cwd=tool_dir_path, text=True, capture_output=True)
                     if current_category == "exploit":
                         try:
@@ -377,7 +376,7 @@ class Attack:
                     # self.spinner.start()
                     scan_start = time.time()
                             
-                    subprocess.run(command, shell=True, cwd=tool_dir_path)
+                    # subprocess.run(command, shell=True, cwd=tool_dir_path)
                     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tool_dir_path)
                     stdout, stderr = proc.communicate()
                     
@@ -426,7 +425,7 @@ class Attack:
                         elif current_category == "postexploit":
                             pass
                         else:
-                            self.matchstring.process_tool_output(tool_name, check_name, results_file_path)    
+                            self.matchstring.process_tool_output(tool_name, check_name, results_file_path)
                             
                     except Exception as e:
                         pass
