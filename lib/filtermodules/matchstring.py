@@ -214,27 +214,23 @@ class MatchString:
         #------------------------------------------------------------------------------------
         elif tool_name == "sqlmap" and check_name == "sqlmap-sql-column-dump":
             column_scan_results = self.exploitation.parse_sqlmap_column_dump_output(output)
-            
+
             if column_scan_results:
-                for (db_name, table_name), columns in column_scan_results.items():
-                    # Log the database and table being processed
-                    logger.success(f"Database: {db_name}, Table: {table_name}")
-                    logger.success("Columns found:")
-                    
-                    # Check if there are columns to display
-                    if columns:
-                        # Prepare the header and data for displaying columns
-                        columns_header = ['Column Name']
-                        columns_data = [[column] for column in columns]
-                        
-                        # Assuming Output.table can display a table with given headers and rows
-                        Output.table(columns_header, columns_data)
-                    else:
-                        # Log when no columns are found for a table
-                        logger.info(f"No columns found for {db_name}.{table_name}.")
-            else:
-                logger.info("No column data dumped.")
+                logger.success(f"Successfully dumped columns and values.")
+                Output.print(f"[~] Database: {column_scan_results['database_name']}, Table: {column_scan_results['table_name']}", color=222)
+                # Extract the columns directly
+                columns = column_scan_results['columns']
+
+                # Prepare the rows data
+                data = []
+                for row_dict in column_scan_results['values']:
+                    row_data = [Output.colored(row_dict[col], color=226)for col in columns]  # Order the row values according to the columns
+                    data.append(row_data)
+
+                Output.table(columns, data)
                 
+            else:
+                logger.info("No columns dumped.")
         
         # print("\n")
 
