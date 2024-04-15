@@ -6,7 +6,7 @@ def display_color(code, description):
 def display_all_colors():
     print("Displaying all colors supported by the 'colored' library:")
     print("------------------------------------------------------")
-    for code in range(257):
+    for code in range(256):
         description = f"Color {code}"
         display_color(code, description)
 

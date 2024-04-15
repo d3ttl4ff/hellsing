@@ -6,7 +6,7 @@
 import logging
 import colorlog
 
-DEBUG   = '[D]'
+DEBUG   = '[~]'
 INFO    = '[*]'
 SUCCESS = '[+]'
 PROMPT  = '[?]'
@@ -36,7 +36,7 @@ LOG_COLORS = {
 
 SECONDARY_LOG_COLORS = {
         'message': {
-            DEBUG    : 'white',
+            DEBUG    : 'bold,white',
             INFO     : 'bold,cyan',
             SUCCESS  : 'bold,green',
             WARNING  : 'bold,yellow',
@@ -87,7 +87,7 @@ setattr(logger, 'smartsuccess',
 setattr(logger, 'smarterror', 
     lambda message, *args: logger._log(logging.SMARTERROR, message, args))
 
-logger.setLevel('INFO')
+logger.setLevel('DEBUG')
 logger.addHandler(handler)
 
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
