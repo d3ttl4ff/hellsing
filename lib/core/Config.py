@@ -36,6 +36,30 @@ BANNER = colored.stylize("""
                  
 """.format(version=prefix + __version__, subtitle=subtitle, context=context), colored.fg('red') + colored.attr('bold'))
 
+#----------------------------------------------------------------------------------------
+step_arrows = Output.colored('-->', color='white', attrs='bold')
+step_info1 = Output.colored('To check whether the tools are properly installed and configured, go through the following steps:', color='105', attrs='bold')
+step_info2 = Output.colored('To launch security checks against a target, follow these steps:', color='105', attrs='bold')
+step_numbers1 = Output.colored('[1]', color='148', attrs='bold')
+step_numbers2 = Output.colored('[2]', color='148', attrs='bold')
+step_numbers3 = Output.colored('[3]', color='148', attrs='bold')
+
+GENERAL_HELP = "To begin launching security assesments on a target, follow these steps:"
+
+GENERAL_HELP_STEPS = colored.stylize("""
+{arw} {info1}
+    {one} Choose the "toolbox" option when prompted
+    {two} Choose the "show-all" option to view all available tools and their availability
+    {three} Choose the "install-all" option to install all available tools to fix or install missing tools
+    
+{arw} {info2}
+    {one} Choose the "attack" option when prompted
+    {two} Enter the target URL/IP address and the service to be checked
+    {three} Choose additional options to customize the security checks when prompted
+    
+""".format(arw=step_arrows, info1=step_info1, info2=step_info2, one=step_numbers1, two=step_numbers2, three=step_numbers3), colored.fg('white'))
+
+#----------------------------------------------------------------------------------------
 USAGE = """
 python3 hellsing.py <command> [<args>]
 

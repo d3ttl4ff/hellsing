@@ -34,6 +34,8 @@ class Program:
 
         try:
             print(BANNER)
+            print(GENERAL_HELP)
+            print(GENERAL_HELP_STEPS)
             # Parse settings files
             settings = Settings()
 

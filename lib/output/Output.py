@@ -87,6 +87,39 @@ class Output(object):
         print()
         
     @staticmethod
+    def print_neon_title(title: str) -> None:
+        title_len = len(title) + 2  # Adding 2 for the spaces around the title
+        # rest_len = (title_len) // 2 - 2  # Adjusted for the border characters
+        
+        title_color = '105'
+        border_color = 'white'
+        
+        top_border = ' ' * 0 + '₋' * (title_len + 4)
+        Output.print(top_border, color=border_color, attrs='bold')
+
+        left_border = Output.colored('┃⥏', color=border_color, attrs='bold')
+        title_part = Output.colored(' ' + title + ' ', color=title_color, attrs='bold')
+        right_border = Output.colored('⥑┃', color=border_color, attrs='bold')
+        print(left_border + title_part + right_border)
+
+        bottom_border = ' ' * 0 + 'ˉ' * (title_len + 4)
+        Output.print(bottom_border, color=border_color)
+        # print()
+        
+    @staticmethod
+    def print_neon_colored(title: str) -> None:
+        title_len = len(title) + 2  # Adding 2 for the spaces around the title
+        
+        title_color = '6'
+        border_color = '10'
+        
+        left_border = Output.colored('┃⥏', color=border_color, attrs='bold')
+        title_part = Output.colored(' ' + title, color=title_color, attrs='bold')
+        y = Output.colored(left_border + title_part )
+        
+        return y
+        
+    @staticmethod
     def print_banner_grabbing(description: str, target_mode: str, action: str) -> None:
         description_color = 'black'
         description_highlight = '135'

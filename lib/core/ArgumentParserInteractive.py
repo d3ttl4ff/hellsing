@@ -315,64 +315,83 @@ class ArgumentsParser:
     #------------------------------------------------------------------------------------
     def prompt_user(self):
         """Prompt user for inputs if no arguments are provided."""
-        mode_input = input("Select mode:\n 1. Toolbox\n 2. Attack\nEnter choice (1 or 2): ")
+        Output.print_neon_title('Select Mode')
+        Output.print("[1] Toolbox\n[2] Attack", color='148', attrs='bold')
+        print("")
+        mode_input = input(Output.print_neon_colored("Enter choice (1 or 2): "))
         
         if mode_input == '1':
+            print("")
             self.prompt_toolbox_mode()
         elif mode_input == '2':
+            print("")
             self.prompt_attack_mode()
         else:
-            print("Invalid choice. Exiting.")
+            print("")
+            logger.error('Invalid mode. Exiting.')
             sys.exit(1)
 
     def prompt_toolbox_mode(self):
         """Interactive prompt for Toolbox mode."""
-        print("Select an operation:")
+        Output.print_neon_title('Select an Operation')
+        
         operations = {
-            'A': '--show-all',
-            'B': '--install-tool',
-            'C': '--install-all',
-            'D': '--update-tool',
-            'E': '--update-all',
-            'F': '--uninstall-tool',
-            'G': '--uninstall-all',
-            'H': '--check-tool',
-            'I': '--check-all'
+            'A': ('show-all', 'Show the status of all the integrated tools available'),
+            'B': ('install-tool', 'Install a specific tool'),
+            'C': ('install-all', 'Install all the available tools'),
+            'D': ('update-tool', 'Update a specific tool'),
+            'E': ('update-all', 'Update all the available tools'),
+            'F': ('uninstall-tool', 'Uninstall a specific tool'),
+            'G': ('uninstall-all', 'Uninstall all the available tools'),
+            'H': ('check-tool', 'Check the operational status of a specific tool'),
+            'I': ('check-all', 'Check the operational status of all the available tools')
         }
-        for key, value in operations.items():
-            print(f"{key}: {value}")
-        operation_key = input("Enter your choice: ").upper()
+        
+        for key, (command, description) in operations.items():
+            Output.print(f"[{key}] {command:<15} : {description}", color='148', attrs='bold')
+            
+        print()    
+        operation_key = input(Output.print_neon_colored("Enter your choice : ")).upper()
 
         if operation_key in operations:
-            option = operations[operation_key]
-            if option in ['--install-tool', '--update-tool', '--uninstall-tool', '--check-tool']:
-                tool_name = input("Enter tool name: ")
-                sys.argv = ['hellsing.py', 'toolbox', option, tool_name]
+            option, _ = operations[operation_key]
+            
+            if option in ['install-tool', 'update-tool', 'uninstall-tool', 'check-tool']:
+                tool_name = input("[~] Enter tool name: ")
+                sys.argv = ['hellsing.py', 'toolbox', '--' + option, tool_name]
             else:
-                sys.argv = ['hellsing.py', 'toolbox', option]
+                sys.argv = ['hellsing.py', 'toolbox', '--' + option]
         else:
-            print("Invalid choice. Exiting.")
+            print()
+            logger.error('Invalid choice. Exiting.')
             sys.exit(1)
 
         self.toolbox()
-        print("Operation completed.")
+        print("")
 
     def prompt_attack_mode(self):
         """Interactive prompt for Attack mode."""
-        target = input("Enter target (IP/URL/Domain): ")
+        target_prompt = Output.print_neon_colored("Enter target (IP/URL/Domain): ")
+        target = input(target_prompt)
+        
         if not target:
-            print("Target is mandatory. Exiting.")
+            print()
+            logger.error('Target is mandatory. Exiting.')
             sys.exit(1)
 
-        banner_info = input("Retrieve banner information? (yes/no): ")
-        if banner_info.lower() == 'yes':
+        banner_info = input(Output.print_neon_colored("Retrieve banner information? (yes/no): "))
+        
+        if banner_info.lower() == 'yes' or banner_info.lower() == 'y':
             sys.argv = ['hellsing.py', 'attack', '--target', target, '--banner']
         else:
-            print("Select additional configurations:")
-            print(" 1. Profile")
-            print(" 2. Run only certain categories")
-            print(" 3. Exclude certain categories")
-            config_choice = input("Enter choice: ")
+            print()
+            Output.print_neon_title("Select Additional Configurations")
+            Output.print("[1] Profile", color='148', attrs='bold')
+            Output.print("[2] Run only certain categories", color='148', attrs='bold')
+            Output.print("[3] Exclude certain categories", color='148', attrs='bold')
+            print()
+            config_choice = input(Output.print_neon_colored("Enter choice: "))
+            
             if config_choice == '1':
                 print("Available profiles: basic, fast, aggressive")
                 profile = input("Enter profile: ")
@@ -386,7 +405,8 @@ class ArgumentsParser:
             elif config_choice == '4':
                 sys.argv = ['hellsing.py', 'attack', '--target', target]
             else:
-                print("Invalid choice. Exiting.")
+                print()
+                logger.error('Invalid choice. Exiting.')
                 sys.exit(1)
 
         self.attack()
