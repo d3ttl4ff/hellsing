@@ -6,7 +6,8 @@ import sys
 import traceback
 import os
 
-from lib.core.ArgumentsParser import ArgumentsParser
+# from lib.core.ArgumentsParser import ArgumentsParser
+from lib.core.ArgumentParserInteractive import ArgumentsParser
 from lib.core.Config import *
 from lib.core.Exceptions import *
 from lib.core.Settings import Settings
