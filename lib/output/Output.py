@@ -118,6 +118,32 @@ class Output(object):
         y = Output.colored(left_border + title_part )
         
         return y
+    
+    @staticmethod
+    def print_sub_scoreboard(total_game_played: str, total_game_count: str, subtitle_highlight="226") -> None:
+        game_count_length = len(total_game_count)
+        score_board_rest_len = (game_count_length) // 2
+        
+        total_game_played_part_color = 'black'
+        # subtitle_highlight = '226'
+        subtool_color = 'black'
+        border_color = '10'
+        total_game_played_part_highlight = 'green'
+
+        total_game_played_part = Output.colored(' ' + total_game_played + ' ', color=total_game_played_part_color, highlight=total_game_played_part_highlight, attrs='bold')
+
+        left_border = Output.colored('┃⥏ ' * 1, color=border_color, attrs='bold')
+        total_game_played_score_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        total_game_played_part_connector = Output.colored('▒', color=border_color, attrs='bold')
+        score_connector = Output.colored('░', color=border_color, attrs='bold')
+        
+        left_highlight = Output.colored(' ', highlight=subtitle_highlight, attrs='bold')
+        right_highlight = Output.colored(' ', highlight=subtitle_highlight, attrs='bold')
+        score_count_part = Output.colored(total_game_count, color=subtool_color, highlight=subtitle_highlight, attrs='bold')
+        final_score_count_part = left_highlight + score_count_part + right_highlight
+
+        print(left_border + total_game_played_part + total_game_played_part_connector + score_connector + total_game_played_score_connector + final_score_count_part + total_game_played_score_connector)
+        # print("")
         
     @staticmethod
     def print_banner_grabbing(description: str, target_mode: str, action: str) -> None:
@@ -136,7 +162,7 @@ class Output(object):
         identify_part = Output.colored(' identify ', color='black', highlight=border_color, attrs='bold')
         
         # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
-        top_border = Output.colored('╔════════', color=border_color, attrs='bold')
+        top_border = Output.colored('╔═══════╣', color=border_color, attrs='bold')
         bottom_border = Output.colored('╚═', color=border_color)
         buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
         description_connector = Output.colored('▒', color=description_highlight, attrs='bold')

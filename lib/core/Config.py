@@ -37,14 +37,15 @@ BANNER = colored.stylize("""
 """.format(version=prefix + __version__, subtitle=subtitle, context=context), colored.fg('red') + colored.attr('bold'))
 
 #----------------------------------------------------------------------------------------
-step_arrows = Output.colored('-->', color='white', attrs='bold')
+step_arrows = Output.colored('┃⥏', color='10', attrs='bold')
+step_arrows2 = Output.colored('┃⥏', color='white', attrs='bold')
 step_info1 = Output.colored('To check whether the tools are properly installed and configured, go through the following steps:', color='105', attrs='bold')
 step_info2 = Output.colored('To launch security checks against a target, follow these steps:', color='105', attrs='bold')
 step_numbers1 = Output.colored('[1]', color='148', attrs='bold')
 step_numbers2 = Output.colored('[2]', color='148', attrs='bold')
 step_numbers3 = Output.colored('[3]', color='148', attrs='bold')
 
-GENERAL_HELP = "To begin launching security assesments on a target, follow these steps:"
+GENERAL_HELP = step_arrows2 + " To begin launching security assesments on a target, follow these steps:"
 
 GENERAL_HELP_STEPS = colored.stylize("""
 {arw} {info1}

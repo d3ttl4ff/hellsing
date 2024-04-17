@@ -63,6 +63,15 @@ class Attack:
 
         :param target: Target URL or IP address
         """ 
+        #get the time
+        now = datetime.now()
+        
+        # format it this way ex: 2024-12-31 23:59:59
+        formatted_date = now.strftime("%Y-%m-%d %H:%M:%S")
+        
+        Output.print_sub_scoreboard("Attack Launched", str(formatted_date))
+        print()
+        
         protocol, base_target, specified_port, domain = '', '', None, ''
         is_ip_address = False
         ip_address = ''

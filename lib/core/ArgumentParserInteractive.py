@@ -37,8 +37,8 @@ class ArgumentsParser:
 
         # If no command is provided (i.e., the user just runs the script without arguments)
         if not args.command:
-            # self.prompt_user()  # Call the interactive prompt
-            # return  # Return after handling interaction to avoid further parsing errors
+            print(GENERAL_HELP)
+            print(GENERAL_HELP_STEPS)
         
             command_list = self.prompt_user()  # This should return a list like ['toolbox', '--show-all']
             if command_list:  # Make sure a command was returned
@@ -494,20 +494,24 @@ class ArgumentsParser:
             sys.exit(1)
         
         banner_info = input(Output.print_neon_colored("Retrieve only banner information? (yes/no): "))
+        print()
         
         if banner_info.lower() == 'yes' or banner_info.lower() == 'y':
             return ['attack', '--target', target, '--banner']
         else:
-            print()
             Output.print_neon_title("Select Additional Configurations")
-            Output.print("[1] Profile", color='148', attrs='bold')
-            Output.print("[2] Run only certain categories", color='148', attrs='bold')
-            Output.print("[3] Exclude certain categories", color='148', attrs='bold')
+            Output.print("[1] Default", color='148', attrs='bold')
+            Output.print("[2] Profile", color='148', attrs='bold')
+            Output.print("[3] Run only certain categories", color='148', attrs='bold')
+            Output.print("[4] Exclude certain categories", color='148', attrs='bold')
             print()
             config_choice = input(Output.print_neon_colored("Enter choice: "))
             
-            print()
+            print()      
             if config_choice == '1':
+                return ['attack', '--target', target]
+            
+            elif config_choice == '2':
                 Output.print_neon_title("Available Profiles")
                 Output.print("[*] Basic", color='148', attrs='bold')
                 print()
@@ -515,12 +519,24 @@ class ArgumentsParser:
                 print()
                 return ['attack', '--target', target, '--profile', profile]
             
-            elif config_choice == '2':
+            elif config_choice == '3':
+                Output.print_neon_title("Available Categories")
+                Output.print("[*] recon", color='148', attrs='bold')
+                Output.print("[*] vuln", color='148', attrs='bold')
+                Output.print("[*] exploit", color='148', attrs='bold')
+                Output.print("[*] postexploit", color='148', attrs='bold')
+                print()
                 categories = input(Output.print_neon_colored("Enter categories to run (comma-separated): "))
                 print()
                 return ['attack', '--target', target, '--run-only', categories]
             
-            elif config_choice == '3':
+            elif config_choice == '4':
+                Output.print_neon_title("Available Categories")
+                Output.print("[*] recon", color='148', attrs='bold')
+                Output.print("[*] vuln", color='148', attrs='bold')
+                Output.print("[*] exploit", color='148', attrs='bold')
+                Output.print("[*] postexploit", color='148', attrs='bold')
+                print()
                 categories = input(Output.print_neon_colored("Enter categories to exclude (comma-separated): "))
                 print()
                 return ['attack', '--target', target, '--run-exclude', categories]
