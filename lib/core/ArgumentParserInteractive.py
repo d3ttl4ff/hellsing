@@ -384,9 +384,9 @@ class ArgumentsParser:
             return ['attack', '--target', target, '--banner']
         else:
             Output.print_neon_title("Select Additional Configurations")
-            Output.print("[1] Default", color='148', attrs='bold')
-            Output.print("[2] Profile", color='148', attrs='bold')
-            Output.print("[3] Run only certain categories", color='148', attrs='bold')
+            Output.print("[1] Default Configuration", color='148', attrs='bold')
+            Output.print("[2] Run a pre-defined Attack Profile", color='148', attrs='bold')
+            Output.print("[3] Run only certain security categories", color='148', attrs='bold')
             Output.print("[4] Exclude certain categories", color='148', attrs='bold')
             print()
             config_choice = input(Output.print_neon_colored("Enter choice: "))
