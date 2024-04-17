@@ -37,8 +37,13 @@ class ArgumentsParser:
 
         # If no command is provided (i.e., the user just runs the script without arguments)
         if not args.command:
-            self.prompt_user()  # Call the interactive prompt
-            return  # Return after handling interaction to avoid further parsing errors
+            # self.prompt_user()  # Call the interactive prompt
+            # return  # Return after handling interaction to avoid further parsing errors
+        
+            command_list = self.prompt_user()  # This should return a list like ['toolbox', '--show-all']
+            if command_list:  # Make sure a command was returned
+                args.command = command_list[0]  # The command name
+                sys.argv = sys.argv[:1] + command_list
 
         # Handle the command if provided
         if not hasattr(self, args.command):
@@ -52,7 +57,6 @@ class ArgumentsParser:
         # Check arguments for validity
         if not self.check_args():
             raise ArgumentsException()
-
     
     #------------------------------------------------------------------------------------
 
@@ -313,26 +317,141 @@ class ArgumentsParser:
         return True
     
     #------------------------------------------------------------------------------------
+    # def prompt_user(self):
+    #     """Prompt user for inputs if no arguments are provided."""
+    #     Output.print_neon_title('Select Mode')
+    #     Output.print("[1] Toolbox\n[2] Attack", color='148', attrs='bold')
+    #     print("")
+    #     mode_input = input(Output.print_neon_colored("Enter choice (1 or 2): "))
+        
+    #     if mode_input == '1':
+    #         print("")
+    #         self.prompt_toolbox_mode()
+    #     elif mode_input == '2':
+    #         print("")
+    #         self.prompt_attack_mode()
+    #     else:
+    #         print("")
+    #         logger.error('Invalid mode. Exiting.')
+    #         sys.exit(1)
+
+    # def prompt_toolbox_mode(self):
+    #     """Interactive prompt for Toolbox mode."""
+    #     Output.print_neon_title('Select an Operation')
+        
+    #     operations = {
+    #         'A': ('show-all', 'Show the status of all the integrated tools available'),
+    #         'B': ('install-tool', 'Install a specific tool'),
+    #         'C': ('install-all', 'Install all the available tools'),
+    #         'D': ('update-tool', 'Update a specific tool'),
+    #         'E': ('update-all', 'Update all the available tools'),
+    #         'F': ('uninstall-tool', 'Uninstall a specific tool'),
+    #         'G': ('uninstall-all', 'Uninstall all the available tools'),
+    #         'H': ('check-tool', 'Check the operational status of a specific tool'),
+    #         'I': ('check-all', 'Check the operational status of all the available tools')
+    #     }
+        
+    #     for key, (command, description) in operations.items():
+    #         Output.print(f"[{key}] {command:<15} : {description}", color='148', attrs='bold')
+            
+    #     print()    
+    #     operation_key = input(Output.print_neon_colored("Enter your choice : ")).upper()
+
+    #     if operation_key in operations:
+    #         option, _ = operations[operation_key]
+            
+    #         if option in ['install-tool', 'update-tool', 'uninstall-tool', 'check-tool']:
+    #             tool_name = input("[~] Enter tool name: ")
+    #             sys.argv = ['hellsing.py', 'toolbox', '--' + option, tool_name]
+    #         else:
+    #             sys.argv = ['hellsing.py', 'toolbox', '--' + option]
+    #     else:
+    #         print()
+    #         logger.error('Invalid choice. Exiting.')
+    #         sys.exit(1)
+
+    #     self.toolbox()
+    #     print("")
+
+    # def prompt_attack_mode(self):
+    #     """Interactive prompt for Attack mode."""
+    #     target_prompt = Output.print_neon_colored("Enter target (IP/URL/Domain): ")
+    #     target = input(target_prompt)
+        
+    #     if not target:
+    #         print()
+    #         logger.error('Target is mandatory. Exiting.')
+    #         sys.exit(1)
+
+    #     banner_info = input(Output.print_neon_colored("Retrieve only banner information? (yes/no): "))
+        
+    #     if banner_info.lower() == 'yes' or banner_info.lower() == 'y':
+    #         sys.argv = ['hellsing.py', 'attack', '--target', target, '--banner']
+    #     else:
+    #         print()
+    #         Output.print_neon_title("Select Additional Configurations")
+    #         Output.print("[1] Profile", color='148', attrs='bold')
+    #         Output.print("[2] Run only certain categories", color='148', attrs='bold')
+    #         Output.print("[3] Exclude certain categories", color='148', attrs='bold')
+    #         print()
+    #         config_choice = input(Output.print_neon_colored("Enter choice: "))
+            
+    #         if config_choice == '1':
+    #             Output.print_neon_title("Available Profiles")
+    #             Output.print("[*] Basic", color='148', attrs='bold')
+    #             print()
+    #             profile = input(Output.print_neon_colored("Enter profile name: "))
+    #             sys.argv = ['hellsing.py', 'attack', '--target', target, '--profile', profile]
+                
+    #         elif config_choice == '2':
+    #             Output.print_neon_title("Available Categories")
+    #             Output.print("[*] recon", color='148', attrs='bold')
+    #             Output.print("[*] vuln", color='148', attrs='bold')
+    #             Output.print("[*] exploit", color='148', attrs='bold')
+    #             Output.print("[*] postexploit", color='148', attrs='bold')
+    #             print()
+    #             categories = input(Output.print_neon_colored("Enter categories to run (comma-separated): "))
+    #             sys.argv = ['hellsing.py', 'attack', '--target', target, '--run-only', categories]
+                
+    #         elif config_choice == '3':
+    #             Output.print_neon_title("Available Categories")
+    #             Output.print("[*] recon", color='148', attrs='bold')
+    #             Output.print("[*] vuln", color='148', attrs='bold')
+    #             Output.print("[*] exploit", color='148', attrs='bold')
+    #             Output.print("[*] postexploit", color='148', attrs='bold')
+    #             print()
+    #             categories = input(Output.print_neon_colored("Enter categories to exclude (comma-separated): "))
+    #             sys.argv = ['hellsing.py', 'attack', '--target', target, '--run-exclude', categories]
+                
+    #         elif config_choice == '4':
+    #             sys.argv = ['hellsing.py', 'attack', '--target', target]
+                
+    #         else:
+    #             print()
+    #             logger.error('Invalid choice. Exiting.')
+    #             sys.exit(1)
+
+    #     self.attack()
+
     def prompt_user(self):
-        """Prompt user for inputs if no arguments are provided."""
+        """Prompt user for inputs if no arguments are provided and return the selected command."""
         Output.print_neon_title('Select Mode')
         Output.print("[1] Toolbox\n[2] Attack", color='148', attrs='bold')
         print("")
         mode_input = input(Output.print_neon_colored("Enter choice (1 or 2): "))
+        print()
         
         if mode_input == '1':
-            print("")
-            self.prompt_toolbox_mode()
+            return self.prompt_toolbox_mode()
         elif mode_input == '2':
-            print("")
-            self.prompt_attack_mode()
+            return self.prompt_attack_mode()
         else:
             print("")
             logger.error('Invalid mode. Exiting.')
             sys.exit(1)
-
+            
     def prompt_toolbox_mode(self):
-        """Interactive prompt for Toolbox mode."""
+        """Interactive prompt for Toolbox mode and return the command."""
         Output.print_neon_title('Select an Operation')
         
         operations = {
@@ -349,28 +468,23 @@ class ArgumentsParser:
         
         for key, (command, description) in operations.items():
             Output.print(f"[{key}] {command:<15} : {description}", color='148', attrs='bold')
-            
+        
         print()    
         operation_key = input(Output.print_neon_colored("Enter your choice : ")).upper()
-
         if operation_key in operations:
-            option, _ = operations[operation_key]
-            
-            if option in ['install-tool', 'update-tool', 'uninstall-tool', 'check-tool']:
-                tool_name = input("[~] Enter tool name: ")
-                sys.argv = ['hellsing.py', 'toolbox', '--' + option, tool_name]
+            command, _ = operations[operation_key]
+            if command in ['install-tool', 'update-tool', 'uninstall-tool', 'check-tool']:
+                tool_name = input(Output.print_neon_colored("Enter tool name: "))
+                return ['toolbox', '--' + command, tool_name]
             else:
-                sys.argv = ['hellsing.py', 'toolbox', '--' + option]
+                return ['toolbox', '--' + command]
         else:
             print()
             logger.error('Invalid choice. Exiting.')
             sys.exit(1)
 
-        self.toolbox()
-        print("")
-
     def prompt_attack_mode(self):
-        """Interactive prompt for Attack mode."""
+        """Interactive prompt for Attack mode and return the command."""
         target_prompt = Output.print_neon_colored("Enter target (IP/URL/Domain): ")
         target = input(target_prompt)
         
@@ -378,11 +492,11 @@ class ArgumentsParser:
             print()
             logger.error('Target is mandatory. Exiting.')
             sys.exit(1)
-
-        banner_info = input(Output.print_neon_colored("Retrieve banner information? (yes/no): "))
+        
+        banner_info = input(Output.print_neon_colored("Retrieve only banner information? (yes/no): "))
         
         if banner_info.lower() == 'yes' or banner_info.lower() == 'y':
-            sys.argv = ['hellsing.py', 'attack', '--target', target, '--banner']
+            return ['attack', '--target', target, '--banner']
         else:
             print()
             Output.print_neon_title("Select Additional Configurations")
@@ -392,23 +506,26 @@ class ArgumentsParser:
             print()
             config_choice = input(Output.print_neon_colored("Enter choice: "))
             
+            print()
             if config_choice == '1':
-                print("Available profiles: basic, fast, aggressive")
-                profile = input("Enter profile: ")
-                sys.argv = ['hellsing.py', 'attack', '--target', target, '--profile', profile]
+                Output.print_neon_title("Available Profiles")
+                Output.print("[*] Basic", color='148', attrs='bold')
+                print()
+                profile = input(Output.print_neon_colored("Enter profile name: "))
+                print()
+                return ['attack', '--target', target, '--profile', profile]
+            
             elif config_choice == '2':
-                categories = input("Enter categories to run (comma-separated): ")
-                sys.argv = ['hellsing.py', 'attack', '--target', target, '--run-only', categories]
+                categories = input(Output.print_neon_colored("Enter categories to run (comma-separated): "))
+                print()
+                return ['attack', '--target', target, '--run-only', categories]
+            
             elif config_choice == '3':
-                categories = input("Enter categories to exclude (comma-separated): ")
-                sys.argv = ['hellsing.py', 'attack', '--target', target, '--run-exclude', categories]
-            elif config_choice == '4':
-                sys.argv = ['hellsing.py', 'attack', '--target', target]
+                categories = input(Output.print_neon_colored("Enter categories to exclude (comma-separated): "))
+                print()
+                return ['attack', '--target', target, '--run-exclude', categories]
+            
             else:
                 print()
                 logger.error('Invalid choice. Exiting.')
                 sys.exit(1)
-
-        self.attack()
-        print("Attack operation completed.")
-
