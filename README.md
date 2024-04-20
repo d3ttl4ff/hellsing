@@ -1,21 +1,14 @@
-```{=html}
-<h1 align="center">
-```
-![image](./resources/hellsing.jpg)
+<p align="center">
+    <img src="./resources/hellsing.jpg">
+</p>
 
-```{=html}
-<br class="title">
-hellsing.py v0.0
+<div align="center">
+    <h1>
+        HELLSING
+    </h1>
+    <img src="https://skillicons.dev/icons?i=py,bash,kali,regex,vscode" />
+</div>
 <br>
-```
-[![Python 3.12](https://img.shields.io/badge/python-3122?style=for-the-badge&logo=python&logoColor=white&color=blue&link=https%3A%2F%2Fwww.python.org%2Fdownloads%2Frelease%2Fpython-3122%2F)](https://www.python.org/downloads/release/python-3122/)
-
-```{=html}
-</h1>
-<h3 align="center">A Web Pentesting Automation Suite</h3>
-```
-::: {.contents local="" depth="1"}
-:::
 
 # Introduction
 
@@ -68,13 +61,10 @@ security of web applications.
 
 # Architecture
 
-```{=html}
-<h1 align="center">
-```
-![hellsing.py process flow](./resources/hellsing.py_process_flow.png){width="700px"}
+<p align="center">
+    <img src="./resources/hellsing.py_process_flow.png">
+</p>
 
-```{=html}
-```
 # Installation
 
 \*\* To install just clone the git repository and run the setup script.
