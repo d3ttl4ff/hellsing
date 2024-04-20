@@ -108,7 +108,7 @@ security of web applications.
 python3 hellsing.py -h
 ```
 
-Toolbox Management \-\-\-\-\-\-\-\-\-\--
+## Toolbox Management
 
 -   Show toolbox help menu:
 
@@ -170,7 +170,7 @@ python3 hellsing.py toolbox --show-all
 python3 hellsing.py toolbox --check-all
 ```
 
-Security Assessment \-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+## Security Assessment
 
 -   Show security assessment help menu:
 
@@ -253,7 +253,7 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vulnlscan
 python3 hellsing.py attack -t http://example.com --addop [castle]
 ```
 
-Database and Reporting \-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+## Database and Reporting
 
 -   Show database help menu:
 
