@@ -36,6 +36,20 @@ BANNER = colored.stylize("""
                  
 """.format(version=prefix + __version__, subtitle=subtitle, context=context), colored.fg('red') + colored.attr('bold'))
 
+BANNER2 = colored.stylize("""
+                         
+  ██╗  ██╗███████╗██╗     ██╗     ███████╗██╗███╗   ██╗ ██████╗ 
+  ██║  ██║██╔════╝██║     ██║     ██╔════╝██║████╗  ██║██╔════╝ 
+  ███████║█████╗  ██║     ██║     ███████╗██║██╔██╗ ██║██║  ███╗
+  ██╔══██║██╔══╝  ██║     ██║     ╚════██║██║██║╚██╗██║██║   ██║
+  ██║  ██║███████╗███████╗███████╗███████║██║██║ ╚████║╚██████╔╝
+  ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
+   {subtitle}
+  {context}                                                              
+                 
+""".format(version=prefix + __version__, subtitle=subtitle), colored.fg('red') + colored.attr('bold'))             
+"""
+
 #----------------------------------------------------------------------------------------
 step_arrows = Output.colored('┃⥏', color='10', attrs='bold')
 step_arrows2 = Output.colored('┃⥏', color='white', attrs='bold')
