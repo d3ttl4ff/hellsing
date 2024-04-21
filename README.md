@@ -1,6 +1,38 @@
-<p align="center">
-    <img src="./resources/hellsing.jpg">
+<p align="center" id="imageContainer">
+    <img src="./resources/hellsing.jpg" id="image1">
 </p>
+
+<style>
+    @keyframes switchImages {
+        0%, 50% {
+            opacity: 1;
+        }
+        51%, 100% {s
+            opacity: 0;
+        }
+    }
+
+    #imageContainer {
+        position: relative;
+        width: fit-content; /* Adjust according to image size */
+        height: fit-content; /* Adjust according to image size */
+    }
+
+    #imageContainer img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: switchImages 2s infinite; /* Adjust animation duration */
+    }
+
+    #image1 {
+        animation-delay: 0s;
+    }
+
+    #image2 {
+        animation-delay: 1s; /* Delay the animation of the second image by 1 second */
+    }
+</style>
 
 <div align="center">
     <h1>
