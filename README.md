@@ -26,6 +26,7 @@ designed to automate the process of security testing and it helps the
 security professionals to save time and effort of manually testing the
 security of web applications.
 
+
 # Features
 
 ## Pentest Toolbox management
@@ -49,21 +50,14 @@ security of web applications.
 -   **Run only checks in specified category(ies).**
 -   **Run all checks except the ones in specified category(ies).**
 -   **Run security checks using a pre-defined attack profile.**
--   **Add/Update the target into a given task scope.**
 
-## Local Database & Reporting
-
--   **Create a new task in the local database.**
--   **Select a task.**
--   **Display services, hosts, detected products, found credentials and
-    found vulnerabilities in the selected task.**
--   **Generate a HTML report for the selected task.**
 
 # Architecture
 
 <p align="center">
     <img src="./resources/hellsing.py_process_flow.png">
 </p>
+
 
 # Installation
 
@@ -88,6 +82,7 @@ security of web applications.
     > python3 hellsing.py -h
     > ```
 
+
 # Update
 
 1.  **In order to update, just pull the latest version of the tool from
@@ -96,6 +91,7 @@ security of web applications.
     > ``` console
     > sudo git pull
     > ```
+
 
 # Commands
 
@@ -213,7 +209,6 @@ python3 hellsing.py attack -t [URL] --run-exclude [CAT1,CAT2,…]
 python3 hellsing.py attack -t [URL] --profile [PROFILE_NAME]
 ```
 
-
 ## Usage examples:
 
 -   Example 1: Run all security checks against a URL:
@@ -241,6 +236,7 @@ python3 hellsing.py attack -t http://example.com:8080
 python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 ```
 
+
 # Supported Security Checks Categories
 
 **Updated on: 21/04/2024**
@@ -252,115 +248,100 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 -   `postexploit` : Post-exploitation
 -   `report` : Reporting
 
+
 # Supported Services
 
 **Updated on: 17/03/2024**
 
 -   [HTTP (default 80/tcp)](#http-default-80tcp)
--   [HTTPS (default 443/tcp)]()
-
-## HTTP (default 80/tcp)
-
-HTTPS (default 443/tcp) \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+-   [HTTPS (default 443/tcp)](#https-default-443tcp)
 
 ``` console
-+------------------------------------------+--------------+------------------------------------------------------------------------------------------------+-------------------------------+
-| Name                                     | Category     | Description                                                                                    | Tool used                     |
-+------------------------------------------+--------------+------------------------------------------------------------------------------------------------+-------------------------------+
-| nmap-recon                               | recon        | Recon using Nmap HTTP scripts                                                                  | nmap                          |
-| load-balancing-detection                 | recon        | HTTP load balancer detection                                                                   | halberd                       |
-| waf-detection                            | recon        | Identify and fingerprint WAF products protecting website                                       | wafw00f                       |
-| waf-detection2                           | recon        | Identify and fingerprint WAF products protecting website                                       | identifywaf                   |
-| cloudmare-recon                          | recon        | CloudFlare real IP catcher                                                                     | cloudmare                     |
-| fingerprinting-multi-whatweb             | recon        | Identify CMS, blogging platforms, JS libraries, Web servers                                    | whatweb                       |
-| fingerprinting-appserver                 | recon        | Fingerprint application server (JBoss, ColdFusion, Weblogic, Tomcat, Railo, Axis2, Glassfish)  | clusterd                      |
-| webdav-detection-msf                     | recon        | Detect WebDAV on webserver                                                                     | metasploit                    |
-| fingerprinting-multi-wig                 | recon        | Fingerprint several CMS and web/application servers                                            | wig                           |
-| fingerprinting-cms-cmseek                | recon        | Detect CMS (130+ supported), detect version on Drupal, advanced scan on Wordpress/Joomla       | cmseek                        |
-| fingerprinting-cms-fingerprinter         | recon        | Fingerprint precisely CMS versions (based on files checksums)                                  | fingerprinter                 |
-| fingerprinting-drupal                    | recon        | Fingerprint Drupal 7/8: users, nodes, default files, modules, themes enumeration               | drupwn                        |
-| fingerprinting-domino                    | recon        | Fingerprint IBM/Lotus Domino software                                                          | domiowned                     |
-| crawling-fast                            | recon        | Crawl website quickly, analyze interesting files/directories                                   | dirhunt                       |
-| crawling-fast2                           | recon        | Crawl website and extract URLs, files, intel & endpoints                                       | photon                        |
-| vulners-lookup                           | vulnlookup   | Vulnerabilities lookup (language, framework, jslib, cms, server, appserver) on Vulners.com     | vulners-lookup                |
-| cvedetails-lookup                        | vulnlookup   | Vulnerabilities lookup (language, framework, jslib, cms, server, appserver) on Cvedetails.com  | cvedetails-lookup             |
-| default-creds-web-multi                  | defaultcreds | Check for default credentials on various web interfaces                                        | changeme                      |
-| default-creds-appserver                  | defaultcreds | Check for default/common credentials on appservers                                             | web-brutator                  |
-| ssl-check                                | vulnscan     | Check for SSL/TLS configuration                                                                | testssl                       |
-| headers-analysis                         | vulnscan     | Check HTTP headers                                                                             | h2t                           |
-| vulnscan-multi-nikto                     | vulnscan     | Check for multiple web vulnerabilities/misconfigurations                                       | nikto                         |
-| webdav-scan-davscan                      | vulnscan     | Scan HTTP WebDAV                                                                               | davscan                       |
-| webdav-internal-ip-disclosure            | vulnscan     | Check for WebDAV internal IP disclosure                                                        | metasploit                    |
-| webdav-website-content                   | vulnscan     | Detect webservers disclosing its content through WebDAV                                        | metasploit                    |
-| http-put-check                           | vulnscan     | Detect the support of dangerous HTTP PUT method                                                | metasploit                    |
-| apache-optionsbleed-check                | vulnscan     | Test for the Optionsbleed bug in Apache httpd (CVE-2017-9798)                                  | optionsbleed                  |
-| shellshock-scan                          | vulnscan     | Detect if web server is vulnerable to Shellshock (CVE-2014-6271)                               | shocker                       |
-| iis-shortname-scan                       | vulnscan     | Scan for IIS short filename (8.3) disclosure vulnerability                                     | iis-shortname-scanner         |
-| iis-internal-ip-disclosure               | vulnscan     | Check for IIS internal IP disclosure                                                           | metasploit                    |
-| tomcat-user-enum                         | vulnscan     | Enumerate users on Tomcat 4.1.0-4.1.39, 5.5.0-5.5.27 and 6.0.0-6.0.18                          | metasploit                    |
-| jboss-vulnscan-multi                     | vulnscan     | Scan JBoss application server for multiple vulnerabilities                                     | metasploit                    |
-| jboss-status-infoleak                    | vulnscan     | Queries JBoss status servlet to collect sensitive information (JBoss 4.0, 4.2.2 and 4.2.3)     | metasploit                    |
-| jenkins-infoleak                         | vulnscan     | Enumerate a remote Jenkins-CI installation in an unauthenticated manner                        | metasploit                    |
-| cms-multi-vulnscan-cmsmap                | vulnscan     | Check for vulnerabilities in CMS Wordpress, Drupal, Joomla                                     | cmsmap                        |
-| wordpress-vulnscan                       | vulnscan     | Scan for vulnerabilities in CMS Wordpress                                                      | wpscan                        |
-| wordpress-vulnscan2                      | vulnscan     | Scan for vulnerabilities in CMS Wordpress                                                      | wpseku                        |
-| joomla-vulnscan                          | vulnscan     | Scan for vulnerabilities in CMS Joomla                                                         | joomscan                      |
-| joomla-vulnscan2                         | vulnscan     | Scan for vulnerabilities in CMS Joomla                                                         | joomlascan                    |
-| joomla-vulnscan3                         | vulnscan     | Scan for vulnerabilities in CMS Joomla                                                         | joomlavs                      |
-| drupal-vulnscan                          | vulnscan     | Scan for vulnerabilities in CMS Drupal                                                         | droopescan                    |
-| magento-vulnscan                         | vulnscan     | Check for misconfigurations in CMS Magento (working partially)                                 | magescan                      |
-| silverstripe-vulnscan                    | vulnscan     | Scan for vulnerabilities in CMS Silverstripe                                                   | droopescan                    |
-| vbulletin-vulnscan                       | vulnscan     | Scan for vulnerabilities in CMS vBulletin                                                      | vbscan                        |
-| liferay-vulnscan                         | vulnscan     | Scan for vulnerabilities in CMS Liferay                                                        | liferayscan                   |
-| angularjs-csti-scan                      | vulnscan     | Scan for AngularJS Client-Side Template Injection                                              | angularjs-csti-scanner        |
-| jquery-fileupload-rce-cve2018-9206       | exploit      | Exploit arbitrary file upload in jQuery File Upload widget <= 9.22 (CVE-2018-9206)             | jqshell                       |
-| struts2-rce-cve2017-5638                 | exploit      | Exploit Apache Struts2 Jakarta Multipart parser RCE (CVE-2017-5638)                            | jexboss                       |
-| struts2-rce-cve2017-9791                 | exploit      | Exploit Apache Struts2 Plugin Showcase OGNL RCE (CVE-2017-9791)                                | metasploit                    |
-| struts2-rce-cve2017-9805                 | exploit      | Exploit Apache Struts2 REST Plugin XStream RCE (CVE-2017-9805)                                 | struts-pwn-cve2017-9805       |
-| struts2-rce-cve2018-11776                | exploit      | Exploit Apache Struts2 misconfiguration RCE (CVE-2018-11776)                                   | struts-pwn-cve2018-11776      |
-| rails-rce-cve2019-5420                   | exploit      | Exploit File Content Disclosure (CVE-2019-5418) + RCE (CVE-2019-5420) On Ruby on Rails         | jok3r-pocs                    |
-| appserver-auth-bypass                    | exploit      | Attempt to exploit authentication bypass on appservers                                         | clusterd                      |
-| tomcat-rce-cve2017-12617                 | exploit      | Exploit for Apache Tomcat JSP Upload Bypass RCE (CVE-2017-12617)                               | jok3r-pocs                    |
-| jboss-misconfig-exploit                  | exploit      | Try exploit misconfig on JBoss appserver pre-auth (jmx|web|admin-console,JMXInvokerServlet)    | jexboss                       |
-| jboss-path-traversal-cve2014-7816        | exploit      | Exploit path traversal on Jboss Wildfly 8.1.0 (only Windows) (CVE-2014-7816)                   | metasploit                    |
-| jboss-deserialize-cve2015-7501           | exploit      | Exploit for JBoss Deserialize RCE (CVE-2015-7501)                                              | jok3r-pocs                    |
-| glassfish-path-traversal-cve2017-1000028 | exploit      | Exploit path traversal on Glassfish <= 4.1 (CVE-2017-1000028)                                  | metasploit                    |
-| jenkins-unauthenticated-console          | exploit      | Detect and exploit unauthenticated Jenkins-CI script console                                   | metasploit                    |
-| jenkins-cli-deserialize-cve2015-8103     | exploit      | Exploit Java deserialization (unauthenticated) in Jenkins CLI RMI (CVE-2015-8103)              | jexboss                       |
-| jenkins-cli-deserialize2-cve2015-8103    | exploit      | Exploit Java deserialization (unauthenticated) in Jenkins CLI RMI (CVE-2015-8103)              | jok3r-pocs                    |
-| jenkins-groovy-xml-rce-cve2016-0792      | exploit      | Exploit Jenkins Groovy XML RCE (CVE-2016-0792)                                                 | jok3r-pocs                    |
-| jenkins-deserialize-cve2017-1000353      | exploit      | Exploit Jenkins Java Deserialize RCE (CVE-2017-1000353)                                        | jok3r-pocs                    |
-| jenkins-rce-cve2018-1000861              | exploit      | Exploit Jenkins unauthenticated RCE via method invokation (CVE-2018-1000861)                   | jok3r-pocs                    |
-| weblogic-t3-open-jdbc-datasource         | exploit      | List JNDIs available thru Weblogic T3(s) and attempt to get SQL shell via open JDBC datasource | jndiat                        |
-| weblogic-t3-deserialize-cve2015-4852     | exploit      | Exploit Java deserialization (unauthenticated) in Weblogic T3(s) (CVE-2015-4852)               | jok3r-pocs                    |
-| weblogic-t3-deserialize-cve2016-3510     | exploit      | Exploit Java deserialization (unauthenticated) in Weblogic T3 (CVE-2016-3510)                  | jok3r-pocs                    |
-| weblogic-t3-deserialize-cve2017-3248     | exploit      | Exploit Java deserialization (unauthenticated) in Weblogic T3(s) (CVE-2017-3248)               | exploit-weblogic-cve2017-3248 |
-| weblogic-t3-deserialize-cve2018-2628     | exploit      | Exploit Java deserialization (unauthenticated) in Weblogic T3(s) (CVE-2018-2628)               | jok3r-pocs                    |
-| weblogic-t3-deserialize-cve2018-2893     | exploit      | Exploit Java deserialization (unauthenticated) in Weblogic T3(s) (CVE-2018-2893)               | jok3r-pocs                    |
-| weblogic-rce-cve2018-2894                | exploit      | Exploit vulnerability in Weblogic allowing webshell deploiement (CVE-2018-2894)                | jok3r-pocs                    |
-| weblogic-wls-wsat-cve2017-10271          | exploit      | Exploit WLS-WSAT (unauthenticated) in Weblogic (CVE-2017-10271)                                | jok3r-pocs                    |
-| websphere-deserialize-cve2015-7450       | exploit      | Exploit Java deserialization (unauthenticated) in Websphere (CVE-2015-7450)                    | jok3r-pocs                    |
-| coldfusion-xxe-cve2009-3960              | exploit      | Exploit XXE in Coldfusion 7/8/9 (CVE-2009-3960)                                                | metasploit                    |
-| coldfusion-path-traversal-cve2010-2861   | exploit      | Exploit path traversal in Coldfusion (CVE-2010-2861)                                           | metasploit                    |
-| coldfusion-path-traversal-cve2013-3336   | exploit      | Exploit path traversal in Coldfusion 9/10 and extract creds (CVE-2013-3336)                    | metasploit                    |
-| iis-webdav-win2003-bof                   | exploit      | Exploit Buffer overflow in WebDAV in IIS 6.0 on Windows 2003 R2 (CVE-2017-7269)                | metasploit                    |
-| drupal-sqli-drupalgeddon                 | exploit      | Exploit Drupalgeddon SQLi to add an admin in CMS Drupal 7.x <= 7.31 (CVE-2014-3704)            | jok3r-pocs                    |
-| drupal-rce-drupalgeddon2                 | exploit      | Exploit Drupalgeddon2 RCE in CMS Drupal 7.x < 7.58 & 8.x < 8.1 (CVE-2018-7600)                 | drupwn                        |
-| drupal-rce-rest-cve2019-6340             | exploit      | Exploit REST RCE in CMS Drupal 8.5.x < 8.5.11 & 8.6.x < 8.6.10 (CVE-2019-6340)                 | drupwn                        |
-| joomla-comfields-sqli-rce                | exploit      | Exploit SQL injection to RCE in com_fields component in Joomla >= 3.7.0 (CVE-2017-8917)        | metasploit                    |
-| bruteforce-htaccess                      | bruteforce   | Bruteforce HTTP authentication (htaccess) if 401 Unauthorized returned                         | web-brutator                  |
-| bruteforce-appserver                     | bruteforce   | Bruteforce authentication on appserver (if no lockout by default)                              | web-brutator                  |
-| bruteforce-domino                        | bruteforce   | Bruteforce authentication on IBM/Lotus Domino software                                         | domiowned                     |
-| bruteforce-wordpress                     | bruteforce   | Bruteforce Wordpress accounts (require detected username(s))                                   | wpseku                        |
-| bruteforce-joomla                        | bruteforce   | Bruteforce Joomla "admin" account                                                              | xbruteforcer                  |
-| bruteforce-drupal                        | bruteforce   | Bruteforce Drupal "admin" account                                                              | xbruteforcer                  |
-| bruteforce-opencart                      | bruteforce   | Bruteforce Opencart "admin" account                                                            | xbruteforcer                  |
-| bruteforce-magento                       | bruteforce   | Bruteforce Magento "admin" account                                                             | xbruteforcer                  |
-| discovery-server                         | discovery    | Bruteforce web paths specific to detected web/application servers                              | dirsearch                     |
-| discovery-cms                            | discovery    | Bruteforce web paths specific to detected CMS                                                  | dirsearch                     |
-| discovery-language-directories           | discovery    | Bruteforce web paths specific to detected language and directories                             | dirsearch                     |
-| discovery-general                        | discovery    | Bruteforce web paths related to config, database, static files, misc...                        | dirsearch                     |
-| appserver-postauth-deploy                | postexploit  | Deploy a webshell on appserver (require credentials)                                           | clusterd                      |
-| wordpress-shell-upload                   | postexploit  | Upload shell on Wordpress (require admin credentials)                                          | wpforce                       |
-+------------------------------------------+--------------+------------------------------------------------------------------------------------------------+-------------------------------+
++----+---------------------------------------+----------+--------------+---------------------------------------------------------------------------------------------------------+
+| #  | Check-name                            | Category | Tool-used    | Description                                                                                             |
++----+---------------------------------------+----------+--------------+---------------------------------------------------------------------------------------------------------+
+| 1  | nmap-simple-recon                     | recon    | nmap         | Simple recon using Nmap                                                                                 |
+| 2  | nmap-recon                            | recon    | nmap         | Recon using Nmap HTTP scripts                                                                           |
+| 3  | waf-detection                         | recon    | wafw00f      | Identify and fingerprint WAF products protecting website                                                |
+| 4  | waf-detection2                        | recon    | identywaf    | Identify and fingerprint WAF products protecting website                                                |
+| 5  | fingerprinting-multi-whatweb          | recon    | whatweb      | Identify CMS, blogging platforms, JS libraries, Web servers                                             |
+| 6  | fingerprinting-cms-cmseek             | recon    | cmseek       | Detect CMS (130+ supported), detect version on Drupal, advanced scan on Wordpress/Joomla                |
+| 7  | gathering-emails                      | recon    | theharvester | Gather emails, subdomains, hosts, employee names, open ports, and banners from different public sources |
+| 8  | gathering-subdomains                  | recon    | sublist3r    | Fast enumerate subdomains of websites using OSINT                                                       |
+| 9  | host-ipv6                             | vuln     | host         | Checks for existence of IPV6 address                                                                    |
+| 10 | aspnet-config-error                   | vuln     | wget         | Checks for ASP.Net Misconfiguration                                                                     |
+| 11 | wordpress-check                       | vuln     | wget         | Checks for WordPress Installation                                                                       |
+| 12 | drupal-check                          | vuln     | wget         | Checks for Drupal Installation                                                                          |
+| 13 | joomla-check                          | vuln     | wget         | Checks for Joomla Installation                                                                          |
+| 14 | uniscan-robots-&-sitemap              | vuln     | uniscan      | Checks for robots.txt & sitemap.xml                                                                     |
+| 15 | dnsrecon-multiple-zone-transfers      | vuln     | dnsrecon     | Attempts Multiple Zone Transfers on Nameservers                                                         |
+| 16 | whois-admin-contact                   | vuln     | whois        | "Checks for Administrator's Contact Information"                                                        |
+| 17 | xss-protection-header                 | vuln     | nmap         | Checks if XSS Protection Header is present                                                              |
+| 18 | slowloris-denial-of-service           | vuln     | nmap         | Checks for Slowloris Denial of Service                                                                  |
+| 19 | sslyze-heartbleed                     | vuln     | sslyze       | Checks for Heartbleed Vulnerability via sslyze                                                          |
+| 20 | nmap-heartbleed                       | vuln     | nmap         | Checks for Heartbleed Vulnerability via Nmap                                                            |
+| 21 | nmap-poodle                           | vuln     | nmap         | Checks for Poodle Vulnerability                                                                         |
+| 22 | nmap-ccs-injection                    | vuln     | nmap         | Checks for CCS Injection                                                                                |
+| 23 | nmap-freak                            | vuln     | nmap         | Checks for FREAK Vulnerability                                                                          |
+| 24 | nmap-logjam                           | vuln     | nmap         | Checks for LOGJAM Vulnerability                                                                         |
+| 25 | sslyze-ocsp-stapling                  | vuln     | sslyze       | Checks for OCSP Stapling                                                                                |
+| 26 | sslyze-zlib-deflate-compression       | vuln     | sslyze       | Checks for ZLib Deflate Compression                                                                     |
+| 27 | sslyze-secure-renegotiation           | vuln     | sslyze       | Checks for Secure Renegotiation Support and Client Renegotiation                                        |
+| 28 | sslyze-session-resumption             | vuln     | sslyze       | Checks for Session Resumption Support with [Session IDs/TLS Tickets]                                    |
+| 29 | lbd-dns-http-load-balancers           | vuln     | lbd          | Checks for DNS/HTTP Load Balancers                                                                      |
+| 30 | golismero-dns-malware-scan            | vuln     | golismero    | Checks if the domain is spoofed or hijacked                                                             |
+| 31 | golismero-heartbleed-scan             | vuln     | golismero    | Checks for Heartbleed Vulnerability                                                                     |
+| 32 | golismero-brute-url-predictables-scan | vuln     | golismero    | BruteForces for certain files on the Domain                                                             |
+| 33 | golismero-brute-directories-scan      | vuln     | golismero    | BruteForces for certain directories on the Domain                                                       |
+| 34 | golismero-sqlmap-scan                 | vuln     | golismero    | SQLMap [Retrieves only the DB Banner]                                                                   |
+| 35 | dirb-brute-open-directories           | vuln     | dirb         | Brutes the target for Open Directories                                                                  |
+| 36 | xsser-cross-site-scripting            | vuln     | xsser        | Checks for Cross-Site Scripting [XSS] Attacks                                                           |
+| 37 | golismero-ssl-scan                    | vuln     | golismero    | Performs SSL related Scans                                                                              |
+| 38 | golismero-zone-transfer               | vuln     | golismero    | Attempts Zone Transfer                                                                                  |
+| 39 | golismero-nikto-scan                  | vuln     | golismero    | Uses Nikto Plugin to detect vulnerabilities                                                             |
+| 40 | golismero-brute-subdomains            | vuln     | golismero    | Brute Forces Subdomain Discovery                                                                        |
+| 41 | dnsenum-zone-transfer                 | vuln     | dnsenum      | Attempts Zone Transfer                                                                                  |
+| 42 | dmitry-email-harvesting               | vuln     | dmitry       | Passively Harvests Emails from the Domain                                                               |
+| 43 | nmap-telnet-service                   | vuln     | nmap         | Checks if TELNET service is running                                                                     |
+| 44 | nmap-ftp-service                      | vuln     | nmap         | Checks if FTP service is running                                                                        |
+| 45 | nmap-stuxnet-worm                     | vuln     | nmap         | Checks if the host is affected by STUXNET Worm                                                          |
+| 46 | webdav-enabled                        | vuln     | davtest      | Checks if WEBDAV enabled on Home directory                                                              |
+| 47 | golismero-fingerprint-web             | vuln     | golismero    | Does a fingerprint on the Domain                                                                        |
+| 48 | uniscan-filebrute                     | vuln     | uniscan      | Brutes for Filenames on the Domain                                                                      |
+| 49 | uniscan-dirbrute                      | vuln     | uniscan      | Brutes Directories on the Domain                                                                        |
+| 50 | uniscan-ministresser                  | vuln     | uniscan      | Stress Tests the Domain                                                                                 |
+| 51 | uniscan-rfi                           | vuln     | uniscan      | Checks for LFI, RFI and RCE                                                                             |
+| 52 | uniscan-xss                           | vuln     | uniscan      | Checks for XSS, SQLi, BSQLi & Other Checks                                                              |
+| 53 | nikto-xss-header                      | vuln     | nikto        | Checks for Apache Expect XSS Header                                                                     |
+| 54 | nikto-shellshock-bug                  | vuln     | nikto        | Checks for Shellshock Bug                                                                               |
+| 55 | nikto-internal-ip-leak                | vuln     | nikto        | Checks for Internal IP Leak                                                                             |
+| 56 | nikto-put-del                         | vuln     | nikto        | Checks for HTTP PUT DEL                                                                                 |
+| 57 | nikto-headers                         | vuln     | nikto        | Checks the Domain Headers                                                                               |
+| 58 | nikto-ms10-070                        | vuln     | nikto        | Checks for MS10-070 Vulnerability                                                                       |
+| 59 | nikto-server-msgs                     | vuln     | nikto        | Checks for Server Issues                                                                                |
+| 60 | nikto-outdated                        | vuln     | nikto        | Checks if Server is Outdated                                                                            |
+| 61 | nikto-http-options                    | vuln     | nikto        | Checks for HTTP Options on the Domain                                                                   |
+| 62 | nikto-cgi                             | vuln     | nikto        | Enumerates CGI Directories                                                                              |
+| 63 | nikto-ssl                             | vuln     | nikto        | Performs SSL Checks                                                                                     |
+| 64 | nikto-sitefiles                       | vuln     | nikto        | Checks for any interesting files on the Domain                                                          |
+| 65 | nikto-paths                           | vuln     | nikto        | Checks for Injectable Paths                                                                             |
+| 66 | nmap-sqlserver-db                     | vuln     | nmap         | Checks for MS-SQL Server DB                                                                             |
+| 67 | nmap-mysql-db                         | vuln     | nmap         | Checks for MySQL DB                                                                                     |
+| 68 | nmap-oracle-db                        | vuln     | nmap         | Checks for ORACLE DB                                                                                    |
+| 69 | nmap-rdp-udp                          | vuln     | nmap         | Checks for Remote Desktop Service over UDP                                                              |
+| 70 | nmap-rdp-tcp                          | vuln     | nmap         | Checks for Remote Desktop Service over TCP                                                              |
+| 71 | nmap-snmp-service                     | vuln     | nmap         | Checks for SNMP Service                                                                                 |
+| 72 | aspnet-elmah-logger                   | vuln     | wget         | Checks for ASP.net Elmah Logger                                                                         |
+| 73 | nmap-tcp-smb                          | vuln     | nmap         | Checks for SMB Service over TCP                                                                         |
+| 74 | nmap-udp-smb                          | vuln     | nmap         | Checks for SMB Service over UDP                                                                         |
+| 75 | wapiti-sqli-rce-xss                   | vuln     | wapiti       | Checks for SQLi, RCE, XSS and Other Vulnerabilities                                                     |
+| 76 | nmap-iis-webdav-vuln                  | vuln     | nmap         | Checks for IIS WebDAV                                                                                   |
+| 77 | whatweb-x-xss-protection              | vuln     | whatweb      | Checks for X-XSS Protection Header                                                                      |
+| 78 | dmitry-subdomain-scan                 | vuln     | dmitry       | Passively Harvests Subdomains from the Domain                                                           |
+| 79 | hydra-http-post-form-brute            | exploit  | hydra        | Brute force HTTP POST form login with Hydra                                                             |
+| 80 | sqlmap-sql-db-scan                    | exploit  | sqlmap       | SQL Injection and DB Scan with SQLMap                                                                   |
+| 81 | sqlmap-sql-table-dump                 | exploit  | sqlmap       | SQL Injection and Table Dump with SQLMap                                                                |
+| 82 | sqlmap-sql-column-dump                | exploit  | sqlmap       | SQL Injection and Column Dump with SQLMap                                                               |
++----+---------------------------------------+----------+--------------+---------------------------------------------------------------------------------------------------------+
+
 ```
