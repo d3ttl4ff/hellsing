@@ -113,6 +113,44 @@ class Toolbox:
 
         Output.table(columns, data, hrules=False)
         
+        # #dummy table to get the tool details for the README.md: #, Category, Check-name, Tool-used, Description
+        # self.config2 = configparser.ConfigParser()
+        # self.config2.read(HTTP_CONF_FILE + CONF_EXT)
+        # self.tools2 = self.config2.sections()
+        
+        # excluded_sections = ["config", "specific_options", "products"]
+        # data_2 = list()
+        # j = 0
+
+        # for tool in self.tools2:
+        #     if tool.lower() in excluded_sections:
+        #         continue
+            
+        #     j += 1
+        #     tool_configz = self.config2[tool]
+        #     check_name = tool_configz.get('name', None)
+        #     category = tool_configz.get('category', None)
+        #     tool_used = tool_configz.get('tool', None)
+        #     description = tool_configz.get('description', None)
+            
+        #     data_2.append([
+        #         j,
+        #         check_name,
+        #         category,
+        #         tool_used,
+        #         StringUtils.wrap(description, 120), # Max line length
+        #     ])
+        
+        # columns_2 = [
+        #     '#',
+        #     'Check-name',
+        #     'Category',
+        #     'Tool-used',
+        #     'Description',
+        # ]
+            
+        # Output.table(columns_2, data_2, hrules=False)
+        
     #------------------------------------------------------------------------------------
     
     def install_tool(self, tool_name):
