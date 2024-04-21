@@ -6,9 +6,17 @@
     <h1>
         HELLSING
     </h1>
-    <img src="https://skillicons.dev/icons?i=py,bash,kali,regex,vscode" />
+    <img src="https://skillicons.dev/icons?i=py,bash,kali,regex,vscode" /><br>
 </div>
 <br>
+
+# Tools and Languages Used
+`python` 
+`bash`
+`kali`
+`regex`
+`vscode`
+
 
 # Introduction
 
