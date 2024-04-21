@@ -48,7 +48,6 @@ BANNER2 = colored.stylize("""
   {context}                                                              
                  
 """.format(version=prefix + __version__, subtitle=subtitle), colored.fg('red') + colored.attr('bold'))             
-"""
 
 #----------------------------------------------------------------------------------------
 step_arrows = Output.colored('┃⥏', color='10', attrs='bold')
