@@ -12,7 +12,7 @@
 </div>
 <br>
 
-# HELLSING
+# `HELLSING`
 **Web Pentesting Automation Suite**
 
 <!-- # Tools and Languages Used
@@ -23,7 +23,7 @@
 `vscode` -->
 
 
-# Introduction
+# `Introduction`
 
 **hellsing.py** is a web penetration testing automation CLI tool which
 is created using Python3 language.
@@ -40,7 +40,7 @@ security professionals to save time and effort of manually testing the
 security of web applications.
 
 
-# Features
+# `Features`
 
 ## Pentest Toolbox management
 
@@ -65,14 +65,14 @@ security of web applications.
 -   **Run security checks using a pre-defined attack profile.**
 
 
-# Architecture
+# `Architecture`
 
 <p align="center">
     <img src="./resources/hellsing.py_process_flow.png">
 </p>
 
 
-# Installation
+# `Installation`
 
 ### To install just clone the git repository and run the setup script.
 
@@ -96,7 +96,7 @@ security of web applications.
     > ```
 
 
-# Update
+# `Update`
 
 1.  **In order to update, just pull the latest version of the tool from
     git repository.**
@@ -106,7 +106,7 @@ security of web applications.
     > ```
 
 
-# Commands
+# `Commands`
 
 ## Debugging
 
@@ -250,7 +250,7 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 ```
 
 
-# Supported Security Checks Categories
+# `Supported Security Checks Categories`
 
 **Updated on: 21/04/2024**
 
@@ -262,7 +262,7 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 -   `report` : Reporting
 
 
-# Supported Services
+# `Supported Services`
 
 **Updated on: 17/03/2024**
 
