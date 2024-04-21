@@ -1,21 +1,26 @@
 <p align="center" id="imageContainer">
-    <img src="./resources/hellsing_BANNER_main.png" id="image1">
+    <img src="./resources/hellsing_BANNER_main_lime.png" id="image1">
 </p>
 
 <div align="center">
-    <h1>
+    <!-- <h1>
         HELLSING
-    </h1>
-    <img src="https://skillicons.dev/icons?i=py,bash,kali,regex,vscode" /><br>
+        <br>
+        Web Pentesting Automation Suite
+    </h1> -->
+    <img src="https://skillicons.dev/icons?i=py,bash,kali,regex,vscode"/><br>
 </div>
 <br>
 
-# Tools and Languages Used
+# HELLSING
+**Web Pentesting Automation Suite**
+
+<!-- # Tools and Languages Used
 `python` 
 `bash`
 `kali`
 `regex`
-`vscode`
+`vscode` -->
 
 
 # Introduction
