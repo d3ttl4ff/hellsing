@@ -213,13 +213,8 @@ python3 hellsing.py attack -t [URL] --run-exclude [CAT1,CAT2,…]
 python3 hellsing.py attack -t [URL] --profile [PROFILE_NAME]
 ```
 
--   Add/Update the target into a given task scope:
 
-``` console
-python3 hellsing.py attack -t [URL] --addop [TASK_NAME]
-```
-
-**Usage examples:**
+## Usage examples:
 
 -   Example 1: Run all security checks against a URL:
 
@@ -243,75 +238,19 @@ python3 hellsing.py attack -t http://example.com:8080
 -   Example 4: Run only checks in specified category(ies):
 
 ``` console
-python3 hellsing.py attack -t http://example.com --run-only recon,vulnlscan
-```
-
--   Example 5: Add/Update the target into a given task scope:
-
-``` console
-python3 hellsing.py attack -t http://example.com --addop [castle]
-```
-
-## Database and Reporting
-
--   Show database help menu:
-
-``` console
-python3 hellsing.py db -h
-```
-
--   Create a new task in the local database:
-
-``` console
-python3 hellsing.py db 
-
-helldb[default]> task -a [TASK_ID] 
-
-[+] Task “bayonet” successfully added 
-[*] Selected task is now bayonet 
-
-helldb[TASK_ID]>
-```
-
--   Select a task:
-
-``` console
-python3 hellsing.py db 
-
-helldb[default]> task [TASK_ID] 
-
-[+] Selected task is now [TASK_ID] 
-[*] Task “[TASK_ID]” does not exist
-```
-
--   Display services, hosts, detected products, found credentials and
-    found vulnerabilities in the selected task:
-
-``` console
-helldb[TASK_ID]> services
-helldb[TASK_ID]> hosts 
-helldb[TASK_ID]> products
-helldb[TASK_ID]> creds 
-helldb[TASK_ID]> vulns
-```
-
--   Generate a HTML report for the selected task:
-
-``` console
-helldb[TASK_ID]> report
+python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 ```
 
 # Supported Security Checks Categories
 
-**Updated on: 17/03/2024**
+**Updated on: 21/04/2024**
 
--   recon
--   vulnscan
--   exploit
--   bruteforce
--   iscovery
--   postexploit
--   report
+-   `recon` : Reconnaissance
+-   `vulnscan` : Vulnerability Scanning 
+-   `exploit` : Exploitation
+-   `bruteforce` : Brute-force
+-   `postexploit` : Post-exploitation
+-   `report` : Reporting
 
 # Supported Services
 
