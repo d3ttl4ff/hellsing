@@ -1,5 +1,5 @@
 <p align="center" id="imageContainer">
-    <img src="./resources/hellsing_BANNER.png" id="image1">
+    <img src="./resources/hellsing_BANNER_main.png" id="image1">
 </p>
 
 <div align="center">
