@@ -13,7 +13,7 @@
 <br>
 
 # `HELLSING`
-**Web Pentesting Automation Suite**
+**A Web Pentesting Automation Suite**
 
 <!-- # Tools and Languages Used
 `python` 
