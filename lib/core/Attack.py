@@ -68,9 +68,68 @@ class Attack:
         
         # format it this way ex: 2024-12-31 23:59:59
         formatted_date = now.strftime("%Y-%m-%d %H:%M:%S")
-        
         Output.print_sub_scoreboard("Attack Launched", str(formatted_date))
         print()
+        
+        if run_only_condition:
+            logger.success(f"Checks in the following categories will be executed: {categories}")
+            print()
+            
+            check_count = 0
+            
+            for tool in self.tools:
+                tool_config = self.config[tool]
+                current_category = tool_config.get('category', None)
+                if current_category in categories:
+                    check_count += 1
+            final_check_count = str(check_count) + " of " + str(len(self.tools))
+            
+            Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
+            print()
+        
+        elif run_exclude_condition:
+            logger.success(f"Checks in the following categories will be excluded: {categories}")
+            print()
+            
+            check_count = 0
+            
+            for tool in self.tools:
+                tool_config = self.config[tool]
+                current_category = tool_config.get('category', None)
+                if current_category not in categories:
+                    check_count += 1
+            final_check_count = str(check_count) + " of " + str(len(self.tools))
+            
+            Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
+            print()
+            
+        elif profile_condition:
+            logger.success(f"Checks in the following profile will be executed: {profile}")
+            print()
+            
+            check_count = 0
+            
+            for tool in self.tools:
+                tool_config = self.config[tool]
+                adjusted_tool_name = tool.replace('check_', '')
+                if adjusted_tool_name in profile.get('http', []):
+                    check_count += 1
+            final_check_count = str(check_count) + " of " + str(len(self.tools))
+            
+            Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
+            print()
+            
+        else:
+            logger.success("All checks in each phase will be executed")
+            print()
+            
+            check_count = 0
+            for tool in self.tools:
+                check_count += 1
+            final_check_count = str(check_count) + " of " + str(len(self.tools))
+            
+            Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
+            print()
         
         protocol, base_target, specified_port, domain = '', '', None, ''
         is_ip_address = False
