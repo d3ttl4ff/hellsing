@@ -119,6 +119,10 @@ class Attack:
             Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
             print()
             
+        elif banner_condition:
+            logger.success("Banner grab will be executed")
+            print()
+            
         else:
             logger.success("All checks in each phase will be executed")
             print()

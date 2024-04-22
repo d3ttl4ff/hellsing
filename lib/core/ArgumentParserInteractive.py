@@ -382,7 +382,7 @@ class ArgumentsParser:
         
         if banner_info.lower() == 'yes' or banner_info.lower() == 'y':
             return ['attack', '--target', target, '--banner']
-        else:
+        elif banner_info.lower() == 'no' or banner_info.lower() == 'n':
             Output.print_neon_title("Select Additional Configurations")
             Output.print("[1] Default Configuration - Run all the checks in every category", color='148', attrs='bold')
             Output.print("[2] Run a pre-defined Attack Profile", color='148', attrs='bold')
@@ -429,3 +429,8 @@ class ArgumentsParser:
                 print()
                 logger.error('Invalid choice. Exiting.')
                 sys.exit(1)
+        
+        else:
+            print()
+            logger.error('Invalid choice. Exiting.')
+            sys.exit(1)
