@@ -250,7 +250,7 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 ```
 
 
-# `Supported Security Checks Categories`
+# `Supported Security Check Categories`
 
 **Updated on: 21/04/2024**
 
