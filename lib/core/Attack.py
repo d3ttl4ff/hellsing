@@ -104,17 +104,16 @@ class Attack:
             print()
             
         elif profile_condition:
-            logger.success(f"Checks in the following profile will be executed: {profile}")
+            x = Output.colored(f"[+] Checks in the following profile will be executed: [", color='10', attrs='bold')
+            y = Output.colored(f"{profile['profile_name']}", color='226', attrs='bold')
+            z = Output.colored(f"]", color='10', attrs='bold')
+            
+            Output.print(f"{x} {y} {z}")
             print()
             
-            check_count = 0
-            
-            for tool in self.tools:
-                tool_config = self.config[tool]
-                adjusted_tool_name = tool.replace('check_', '')
-                if adjusted_tool_name in profile.get('http', []):
-                    check_count += 1
-            final_check_count = str(check_count) + " of " + str(len(self.tools))
+            profile_checks = profile.get('http', [])
+                    
+            final_check_count = str(len(profile_checks)) + " of " + str(len(self.tools))
             
             Output.print_sub_scoreboard("Loaded check count", str(final_check_count))
             print()

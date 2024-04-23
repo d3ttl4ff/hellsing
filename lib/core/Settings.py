@@ -154,6 +154,7 @@ class Settings:
             http_tools = [tool.strip() for tool in http_tools if tool.strip() and not tool.strip().startswith('#')]
             return {
                 'description': config[profile_name].get('description', '').strip(),
+                'profile_name': profile_name,
                 'http': http_tools
             }
         else:
