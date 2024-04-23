@@ -12,7 +12,7 @@
 </div>
 <br>
 
-# `HELLSING`
+# `hellsing.py`
 **A Web Pentesting Automation Suite**
 
 <!-- # Tools and Languages Used
