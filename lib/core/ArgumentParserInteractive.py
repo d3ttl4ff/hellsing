@@ -4,6 +4,7 @@
 ###
 
 import argparse
+import configparser
 import sys
 
 from lib.core.Config import *
@@ -396,8 +397,16 @@ class ArgumentsParser:
                 return ['attack', '--target', target]
             
             elif config_choice == '2':
+                self.config = configparser.ConfigParser()
+                self.config.read(ATTACK_PROFILES_CONF_FILE + CONF_EXT)
+                self.profiles = self.config.sections()
+                
                 Output.print_neon_title("Available Profiles")
-                Output.print("[*] Basic", color='148', attrs='bold')
+                
+                for profile in self.profiles:
+                    description = self.config[profile]['description']
+                    Output.print(f"[*] {profile:<10} : {description}", color='148', attrs='bold')
+                    
                 print()
                 profile = input(Output.print_neon_colored("Enter profile name: "))
                 print()
