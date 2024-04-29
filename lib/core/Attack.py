@@ -72,7 +72,10 @@ class Attack:
         print()
         
         if run_only_condition:
-            logger.success(f"Checks in the following categories will be executed: {categories}")
+            x = Output.colored(f"[+] Checks in the following categories will be executed: ", color='10', attrs='bold')
+            y = Output.colored(f"{categories}", color='226', attrs='bold')
+            
+            Output.print(f"{x} {y}")
             print()
             
             check_count = 0
@@ -88,7 +91,10 @@ class Attack:
             print()
         
         elif run_exclude_condition:
-            logger.success(f"Checks in the following categories will be excluded: {categories}")
+            x = Output.colored(f"[+] Checks in the following categories will be excluded: ", color='10', attrs='bold')
+            y = Output.colored(f"{categories}", color='226', attrs='bold')
+            
+            Output.print(f"{x} {y}")
             print()
             
             check_count = 0
@@ -443,6 +449,11 @@ class Attack:
                             logger.error(f"Error: {e}")
                             pass
                         # print("\n")
+                    
+                    if current_category == "exploit":
+                        pass
+                    else:
+                        self.spinner.start()
                     
                     # self.spinner.start()
                     scan_start = time.time()
