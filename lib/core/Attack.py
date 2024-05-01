@@ -406,10 +406,17 @@ class Attack:
                 # Check if the tool's execution directory exists
                 tool_name = tool_config.get('tool', '').lower()
                 tool_dir_path = HTTP_TOOLBOX_DIR + "/" + tool_name
+                display_check_name = tool_config.get('name', None)
+                display_check_tool_name = tool_config.get('tool', None)
                 
                 if os.path.isdir(tool_dir_path):
                     # Change to the tool's directory and execute the command
                     os.chdir(tool_dir_path)
+                else:
+                    self.output.print_subtitle(display_check_name, display_check_tool_name, tool_description)
+                    logger.error(f"{tool_name} is not installed. Install it using the 'install-tool' option.")
+                    logger.info(f"Skipping...\n")
+                    continue
 
                 if "[TOOLDIR]" in command:
                     command = command.replace("[TOOLDIR]", tool_dir_path)
@@ -427,8 +434,8 @@ class Attack:
                 if "[RESULTS_DIR]" in command:
                     command = command.replace("[RESULTS_DIR]", RESULTS_DIR)
 
-                display_check_name = tool_config.get('name', None)
-                display_check_tool_name = tool_config.get('tool', None)
+                # display_check_name = tool_config.get('name', None)
+                # display_check_tool_name = tool_config.get('tool', None)
                 
                 # Define the results file path for this tool
                 results_file_path = os.path.join(RESULTS_DIR, f"{tool}_results.txt")
