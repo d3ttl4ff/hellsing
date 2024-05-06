@@ -233,7 +233,7 @@ class MatchString:
                 logger.info("No columns dumped.")
 
         #------------------------------------------------------------------------------------
-        elif tool_name == "pwncat" and check_name == "pwncat-shell-upload":
+        else:
             pass
                 
         # print("\n")
