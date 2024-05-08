@@ -461,8 +461,7 @@ class Attack:
                         pass
                     else:
                         self.spinner.start()
-                    
-                    # self.spinner.start()
+                        
                     scan_start = time.time()
                             
                     # subprocess.run(command, shell=True, cwd=tool_dir_path)
