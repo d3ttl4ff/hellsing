@@ -40,6 +40,8 @@ class MatchString:
         self.report_dir = REPORT_DIR
         self.report_file = None
         
+        self.previous_category = None
+        
     #------------------------------------------------------------------------------------
     
     def strip_ansi_codes(self, text):
@@ -115,7 +117,7 @@ class MatchString:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+                self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
             else:
                 logger.info("No ports found.")
                 
@@ -157,7 +159,7 @@ class MatchString:
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+                self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
             else:
                 logger.info("No WAFs detected.")
                 
@@ -197,7 +199,7 @@ class MatchString:
                 logger.success("Plugins Found:")
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+                self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
             else:
                 print("No significant plugin data detected.")
         
@@ -219,7 +221,7 @@ class MatchString:
                 ]
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+                self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
             else:   
                 logger.info("No Hosts, IPs, or Emails detected by The Harvester.")
 
@@ -233,7 +235,7 @@ class MatchString:
                 data = [[domain, "\n".join(sublist3r_subdomains)]]
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+                self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
             else:
                 logger.info(f"No subdomains detected for {domain}.")   
                 
@@ -247,7 +249,7 @@ class MatchString:
                 data = [[creds['Host'], creds['Login'], creds['Password']]]
                 Output.table(columns, data)
                 
-                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
+                self.save_to_report("Exploitation", columns, data, check_name, tool_description)
             else:
                 logger.info("No login credentials found.")
         
@@ -266,7 +268,7 @@ class MatchString:
                     
                 Output.table(columns, data)
                 
-                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
+                self.save_to_report("Exploitation", columns, data, check_name, tool_description)
             else:
                 logger.info("No databases found.")
                 
@@ -287,7 +289,7 @@ class MatchString:
                 
                 Output.table(columns, data)
                  
-                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
+                self.save_to_report("Exploitation", columns, data, check_name, tool_description)
             else:
                 logger.info("No tables dumped.")
                 
@@ -309,7 +311,7 @@ class MatchString:
 
                 Output.table(columns, data)
                 
-                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
+                self.save_to_report("Exploitation", columns, data, check_name, tool_description)
             else:
                 logger.info("No columns dumped.")
 
@@ -342,7 +344,7 @@ class MatchString:
             data = [[parsed_data['Product'], parsed_data['Type'], parsed_data['Version'], parsed_data['Info']]]
             Output.table(columns, data)
             
-            self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
+            self.save_to_report("Reconnaissance", columns, data, check_name, tool_description)
         else:
             logger.info(f"No CMS version detected by {tool_name}.")
             
@@ -394,7 +396,7 @@ class MatchString:
                     logger.success("Vulnerability Detected:")
                     Output.table(columns, data)
                     
-                    self.save_to_report("Vulnerability Results", columns, data, check_name, tool_description)
+                    self.save_to_report("Vulnerability", columns, data, check_name, tool_description)
             else:
                 logger.info("No vulnerabilities detected for this check.")
             print("")
@@ -571,9 +573,22 @@ class MatchString:
     def save_to_report(self, phase, columns, data, check_name=None, description=None):
         with open(self.report_file, "a") as file:
             
+            current_category = phase
+            
+            if self.previous_category == current_category:
+                pass
+            else:
+                file.write("="*50 + "\n")
+                file.write(f"| {phase.upper()} RESULTS\n")
+                file.write("="*50 + "\n")
+            
+            self.previous_category = current_category
+            
             if check_name:
+                file.write("="*50 + "\n")
                 file.write(f"CHECK NAME: {check_name}\n")
                 file.write(f"DESCRIPTION: {description}\n")
+                file.write("="*50 + "\n")
             
             # Generate and write the table string
             table_string = Output.report_table(columns, data, use_ansi=True)
