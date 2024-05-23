@@ -38,9 +38,7 @@ class MatchString:
         self.target_mode = None
         
         self.report_dir = REPORT_DIR
-        self.report_file = self.create_report_file()
-        self.write_report_header()
-        self.rename_existing_report()
+        self.report_file = None
         
     #------------------------------------------------------------------------------------
     
@@ -49,7 +47,7 @@ class MatchString:
         return ansi_escape.sub('', text)
     
     #self.matchstring.get_host_info(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
-    def get_host_info(self, target, port, domain, ip_address, protocol, specified_port, rechability, target_mode):
+    def get_host_info(self, target=None, port=None, domain=None, ip_address=None, protocol=None, specified_port=None, rechability=None, target_mode=None):
         self.target = target
         self.port = port
         self.domain = domain
@@ -59,12 +57,26 @@ class MatchString:
         self.rechability = rechability
         self.target_mode = target_mode
         
-        return self.target, self.port, self.domain, self.ip_address, self.protocol, self.specified_port, self.rechability, self.target_mode
+        self.create_report_file()
     
     # create the report file
     def create_report_file(self):
-        os.path.join(REPORT_DIR, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}.report.txt")
-
+        if not os.path.exists(self.report_dir):
+            os.makedirs(self.report_dir)
+        
+        self.report_file = os.path.join(self.report_dir, f"{self.domain}_{datetime.now().strftime('%Y-%m-%d')}_report.txt")
+        if os.path.exists(self.report_file):
+            i = 1
+            while True:
+                new_report_file = os.path.join(self.report_dir, f"{self.domain}_{datetime.now().strftime('%Y-%m-%d')}_report.{i}.txt")
+                if not os.path.exists(new_report_file):
+                    os.rename(self.report_file, new_report_file)
+                    self.report_file = new_report_file
+                    break
+                i += 1
+        
+        self.write_report_header()
+        
     # write the header
     def write_report_header(self):
         with open(self.report_file, "w") as file:
@@ -72,24 +84,21 @@ class MatchString:
             file.write(f"HELLSING FINAL REPORT\n")
             file.write(f"DATE: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             file.write("="*50 + "\n")
+            file.write(f"TARGET INFORMATION\n")
+            file.write("="*50 + "\n")
+            file.write(f"TARGET         : {self.target}\n")
+            file.write(f"DOMAIN         : {self.domain}\n")
+            file.write(f"IP ADDRESS     : {self.ip_address}\n")
+            file.write(f"PORT           : {self.port}\n")
+            file.write(f"PROTOCOL       : {self.protocol}\n")
+            file.write(f"SPECIFIED PORT : {self.specified_port}\n")
+            file.write(f"REACHABILITY   : {self.rechability}\n")
+            file.write(f"TARGET MODE    : {self.target_mode}\n")
+            file.write("="*50 + "\n")
             file.write("\n")
-            
-    # if the report file already exists, rename it and create a new one
-    def rename_existing_report(self):
-        if os.path.exists(self.report_file):
-            i = 1
-            while True:
-                new_report_file = os.path.join(self.report_dir, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}_{i}.report.txt")
-                if not os.path.exists(new_report_file):
-                    os.rename(self.report_file, new_report_file)
-                    self.report_file = new_report_file
-                    break
-                i += 1
-            
-            self.write_report_header()
 
     #------------------------------------------------------------------------------------
-    def process_tool_output(self, tool_name, check_name, output_file_path):
+    def process_tool_output(self, tool_name, check_name, tool_description, output_file_path):
         with open(output_file_path, "r") as file:
             output = file.read()
 
@@ -106,7 +115,7 @@ class MatchString:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name)
+                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
             else:
                 logger.info("No ports found.")
                 
@@ -148,7 +157,7 @@ class MatchString:
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
                 
-                self.save_to_report("Recoinnaisance", columns, data, check_name)
+                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
             else:
                 logger.info("No WAFs detected.")
                 
@@ -187,12 +196,14 @@ class MatchString:
             if data:
                 logger.success("Plugins Found:")
                 Output.table(columns, data)
+                
+                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
             else:
                 print("No significant plugin data detected.")
         
         #------------------------------------------------------------------------------------
         elif tool_name in ["cmseek"] and check_name == "fingerprinting-cms-cmseek":
-            self.display_cms_detection_results(tool_name, output)
+            self.display_cms_detection_results(tool_name, output, check_name, tool_description)
         
         #------------------------------------------------------------------------------------
         elif tool_name == "theharvester" and check_name == "gathering-emails":
@@ -207,6 +218,8 @@ class MatchString:
                     ["The Harvester", "Email Discovery", "N/A", "\n".join(harvester_data['Emails'])]  # Include emails
                 ]
                 Output.table(columns, data)
+                
+                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
             else:   
                 logger.info("No Hosts, IPs, or Emails detected by The Harvester.")
 
@@ -219,6 +232,8 @@ class MatchString:
                 columns = ['Domain', 'Subdomains']
                 data = [[domain, "\n".join(sublist3r_subdomains)]]
                 Output.table(columns, data)
+                
+                self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
             else:
                 logger.info(f"No subdomains detected for {domain}.")   
                 
@@ -231,6 +246,8 @@ class MatchString:
                 columns = ['Host', 'Username', 'Password']
                 data = [[creds['Host'], creds['Login'], creds['Password']]]
                 Output.table(columns, data)
+                
+                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
             else:
                 logger.info("No login credentials found.")
         
@@ -249,6 +266,7 @@ class MatchString:
                     
                 Output.table(columns, data)
                 
+                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
             else:
                 logger.info("No databases found.")
                 
@@ -269,6 +287,7 @@ class MatchString:
                 
                 Output.table(columns, data)
                  
+                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
             else:
                 logger.info("No tables dumped.")
                 
@@ -290,6 +309,7 @@ class MatchString:
 
                 Output.table(columns, data)
                 
+                self.save_to_report("Exploitation Results", columns, data, check_name, tool_description)
             else:
                 logger.info("No columns dumped.")
 
@@ -301,7 +321,7 @@ class MatchString:
 
     #------------------------------------------------------------------------------------
     
-    def display_cms_detection_results(self, tool_name, output):
+    def display_cms_detection_results(self, tool_name, output, check_name, tool_description):
         parser_functions = {
             "cmseek": self.fingerprinter.parse_cmseek_output,
         }
@@ -321,13 +341,15 @@ class MatchString:
             columns = ['Product', 'Type', 'Version', 'Info']
             data = [[parsed_data['Product'], parsed_data['Type'], parsed_data['Version'], parsed_data['Info']]]
             Output.table(columns, data)
+            
+            self.save_to_report("Recoinnaisance", columns, data, check_name, tool_description)
         else:
             logger.info(f"No CMS version detected by {tool_name}.")
             
     #------------------------------------------------------------------------------------
     
     # vulnerability filter
-    def process_vuln(self, tool_name, check_name, output_file_path, vuln_pattern, response, criticality, remed_ref, response_code):
+    def process_vuln(self, tool_name, check_name, tool_description, output_file_path, vuln_pattern, response, criticality, remed_ref, response_code):
         with open(output_file_path, "r") as file:
             output = file.read()
         # print(output)
@@ -372,6 +394,7 @@ class MatchString:
                     logger.success("Vulnerability Detected:")
                     Output.table(columns, data)
                     
+                    self.save_to_report("Vulnerability Results", columns, data, check_name, tool_description)
             else:
                 logger.info("No vulnerabilities detected for this check.")
             print("")
@@ -530,20 +553,33 @@ class MatchString:
         return final_criticality
     
     #------------------------------------------------------------------------------------
+   
+    # strip ansi codes    
+    def strip_ansi_codes(self, text):
+        # ANSI escape sequences can be complex; this pattern aims to capture all typical sequences
+        ansi_escape = re.compile(r'''
+            \x1B  # ESC
+            (?:   # 7-bit C1 Fe (except CSI)
+                [@-Z\\-_]
+            |     # or [ for CSI, followed by a parameter byte
+                \[ [0-?]* [ -/]* [@-~]
+            )
+        ''', re.VERBOSE)
+        return ansi_escape.sub('', text)
     
     # save the final report
-    def save_to_report(self, phase, columns, data, check_name=None):
-        # Ensure the report directory exists
-        if not os.path.exists(self.report_dir):
-            os.makedirs(self.report_dir)
-
-        # Write to the report file
+    def save_to_report(self, phase, columns, data, check_name=None, description=None):
         with open(self.report_file, "a") as file:
             
             if check_name:
                 file.write(f"CHECK NAME: {check_name}\n")
+                file.write(f"DESCRIPTION: {description}\n")
             
             # Generate and write the table string
-            table_string = Output.report_table(columns, data, use_ansi=False)
-            file.write(table_string)
+            table_string = Output.report_table(columns, data, use_ansi=True)
+            
+            clean_table_string = self.strip_ansi_codes(table_string)
+            
+            file.write(clean_table_string)
             file.write("\n\n")
+            
