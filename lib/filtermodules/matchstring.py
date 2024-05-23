@@ -38,7 +38,7 @@ class MatchString:
         self.target_mode = None
         
         self.report_dir = REPORT_DIR
-        self.report_file = os.path.join(REPORT_DIR, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}.report.txt")
+        self.report_file = self.create_report_file()
         self.write_report_header()
         self.rename_existing_report()
         
@@ -60,13 +60,17 @@ class MatchString:
         self.target_mode = target_mode
         
         return self.target, self.port, self.domain, self.ip_address, self.protocol, self.specified_port, self.rechability, self.target_mode
+    
+    # create the report file
+    def create_report_file(self):
+        os.path.join(REPORT_DIR, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}.report.txt")
 
     # write the header
     def write_report_header(self):
         with open(self.report_file, "w") as file:
             file.write("="*50 + "\n")
             file.write(f"HELLSING FINAL REPORT\n")
-            file.write(f"DATE: {self.domain}.{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            file.write(f"DATE: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             file.write("="*50 + "\n")
             file.write("\n")
             
