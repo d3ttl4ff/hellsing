@@ -258,7 +258,6 @@ python3 hellsing.py attack -t http://example.com --run-only recon,vuln
 -   `vulnscan` : Vulnerability Scanning 
 -   `exploit` : Exploitation
 -   `bruteforce` : Brute-force
--   `postexploit` : Post-exploitation
 -   `report` : Reporting
 
 
