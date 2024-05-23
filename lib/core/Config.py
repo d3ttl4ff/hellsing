@@ -123,20 +123,11 @@ HTTP_TOOLBOX_RELATIVE_DIR = TOOLBOX_RELATIVE_DIR + '/http'
 # DEFAULT_OUTPUT_DIR = 'output'
 WEBSHELLS_DIR      = TOOL_BASEPATH + '/webshells'
 WORDLISTS_DIR      = TOOL_BASEPATH + '/wordlists'
-DB_FILE            = TOOL_BASEPATH + '/hellsing.db'
-# DB_HIST_FILE       = TOOL_BASEPATH + '/.dbhistory'
 
 RESULTS_DIR     = TOOL_BASEPATH + '/results'
 RESULTS_EXT          = '.txt'
 
-# REPORT_TPL_DIR     = TOOL_BASEPATH + '/lib/reporter/templates'
-# REPORT_PATH        = TOOL_BASEPATH + '/reports'
-# VIRTUALENVS_DIR    = TOOL_BASEPATH + '/toolbox/virtualenvs'
-
-#----------------------------------------------------------------------------------------
-# # Display Settings
-
-# ATTACK_SUMMARY_TABLE_MAX_SIZE = 18
+REPORT_DIR     = TOOL_BASEPATH + '/reports'
 
 # #----------------------------------------------------------------------------------------
 # # Settings Files
@@ -147,54 +138,3 @@ TOOLBOX_CONF_FILE         = SETTINGS_DIR + '/toolbox'
 HTTP_CONF_FILE            = SETTINGS_DIR + '/http'
 
 ATTACK_PROFILES_CONF_FILE = SETTINGS_DIR + '/attack_profiles'
-# INSTALL_STATUS_CONF_FILE  = '_install_status'
-# PREFIX_SECTION_CHECK      = 'check_'
-# MULTI_CONF                = 'multi'
-# MULTI_TOOLBOX_SUBDIR      = 'multi'
-
-# TOOL_OPTIONS = {
-#     MANDATORY: [
-#         'name',
-#         'description',
-#         'target_service',
-#     ],
-#     OPTIONAL: [
-#         'virtualenv',
-#         'install',
-#         'update',
-#         'check_command',
-#     ]
-# }
-
-# SERVICE_CHECKS_CONFIG_OPTIONS = {
-#     MANDATORY: [
-#         'default_port',
-#         'protocol',
-#         'categories',
-#     ],
-#     OPTIONAL: [
-#         'auth_types'
-#     ]
-# }
-
-# CHECK_OPTIONS = {
-#     MANDATORY: [
-#         'name',
-#         'category',
-#         'description',
-#         'tool',
-#         # command
-#     ],
-#     OPTIONAL: [
-#         'apikey',
-#     ]
-# }
-
-# OPTIONS_ENCRYTPED_PROTO = (
-#     'ftps',
-#     'https',
-#     'rmissl',
-#     'smtps',
-#     'telnets',
-# )
-

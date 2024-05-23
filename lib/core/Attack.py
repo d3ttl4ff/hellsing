@@ -299,6 +299,8 @@ class Attack:
             print('')
         except socket.error as e:
             logger.error(f"Error performing banner grab: {e}\n")
+            
+        self.matchstring.get_host_info(target,)
        
     #------------------------------------------------------------------------------------
     
@@ -510,8 +512,6 @@ class Attack:
                             self.matchstring.process_vuln(tool_name, check_name, results_file_path, vuln_pattern, response, criticality, remed_ref, response_code)
                         # elif current_category == "exploit":
                         #     self.matchstring.process_tool_output(tool_name, check_name, results_file_path)
-                        elif current_category == "postexploit":
-                            pass
                         else:
                             self.matchstring.process_tool_output(tool_name, check_name, results_file_path)
                             

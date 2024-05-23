@@ -1,4 +1,6 @@
 import re
+from datetime import datetime
+import os
 
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import httpWebApplicationFirewallProducts
 from lib.filtermodules.products.httpWebApplicationFirewallProducts import WAFDetectionResults
@@ -8,6 +10,7 @@ from lib.filtermodules.vuln.httpVulnRemediation import vuln_dic
 from lib.output.Logger import logger  
 from lib.output import Output
 from lib.utils.StringUtils import StringUtils
+from lib.core.Config import REPORT_DIR  
 
 class MatchString:
     def __init__(self):
@@ -25,11 +28,61 @@ class MatchString:
         
         self.waf_detected = False
         
+        self.target = None
+        self.port = None
+        self.domain = None
+        self.ip_address = None
+        self.protocol = None
+        self.specified_port = None
+        self.rechability = None
+        self.target_mode = None
+        
+        self.report_dir = REPORT_DIR
+        self.report_file = os.path.join(REPORT_DIR, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}.report.txt")
+        self.write_report_header()
+        self.rename_existing_report()
+        
     #------------------------------------------------------------------------------------
     
     def strip_ansi_codes(self, text):
         ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
         return ansi_escape.sub('', text)
+    
+    #self.matchstring.get_host_info(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
+    def get_host_info(self, target, port, domain, ip_address, protocol, specified_port, rechability, target_mode):
+        self.target = target
+        self.port = port
+        self.domain = domain
+        self.ip_address = ip_address
+        self.protocol = protocol
+        self.specified_port = specified_port
+        self.rechability = rechability
+        self.target_mode = target_mode
+        
+        return self.target, self.port, self.domain, self.ip_address, self.protocol, self.specified_port, self.rechability, self.target_mode
+
+    # write the header
+    def write_report_header(self):
+        with open(self.report_file, "w") as file:
+            file.write("="*50 + "\n")
+            file.write(f"HELLSING FINAL REPORT\n")
+            file.write(f"DATE: {self.domain}.{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            file.write("="*50 + "\n")
+            file.write("\n")
+            
+    # if the report file already exists, rename it and create a new one
+    def rename_existing_report(self):
+        if os.path.exists(self.report_file):
+            i = 1
+            while True:
+                new_report_file = os.path.join(self.report_dir, f"{self.domain}.{datetime.now().strftime('%Y-%m-%d')}_{i}.report.txt")
+                if not os.path.exists(new_report_file):
+                    os.rename(self.report_file, new_report_file)
+                    self.report_file = new_report_file
+                    break
+                i += 1
+            
+            self.write_report_header()
 
     #------------------------------------------------------------------------------------
     def process_tool_output(self, tool_name, check_name, output_file_path):
@@ -48,6 +101,8 @@ class MatchString:
             if data!=[]:
                 logger.success("Found the following ports:")
                 Output.table(columns, data)
+                
+                self.save_to_report("Recoinnaisance", columns, data, check_name)
             else:
                 logger.info("No ports found.")
                 
@@ -88,6 +143,8 @@ class MatchString:
                     wafs = ", ".join(entry['waf'])
                     data.append([entry['vendor'], wafs, entry['blocked_categories']])
                 Output.table(columns, data)
+                
+                self.save_to_report("Recoinnaisance", columns, data, check_name)
             else:
                 logger.info("No WAFs detected.")
                 
@@ -240,32 +297,6 @@ class MatchString:
 
     #------------------------------------------------------------------------------------
     
-    # filter nmap simple recon output
-    def nmap_simple_recon_output(self, nmap_output):
-        # Regular expression to match the lines containing port, state, service, and version information
-        # port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
-        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+([^\s]+)\s+(.*)$')
-
-        parsed_results = []
-
-        # Split the output into lines for processing
-        for line in nmap_output.splitlines():
-            # Search for lines that match the regular expression
-            match = port_info_regex.search(line)
-            if match:
-                # Extract the information from the matching line
-                port, state, service, version = match.groups()
-                parsed_results.append({
-                    'PORT': port,
-                    'STATE': state,
-                    'SERVICE': service,
-                    'VERSION': version.strip()  # Remove leading/trailing whitespace from the version
-                })
-
-        return parsed_results
-
-    #------------------------------------------------------------------------------------
-    
     def display_cms_detection_results(self, tool_name, output):
         parser_functions = {
             "cmseek": self.fingerprinter.parse_cmseek_output,
@@ -341,6 +372,8 @@ class MatchString:
                 logger.info("No vulnerabilities detected for this check.")
             print("")
     
+    #------------------------------------------------------------------------------------
+    # functions
     #------------------------------------------------------------------------------------
     def check_vulnerability(self, check_name, output, response_code):
         # Mapping of check names to their regex patterns
@@ -438,8 +471,35 @@ class MatchString:
                         break
 
         return vulnerability_found
+
+    #------------------------------------------------------------------------------------
+        
+    # filter nmap simple recon output
+    def nmap_simple_recon_output(self, nmap_output):
+        # Regular expression to match the lines containing port, state, service, and version information
+        # port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+(\w+)\s+(.*)$')
+        port_info_regex = re.compile(r'^(\d+)/tcp\s+(\w+)\s+([^\s]+)\s+(.*)$')
+
+        parsed_results = []
+
+        # Split the output into lines for processing
+        for line in nmap_output.splitlines():
+            # Search for lines that match the regular expression
+            match = port_info_regex.search(line)
+            if match:
+                # Extract the information from the matching line
+                port, state, service, version = match.groups()
+                parsed_results.append({
+                    'PORT': port,
+                    'STATE': state,
+                    'SERVICE': service,
+                    'VERSION': version.strip()  # Remove leading/trailing whitespace from the version
+                })
+
+        return parsed_results
     
     #------------------------------------------------------------------------------------
+    
     def criticality_color(self, criticality):
         if criticality == "info":
             criticality_color = 16
@@ -464,3 +524,22 @@ class MatchString:
         final_criticality = temp_criticality + criticality_right_connector
         
         return final_criticality
+    
+    #------------------------------------------------------------------------------------
+    
+    # save the final report
+    def save_to_report(self, phase, columns, data, check_name=None):
+        # Ensure the report directory exists
+        if not os.path.exists(self.report_dir):
+            os.makedirs(self.report_dir)
+
+        # Write to the report file
+        with open(self.report_file, "a") as file:
+            
+            if check_name:
+                file.write(f"CHECK NAME: {check_name}\n")
+            
+            # Generate and write the table string
+            table_string = Output.report_table(columns, data, use_ansi=False)
+            file.write(table_string)
+            file.write("\n\n")

@@ -330,5 +330,25 @@ class Output(object):
         table.align = 'l'
         if not borders:
             table.border = False
-        print(table)
             
+        print(table)
+        
+    @staticmethod
+    def report_table(columns, data, hrules=True, borders=True, use_ansi=True):
+        """
+        Print a table. Supports multi-row cells.
+        :param columns: An iterable of column names (strings)
+        :param data: An iterable containing the data of the table
+        :param hrules: Boolean for horizontal rules
+        """
+        if use_ansi:
+            columns = [Output.colored(x, attrs='bold') for x in columns]
+        table = prettytable.PrettyTable(field_names=columns)
+        for row in data:
+            table.add_row(row)
+        table.align = 'l'
+        if not borders:
+            table.border = False
+        if hrules:
+            table.hrules = prettytable.ALL
+        return table.get_string()
