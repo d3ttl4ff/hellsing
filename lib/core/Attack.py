@@ -249,6 +249,8 @@ class Attack:
         # Check if banner grab is specified
         if banner_condition:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
+            
+            self.output.print("\n[*] The banner grab report has been created in '/hellsing/reports' directory", color='226')
         else:
             self.banner_grab(target, port, domain, ip_address, protocol, specified_port, rechability, target_mode)
             
@@ -258,13 +260,17 @@ class Attack:
                 if rechability_input.lower() == 'y':
                     pass
                 else:
+                    self.output.print("\n[*] The assessment report will be created in '/hellsing/reports' directory", color='226')
                     return
             else:
                 rechability_input = input(f"\033[1m[>] The target is not reachable. Do you want to continue? (Y/n) :\033[0m ")
                 if rechability_input.lower() == 'y':
                     pass
                 else:
+                    self.output.print("\n[*] The assessment report will be created in '/hellsing/reports' directory", color='226')
                     return
+                
+            self.output.print("\n[*] The assessment report will be created in '/hellsing/reports' directory", color='226')
             
             self.run_default(protocol, base_target, domain, is_ip_address, ip_address, str(port), run_only_condition, run_exclude_condition, categories=categories, profile_condition=profile_condition, profile=profile)
         
