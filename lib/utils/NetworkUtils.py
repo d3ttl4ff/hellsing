@@ -124,7 +124,6 @@ class NetworkUtils:
             "recon": "Reconnaissance",
             "vuln": "Vulnerability Scan",
             "exploit": "Exploitation",
-            "postexploit": "Post-exploitation",
             "bruteforce": "Brute Force",
             "report": "Reporting",
             "discovery": "Discovery",
