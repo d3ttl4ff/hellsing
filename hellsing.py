@@ -46,9 +46,25 @@ class Program:
             controller.run()
 
         except KeyboardInterrupt:
-            print()
-            logger.error('Ctrl+C received ! Terminating...')
-            sys.exit(0)
+            print('\n')
+            # logger.error('Ctrl+C received ! Terminating...')
+            # sys.exit(0)
+        
+            try:
+                exit_key = input(Output.input_exit_choice('Do you want to exit (y/n)? '))
+                
+                if exit_key == 'y':
+                    logger.error('Terminating...')
+                    sys.exit(0)
+                else:
+                    print()
+                    Output.print('>>> Program restarting...', color='10', attrs='bold')
+                    Program()
+            except KeyboardInterrupt:
+                print()
+                logger.error('Ctrl+C received! Terminating...')
+                sys.exit(0)
+            
         except (SettingsException, AttackException) as e:
             logger.error(e)
             sys.exit(1)
@@ -60,6 +76,17 @@ class Program:
             logger.error('Unexpected error occured: {0}'.format(str(e)))
             traceback.print_exc()
             sys.exit(1)
+        # finally:
+        #     print()
+        #     exit_key = input(Output.input_exit_choice('Do you want to exit (y/n)? '))
+            
+        #     if exit_key == 'y':
+        #         logger.error('Terminating...')
+        #         sys.exit(0)
+        #     else:
+        #         print()
+        #         Output.print('>>> Program restarting...', color='10', attrs='bold')
+        #         Program()
 
 if __name__ == '__main__':
     main = Program()

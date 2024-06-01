@@ -352,3 +352,17 @@ class Output(object):
         if hrules:
             table.hrules = prettytable.ALL
         return table.get_string()
+
+    @staticmethod
+    def input_exit_choice(title: str) -> None:
+        title_len = len(title) + 2  # Adding 2 for the spaces around the title
+        
+        title_color = '135'
+        border_color = 'turquoise_2'
+        
+        left_border = Output.colored('⬤', color=border_color, attrs='bold')
+        title_part = Output.colored(' ' + title, color=title_color, attrs='bold')
+        y = Output.colored(left_border + title_part)
+        
+        return y
+    
